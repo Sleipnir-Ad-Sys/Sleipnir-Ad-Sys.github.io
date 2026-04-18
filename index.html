@@ -3,42 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sleipnir | Data Analyst & Product Designer</title>
+    <title>Sleipnir — Portfolio</title>
+    <meta name="description" content="Portfolio de Sleipnir — Data Analyst & Designer. Projets de data analyse, data science, webtoon et illustration.">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>Sleipnir</h1>
-        <p class="subtitle">Data Analyst & Product Designer | Passionné de Phygital (IoT & 3D)</p>
-    </header>
 
-    <main>
-        <section id="bio">
-            <h2>À propos</h2>
-            <p>J'analyse la donnée et je lui donne une forme concrète. Mon approche allie la rigueur de l'administration système à la créativité du design de produit interactif.</p>
-        </section>
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">Sleipnir</a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Accueil</a></li>
+                <li><a href="cv.html">CV</a></li>
+                <li><a href="projets.html">Projets</a></li>
+            </ul>
+            <div class="nav-toggle" id="navToggle" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </nav>
 
-        <section id="projets">
-            <h2>Projets phares</h2>
-            <div class="grid">
-                <article class="card">
-                    <h3>Webtoon & NFC</h3>
-                    <p>Système d'objets collector connectés pour mon univers Webtoon. Intégration IoT, UX, et gestion de flux de données.</p>
-                </article>
-                <article class="card">
-                    <h3>Dashboard Data</h3>
-                    <p>Analyse de logs système et visualisation de données pour optimiser les performances d'infrastructure.</p>
-                </article>
-                <article class="card">
-                    <h3>Prototypage 3D</h3>
-                    <p>Conception de solutions physiques sur-mesure intégrant des tags NFC pour le networking professionnel.</p>
-                </article>
+    <div class="page-wrapper">
+
+        <!-- HERO -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-badge">
+                        <span class="dot"></span>
+                        Disponible pour des projets
+                    </div>
+                    <h1>
+                        Data &amp; Design.<br>
+                        <span class="gradient-text">Donnée &amp; Créativité.</span>
+                    </h1>
+                    <section class="about-intro">
+                            <p class="hero-subtitle">
+                                Mon parcours s'articule autour de deux mondes distincts. 
+                                D'un côté, celui de la <span class="text-data">Data</span>, où j'analyse et structure des systèmes avec rigueur. 
+                                De l'autre, celui de la <span class="text-creation">Création</span>, où j'utilise le dessin et la narration pour explorer des univers visuels. 
+                                <br />L'un nourrit ma discipline, l'autre ma curiosité.
+                            </p>
+                        </section>
+                    <div class="hero-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">SQL</span>
+                        <span class="tag">Power BI</span>
+                        <span class="tag">Data Analyse</span>
+                        <span class="tag">Data Visualization</span>
+                        <span class="tag">Machine Learning</span>
+                        <span class="tag">UI/UX Design</span>
+
+                        <span class="tag">Illustration 2D/3D</span>
+                        <span class="tag">Storytelling</span>
+                        <span class="tag">Storyboard</span>
+                        <span class="tag">Design Thinking</span>
+                        <span class="tag">Character Design</span>
+                        <span class="tag">Dessin</span>
+                        <span class="tag">Webtoon</span>
+                    </div>
+                    <div class="hero-cta">
+                        <a href="projets.html" class="btn btn-primary">✦ Voir mes projets</a>
+                        <a href="cv.html" class="btn btn-secondary">Mon CV →</a>
+                    </div>
+                </div>
             </div>
         </section>
-    </main>
 
+        <!-- STATS -->
+        <section style="padding-bottom: 2rem;">
+            <div class="container">
+                <div class="stats-row">
+                    <div class="stat">
+                        <span class="stat-number">4+</span>
+                        <span class="stat-label">Domaines</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">∞</span>
+                        <span class="stat-label">Curiosité</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">Passion</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">1</span>
+                        <span class="stat-label">Univers unique</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJETS PHARES -->
+        <section style="padding-bottom: 5rem;">
+            <div class="container">
+                <h2 class="section-title">Projets phares</h2>
+                <p class="section-subtitle">Un aperçu de ce que je construis, explore et crée.</p>
+                <div class="featured-grid">
+                    <article class="card fade-in">
+                        <div class="card-inner">
+                            <span class="card-icon">📖</span>
+                            <h3>Webtoon</h3>
+                            <p>Des univers illustrés allans du médiéval fantastique au comic strip.</p>
+                            <a href="projets.html#webtoon" class="card-link">Explorer →</a>
+                        </div>
+                    </article>
+                    <article class="card fade-in">
+                        <div class="card-inner">
+                            <span class="card-icon">📊</span>
+                            <h3>Dashboards &amp; Visualisation</h3>
+                            <p>Analyse de données systèmes et business. Des logs bruts aux insights visuels exploitables.</p>
+                            <a href="projets.html#data-analyse" class="card-link">Explorer →</a>
+                        </div>
+                    </article>
+                    <article class="card fade-in">
+                        <div class="card-inner">
+                            <span class="card-icon">🎨</span>
+                            <h3>Illustration &amp; Concept Art</h3>
+                            <p>Du sketch au rendu final — personnages, environnements et univers visuels pour le webtoon et des projets indépendants.</p>
+                            <a href="projets.html#dessin" class="card-link">Explorer →</a>
+                        </div>
+                    </article>
+                    <article class="card fade-in">
+                        <div class="card-inner">
+                            <span class="card-icon">🤖</span>
+                            <h3>Machine Learning &amp; IA</h3>
+                            <p>Modèles prédictifs, NLP et expérimentations en data science appliquée à des problèmes concrets.</p>
+                            <a href="projets.html#data-science" class="card-link">Explorer →</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- À PROPOS -->
+        <section style="padding-bottom: 5rem;">
+            <div class="container">
+                <div class="card fade-in" style="max-width: 680px; margin: 0 auto; text-align: center; padding: 3rem 2.5rem;">
+                    <div class="card-inner">
+                        <h2 style="margin-bottom: 1rem; font-size: 1.75rem;">Le profil rare <span class="gradient-text">Data + Créa</span></h2>
+                        <p style="font-size: 0.98rem; line-height: 1.9; color: var(--text-secondary); margin-bottom: 2rem;">
+                            Analyser des patterns pour produire un dashboard ou dessiner un personnage — ce sont deux manières différentes de donner du sens à un problème. Je me situe à cette intersection, là où la rigueur rencontre l'imagination.
+                        </p>
+                        <a href="cv.html" class="btn btn-primary">Découvrir mon parcours</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- FOOTER -->
     <footer>
-        <p>Retrouve mon code sur <a href="https://github.com/Sleipnir-Ad-Sys">GitHub</a></p>
+        <div class="container">
+            <div class="footer-inner">
+                <p>© 2026 Sleipnir — Construit avec passion &amp; du code</p>
+                <div class="footer-links">
+                    <a href="https://github.com/Sleipnir-Ad-Sys" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <a href="cv.html">CV</a>
+                    <a href="projets.html">Projets</a>
+                </div>
+            </div>
+        </div>
     </footer>
+
+    <script>
+        // Mobile nav
+        const navToggle = document.getElementById('navToggle');
+        const navLinks  = document.querySelector('.nav-links');
+        navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+
+        // Scroll fade-in
+        const observer = new IntersectionObserver(
+            entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+            { threshold: 0.1 }
+        );
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    </script>
 </body>
 </html>

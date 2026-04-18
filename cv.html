@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV — Clément Liska</title>
+    <meta name="description" content="Curriculum vitae de Clément Liska — Data Analyste / Data Scientist, Orvault (44).">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">Sleipnir</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="cv.html" class="active">CV</a></li>
+                <li><a href="projets.html">Projets</a></li>
+            </ul>
+            <div class="nav-toggle" id="navToggle" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="cv-layout">
+
+                <!-- =================== SIDEBAR =================== -->
+                <aside class="cv-sidebar">
+
+                    <!-- Avatar + nom -->
+                    <div>
+                        <div class="cv-avatar">CL</div>
+                        <h1 style="font-size: 1.5rem; margin-bottom: 4px;">Clément Liska</h1>
+                        <p style="color: var(--accent-purple); font-size: 0.88rem; font-weight: 500;">Data Analyste / Data Scientist</p>
+                    </div>
+
+                    <!-- Contact -->
+                    <div class="skill-card">
+                        <h3>Contact</h3>
+                        <a href="mailto:clement.liska@gmail.com" class="cv-contact-item">
+                            <span class="cv-contact-icon">✉</span>clement.liska@gmail.com
+                        </a>
+                        <a href="https://github.com/Sleipnir-Ad-Sys" target="_blank" rel="noopener noreferrer" class="cv-contact-item">
+                            <span class="cv-contact-icon">⌥</span>GitHub
+                        </a>
+                        <a href="https://www.linkedin.com/in/clement-l-81a82b7a" target="_blank" rel="noopener noreferrer" class="cv-contact-item">
+                            <span class="cv-contact-icon">⌥</span>Linkedin
+                        </a>
+                        <span class="cv-contact-item">
+                            <span class="cv-contact-icon">📍</span>Orvault (44)
+                        </span>
+                        <span class="cv-contact-item">
+                            <span class="cv-contact-icon">🚗</span>Permis B
+                        </span>
+                    </div>
+
+                    <!-- Compétences Programmation -->
+                    <div class="skill-card">
+                        <h3>Langages de programmation</h3>
+                        <div class="skill-list">
+                            <span class="skill-pill">Python (Polars / Pandas / Numpy,etc.)</span>
+                            <span class="skill-pill">Power Query M / DAX</span>
+                            <span class="skill-pill">PHP / HTML / CSS / JS / React</span>
+                            <span class="skill-pill">API REST / Grafana</span>
+                            <span class="skill-pill">Git / GitLab / GitHub</span>
+                            <span class="skill-pill">SQL / Merise</span>
+                        </div>
+                    </div>
+
+                    <!-- Base de données -->
+                    <div class="skill-card">
+                        <h3>Base de données</h3>
+                        <div class="skill-list">
+                            <span class="skill-pill">MySQL / PostgreSQL / SQLite3 / SQL</span>
+                        </div>
+                    </div>
+
+                    <!-- Data analyse -->
+                    <div class="skill-card">
+                        <h3>Logiciels de data analyse</h3>
+                        <div class="skill-list">
+                            <span class="skill-pill">Power BI</span>
+                            <span class="skill-pill">Excel</span>
+                            <span class="skill-pill">GRAFANA</span>
+                            <span class="skill-pill">ELK</span>
+                        </div>
+                    </div>
+
+                    <!-- Framework -->
+                    <div class="skill-card">
+                        <h3>Frameworks</h3>
+                        <div class="skill-list">
+                            <span class="skill-pill">Django / React.js </span>
+                            <span class="skill-pill">Symfony</span>
+                        </div>
+                    </div>
+
+                    <!-- Management -->
+                    <div class="skill-card">
+                        <h3>Management</h3>
+                        <div class="skill-list">
+                            <span class="skill-pill">Travail en équipe</span>
+                            <span class="skill-pill">Gestion de projet</span>
+                            <span class="skill-pill">Leadership</span>
+                            <span class="skill-pill">Communication et Collaboration</span>
+                            <span class="skill-pill">Processus ITIL 4</span>
+                            <span class="skill-pill">Gestion de crise</span>
+                            <span class="skill-pill">Prise de décision</span>
+                        </div>
+                    </div>
+
+                    <!-- Machine learning / Deep learning / Text Mining -->
+                    <div class="skill-card">
+                        <h3>Machine learning / Deep learning / Text Mining</h3>
+                        <div class="skill-list">
+                            <span class="skill-pill">Réseaux de neurones artificiels</span>
+                            <span class="skill-pill">Évaluation de modèles</span>
+                            <span class="skill-pill">Apprentissage supervisé et non supervisé</span>
+                            <span class="skill-pill">Traitement du langage naturel (NLP)</span>
+                            <span class="skill-pill">Analyse de données textuelles</span>
+                            <span class="skill-pill">Deep Learning</span>
+                            <span class="skill-pill">Machine Learning</span>
+                            <span class="skill-pill">Statistiques descriptives / prédictives</span>
+                        </div>
+                    </div>
+
+                    <!--  Gestion des infrastructures informatiques -->
+                    <div class="skill-card">
+                        <h3>Gestion des infrastructures informatiques</h3>
+                        <div class="skill-list">
+                            <span class="skill-pill">Windows</span>
+                            <span class="skill-pill">Linux / Unix</span>
+                            <span class="skill-pill">Réseau / câblage / configuration IP</span>
+                            <span class="skill-pill">Virtualisation (Proxmox, VMware)</span>
+                            <span class="skill-pill">IBM Mainframe (TSO / JCL / B92 / B48 / SDSF / IPL)</span>
+                            <span class="skill-pill">Cloud Computing</span>
+                            <span class="skill-pill">Gestion de serveurs</span>
+                        </div>
+                    </div>
+
+                    <!-- Architecture de sauvegarde et restauration -->
+                    <div class="skill-card">
+                        <h3>Architecture de sauvegarde et restauration</h3>
+                        <div class="skill-list">
+                            <span class="skill-pill">Avamar, AVE</span>
+                            <span class="skill-pill">Networker</span>
+                        </div>
+                    </div>
+
+                    <!-- Communication visuelle -->
+                    <div class="skill-card">
+                        <h3>Communication visuelle</h3>
+                        <div class="skill-list">
+                            <span class="skill-pill">Suite Adobe</span>
+                            <span class="skill-pill">Infographie 2D/3D</span>
+                            <span class="skill-pill">Web design</span>
+                            <span class="skill-pill">Print</span>
+                            <span class="skill-pill">Design</span>
+                        </div>
+                    </div>
+
+                    <!-- Personnelles -->
+                    <div class="skill-card">
+                        <h3>Compétences personnelles</h3>
+                        <div class="skill-list">
+                            <span class="skill-pill">Sens de l’organisation</span>
+                            <span class="skill-pill">Autodidacte</span>
+                            <span class="skill-pill">Analytique</span>
+                            <span class="skill-pill">Adaptabilité</span>
+                            <span class="skill-pill">Créativité</span>
+                            <span class="skill-pill">Autonomie</span>
+                        </div>
+                    </div>
+
+                    <!-- Langues -->
+                    <div class="skill-card">
+                        <h3>Langues</h3>
+                        <div class="skill-bar-list" id="skillBars">
+                            <div class="skill-bar-item">
+                                <div class="skill-bar-header">
+                                    <span>Français</span>
+                                    <span style="color: var(--text-muted)">Natif</span>
+                                </div>
+                                <div class="skill-bar-track">
+                                    <div class="skill-bar-fill" data-width="100"></div>
+                                </div>
+                            </div>
+                            <div class="skill-bar-item">
+                                <div class="skill-bar-header">
+                                    <span>Anglais</span>
+                                    <span style="color: var(--text-muted)">Professionnel</span>
+                                </div>
+                                <div class="skill-bar-track">
+                                    <div class="skill-bar-fill" data-width="78"></div>
+                                </div>
+                            </div>
+                            <div class="skill-bar-item">
+                                <div class="skill-bar-header">
+                                    <span>Allemand</span>
+                                    <span style="color: var(--text-muted)">Scolaire</span>
+                                </div>
+                                <div class="skill-bar-track">
+                                    <div class="skill-bar-fill" data-width="35"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Télécharger CV -->
+                    <a href="cv/CV_Clement.pdf" download="CV_Clement.pdf" class="btn btn-primary" style="justify-content: center;">
+                        ⬇ Télécharger le CV (PDF)
+                    </a>
+
+                </aside>
+
+                <!-- =================== MAIN CONTENT =================== -->
+                <main class="cv-main">
+
+                    <!-- Profil -->
+                    <section>
+                        <h2 class="cv-section-title">Profil</h2>
+                        <p style="color: var(--text-secondary); line-height: 1.9; font-size: 0.98rem;">
+                            Expert en exploitation informatique avec plus de 9 ans d'expérience en prestation au
+                            sein du groupe Crédit Agricole. Spécialisé dans l'automatisation de processus et la
+                            création de solutions d'aide à la décision (Python, Django, Power BI). Ma double
+                            compétence technique et métier me permet de transformer des flux complexes en outils
+                            d'analyse performants et actionnables.
+                        </p>
+                    </section>
+
+                    <!-- Expériences -->
+                    <section>
+                        <h2 class="cv-section-title">Expériences</h2>
+                        <div class="timeline">
+                            <div class="timeline-item fade-in">
+                                <span class="timeline-date">nov. 2023 <br /> En poste</span>
+                                <div class="timeline-content">
+                                    <h4>Data Analyst / Data Scientist</h4>
+                                    <p class="company">DCS EASYWARE, Orvault 44 (depuis janv. 2026, précédemment Annecy-le-Vieux)</p>
+                                    <p>Prestataire informatique pour le groupe Crédit Agricole Group Infrastructure Platform.</p>
+                                    <ul style="margin: 0.5rem 0 0 1.2rem; color: var(--text-secondary); font-size: 0.92rem; line-height: 1.8;">
+                                        <p>En plus des actions d’Incident Manager :</p>
+                                        <li>Développement d'outils d'aide à la décision pour les équipes Incident Management</li>
+                                        <li>Développement d’outils : PHP, HTML, CSS, JS (React.js), Symfony (v4.4 à v6.0), Django, Python (Pandas, Numpy).</li>
+                                        <li>Bases de données : SQLite, MySQL, SQL</li>
+                                        <li>Création d’application autonome (.exe)</li>
+                                        <li>Management d’équipe et participation aux réunions COMOP/COPIL.</li>
+                                        <li>Apport d’expérience et d’expertise sur les configurations systèmes et outils.</li>
+                                        <li>Support technique : rédaction et validation de documentations</li>
+                                        <li>Création de documents avec scripts et visualisation de données via Power BI.</li>
+                                        <li>Connaissance du monitoring de production : outils Tivoli, Omnibus DASH, BEM, TWSgraph, Elasticsearch,</li>
+                                        <li>Grafana, Dynatrace, Service Pilote, gestion de tickets (ServiceNow).</li>
+                                        <li>Amélioration continue : élaboration et optimisation des processus, propositions de solutions innovantes multienvironnement</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item fade-in">
+                                <span class="timeline-date">juin 2020 <br />à nov. 2023</span>
+                                <div class="timeline-content">
+                                    <h4>Incident Manager</h4>
+                                    <p class="company">DCS EASYWARE, Annecy-le-Vieux 74000</p>
+                                    <p>Prestataire informatique pour le groupe Crédit Agricole Group Infrastructure Platform.</p>
+                                    <ul style="margin: 0.5rem 0 0 1.2rem; color: var(--text-secondary); font-size: 0.92rem; line-height: 1.8;">
+                                    <p>En plus des actions d’Analyste d’exploitation :</p>
+                                        <li>Création et présentation de graphiques.</li>
+                                        <li>Management d’équipe.</li>
+                                        <li>Création d’outils via PHP, gestion/maintenance des bases de données liées à ces outils (Framework Symfony).</li>
+                                        <li>Support technique, rédaction et validation de documentations techniques</li>
+                                        <li>Élaboration et validation de processus</li>
+                                        <li>Création d’outils via Python (3.9/Anaconda), gestion/maintenance des bases de données liées à ces outils
+                                        (SQLite), output des outils Python en .exe (Selenium / QtPy5 / Qt Designer / auto-py-to-exe, Django)</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item fade-in">
+                                <span class="timeline-date">juil. 2018 <br />à juin 2020</span>
+                                <div class="timeline-content">
+                                    <h4>Analyste d’exploitation</h4>
+                                    <p class="company">DCS EASYWARE, Annecy-le-Vieux 74000</p>
+                                    <p>Prestataire informatique au Crédit Agricole Technologie et Services.</p>
+                                    <ul style="margin: 0.5rem 0 0 1.2rem; color: var(--text-secondary); font-size: 0.92rem; line-height: 1.8;">
+                                        <p>En plus des actions techniques :</p>
+                                        <li>Analyse et proposition de solutions.</li>
+                                        <li>Restauration de fichiers / bases de données / dossiers / lecteurs réseau.</li>
+                                        <li>Gestion et surveillance des sauvegardes sur les solutions Avamar / Avamar AVE / Networker.</li>
+                                        <li>Création et présentation de graphiques.</li>
+                                        <li>Participation aux points hebdomadaires et mensuels avec le client (COMOP / COPIL).</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item fade-in">
+                                <span class="timeline-date">Dec. 2016 <br />à juil. 2018</span>
+                                <div class="timeline-content">
+                                    <h4>Technicien d’exploitation informatique</h4>
+                                    <p class="company">DCS EASYWARE, Annecy-le-Vieux 74000</p>
+                                    <p>Prestataire informatique au Crédit Agricole Technologie et Services.</p>
+                                    <ul style="margin: 0.5rem 0 0 1.2rem; color: var(--text-secondary); font-size: 0.92rem; line-height: 1.8;">
+                                        <li> Traitement des incidents batchs demandant une analyse approfondie du JCL.</li>
+                                        <li> Copie, sauvegarde, restauration, modification de fichiers (QSAM) ainsi que de ses paramètres.</li>
+                                        <li> Montée au plan d’applications et de jobs (batchs) sous TWS/OPC.</li>
+                                        <li> Assurer les contrôles d’une check-list.</li>
+                                        <li> Assurer la surveillance de la production via les outils de monitoring (Tivoli, Newtest, TWSgraph, Service Pilote).</li>
+                                        <li> Gestion de tickets (Remedy).</li>
+                                        <li> Prise en compte et résolution des incidents batch, OPEN (Windows, Unix/Linux), réseaux et TOIP.</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item fade-in">
+                                <span class="timeline-date">Août 2014 <br />à sept 2016</span>
+                                <div class="timeline-content">
+                                    <h4>Technicien Informatique</h4>
+                                    <p>Copieur / maintenance en itinérance</p>
+                                    <p class="company">Yes copies & service, Chambéry 73000</p>
+                                    <ul style="margin: 0.5rem 0 0 1.2rem; color: var(--text-secondary); font-size: 0.92rem; line-height: 1.8;">
+                                        <li>Mise en place de réseau.</li>
+                                        <li>Installation, réparation et maintenance, informatique.</li>
+                                        <li>Installation, réparation, maintenance et remplacement de copieurs multifonctions.</li>
+                                        <li>Formation des utilisateurs.</li>
+                                        <li>Création de documents d’utilisation pour les utilisateurs finaux.</li>
+                                        <li>Formation chez le constructeur Sharp, Oki, Kyocera, Epson, Samsung.</li>
+                                        <li>Gestion des déplacements.</li>
+                                        <li>Gestion en solitaire</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Formation ---------------------------------------------->
+                    <section>
+                        <h2 class="cv-section-title">Formation</h2>
+                        <div class="timeline">
+                            <div class="timeline-item fade-in">
+                                <span class="timeline-date">de juil. 2014 <br /> à août 2016</span>
+                                <div class="timeline-content">
+                                    <h4>BTS SIO</h4>
+                                    <p class="company">Services Informatiques aux Organisations</p>
+                                    <p>Formation aux systèmes d'information, réseaux, développement et maintenance informatique.</p>
+                                    <p>En alternance - Ecoris Chambéry</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item fade-in">
+                                <span class="timeline-date">de juil. 2010 <br /> à août 2013</span>
+                                <div class="timeline-content">
+                                    <h4>Bachelor of Arts (BA)</h4>
+                                    <p class="company">Webmaster - infographie - design</p>
+                                    <p>Univeria Chambéry</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item fade-in">
+                                <span class="timeline-date">de juil. 2011 <br /> à août 2013</span>
+                                <div class="timeline-content">
+                                    <h4>BTS Communication visuelle</h4>
+                                    <p class="company">Option multimédia</p>
+                                    <p>Univeria Chambéry</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Certifications ----------------------------->
+                    <section>
+                        <h2 class="cv-section-title">Certifications</h2>
+                        <div class="timeline">
+
+                            <div class="timeline-item fade-in">
+                                <span class="timeline-date">Nov. 2023</span>
+                                <div class="timeline-content">
+                                    <h4>Certification Big data</h4>
+                                    <p class="company">Machine learning et deep learning avec Python <br />ORSYS Formation</p>
+                                    <ul>
+                                        <li>Text Mining par la pratique</li>
+                                        <li>Deep Learning par la pratique</li>
+                                        <li>Machine learning, méthodes et solutions</li>
+                                        <li>Big Data Analytics avec Python</li>
+                                        <li>Modélisation statistique, l’essentiel</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item fade-in">
+                                <span class="timeline-date">Parcours Itératif</span>
+                                <div class="timeline-content">
+                                    <h4>Formation UDEMY</h4>
+                                    <p class="company">Auto formation</p>
+                                    <ul>
+                                        <li>[Introduction] Python pour la Data Science et le Machine Learning</li>
+                                        <li>[Introduction] Python pour le Deep Learning</li>
+                                        <li>Microsoft Certified: Data Analyst Associate with Power BI</li>
+                                        <li>Réaliser un Logiciel réel sous Python, PyQt5 et QT Designer</li>
+                                    </ul>
+                                </div>
+                            </div>
+ 
+                            <div class="timeline-item fade-in">
+                                <span class="timeline-date">Nov. 2020</span>
+                                <div class="timeline-content">
+                                    <h4>Formation management</h4>
+                                    <p class="company">Cegos France</p>
+                                    <ul>
+                                        <li>Manager son équipe - N1</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item fade-in">
+                                <span class="timeline-date">Dec. 2019</span>
+                                <div class="timeline-content">
+                                    <h4>ITIL 4 Foundation</h4>
+                                    <p class="company">AXELOS</p>
+                                    <p class="company">Global Best Practice</p>
+                                    <ul>
+                                        <li>ITIL 4 Foundation</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item fade-in">
+                                <span class="timeline-date">Dec. 2019</span>
+                                <div class="timeline-content">
+                                    <h4>Certification imprimante multifonction</h4>
+                                    <p class="company">Sharp Business Systems</p>
+                                    <p class="company">OKI Europe</p>
+                                    <p class="company">Epson</p>
+                                    <ul>
+                                        <li>SHARP</li>
+                                            <p>3050 / 60/70 <br /> 4060/70 - 5060/70 <br /> MX-2314 / 2614 / 3114 <br /> MX-2640 / 3140 / 3640 <br /> MX-4140 / 4141 / 5140 / 5141</p>
+                                        <li>OKI</li>
+                                            <p>C931/ES9431 & ES9541 Art Graphique <br />ES8473 /7411 /7470 7140 <br /> 7170</p>
+                                        <li>EPSON</li>
+                                            <p>EPSON WorkForce RIPS-WFR51*/56*/85*</p>
+                                    </ul>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </section>
+
+                    <!-- Compétences clés -->
+                    <section>
+                        <h2 class="cv-section-title">Compétences clés</h2>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1rem;">
+                            <div class="skill-card fade-in">
+                                <h3>Analyse de données</h3>
+                                <div class="skill-list">
+                                    <span class="skill-pill">Python</span>
+                                    <span class="skill-pill">Pandas</span>
+                                    <span class="skill-pill">Polars</span>
+                                    <span class="skill-pill">SQL</span>
+                                    <span class="skill-pill">API REST</span>
+                                    <span class="skill-pill">CSV</span>
+                                </div>
+                            </div>
+                            <div class="skill-card fade-in">
+                                <h3>Visualisation</h3>
+                                <div class="skill-list">
+                                    <span class="skill-pill">Power BI</span>
+                                    <span class="skill-pill">Excel</span>
+                                    <span class="skill-pill">Grafana / ELK</span>
+                                </div>
+                            </div>
+                            <div class="skill-card fade-in">
+                                <h3>Monitoring &amp; ITSM</h3>
+                                <div class="skill-list">
+                                    <span class="skill-pill">Dynatrace</span>
+                                    <span class="skill-pill">Service Now</span>
+                                    <span class="skill-pill">ITIL 4</span>
+                                    <span class="skill-pill">TOIP</span>
+                                </div>
+                            </div>
+                            <div class="skill-card fade-in">
+                                <h3>Systèmes &amp; Backup</h3>
+                                <div class="skill-list">
+                                    <span class="skill-pill">Windows</span>
+                                    <span class="skill-pill">Unix/Linux</span>
+                                    <span class="skill-pill">Avamar</span>
+                                    <span class="skill-pill">Networker</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Projet notable -->
+                    <section>
+                        <h2 class="cv-section-title">Projet notable</h2>
+                        <div class="skill-card fade-in">
+                            <h3>Formulaire de rapport d’escale web</h3>
+                            <p>Mise en production janv. 2021</p>
+                            <ul style="margin: 0.5rem 0 0 1.2rem; color: var(--text-secondary); font-size: 0.92rem; line-height: 1.8;">
+                                <p>Développement d’une application web de gestion des rapports d’escale</p>
+                                <li>Mise en place des environnements de développement, intégration et production.</li>
+                                <li>Création et gestion des tables MySQL pour structurer les données.</li>
+                                <li>Implémentation d’un système de connexion sécurisé avec gestion des rôles utilisateurs.</li>
+                                <li>Développement d’un formulaire interactif pour la saisie des rapports.</li>
+                                <li>Génération automatique des rapports au format PDF.</li>
+                                <li>Visualisation et gestion des rapports via une interface web intuitive.</li>
+                                <li>Suivi et correction des bugs, avec ajout de fonctionnalités à la demande.</li>
+                                <li>Refonte complète de l'architecture en 2026 sous Django (Python)</li>
+                                <li>Mise en place de dashboards d’analyse et d'une API REST d’export de données</li>
+                            </ul>
+                            <div class="skill-list" style="margin-top: 0.75rem;">
+                                <span class="skill-pill">Symfony 4.4</span>
+                                <span class="skill-pill">Python</span>
+                                <span class="skill-pill">Django</span>
+                                <span class="skill-pill">API REST</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <h2 class="cv-section-title">Projet notable</h2>
+                        <div class="skill-card fade-in">
+                            <h3>Automatisation d’extraction et d’analyse de données</h3>
+                            <p>Développement d’un outil d’extraction et d’analyse de données automatisé</p>
+                            <p>depuis début 2025</p>
+                            <ul style="margin: 0.5rem 0 0 1.2rem; color: var(--text-secondary); font-size: 0.92rem; line-height: 1.8;">
+                                <p>Développement d’une application web de gestion des rapports d’escale</p>
+                                <li>Récupération et transformation de données à partir de différentes sources (SQL, CSV, API REST).</li>
+                                <li>Création de tableaux de bord interactifs pour la visualisation des données. (Power BI - Power Query M)</li>
+                                <li>Automatisation des processus pour optimiser l’efficacité et réduire les erreurs.</li>
+                                <li>Développement de tableaux de bord et gestion du cycle de déploiement sur Power BI Service (Cloud)</li>
+                            </ul>
+                            <div class="skill-list" style="margin-top: 0.75rem;">
+                                <span class="skill-pill">Python</span>
+                                <span class="skill-pill">SharePoint</span>
+                                <span class="skill-pill">Pandas</span>
+                                <span class="skill-pill">PowerBI</span>
+                                <span class="skill-pill">SQL</span>
+                                <span class="skill-pill">API REST</span>
+                                <span class="skill-pill">CSV</span>
+                                <span class="skill-pill">app.powerbi (cloud)</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Centres d'intérêt -->
+                    <section>
+                        <h2 class="cv-section-title">Centres d'intérêt</h2>
+                        <div class="hero-tags" style="margin-bottom: 0;">
+                            <span class="tag">Cinéma</span>
+                            <span class="tag">Musique</span>
+                            <span class="tag">Jeux Vidéo</span>
+                            <span class="tag">Jeux de rôle</span>
+                            <span class="tag">Arts visuels</span>
+                            <span class="tag">Peinture numérique</span>
+                            <span class="tag">Dessin</span>
+                            <span class="tag">Infographie 2D/3D</span>
+                            <span class="tag">Motion design / Animation</span>
+                            <span class="tag">Échecs</span>
+                            <span class="tag">Escrime</span>
+                            <span class="tag">Médiéval fantastique</span>
+                            <span class="tag">Nouvelles technologies</span>
+                            <span class="tag">Programmation</span>
+                        </div>
+                    </section>
+
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-inner">
+                <p>© 2024 Clément Liska</p>
+                <div class="footer-links">
+                    <a href="https://github.com/Sleipnir-Ad-Sys" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <a href="index.html">Accueil</a>
+                    <a href="projets.html">Projets</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile nav
+        document.getElementById('navToggle').addEventListener('click', () => {
+            document.querySelector('.nav-links').classList.toggle('open');
+        });
+
+        // Skill bars animation
+        const barsObserver = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.querySelectorAll('.skill-bar-fill').forEach(bar => {
+                        bar.style.width = bar.dataset.width + '%';
+                    });
+                    barsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.4 });
+
+        const skillBars = document.getElementById('skillBars');
+        if (skillBars) barsObserver.observe(skillBars);
+
+        // Scroll fade-in
+        const observer = new IntersectionObserver(
+            entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+            { threshold: 0.1 }
+        );
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>

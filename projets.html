@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projets — Sleipnir</title>
+    <meta name="description" content="Projets de Sleipnir — Dessin, Webtoon, Data Analyse et Data Science.">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">Sleipnir</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="cv.html">CV</a></li>
+                <li><a href="projets.html" class="active">Projets</a></li>
+            </ul>
+            <div class="nav-toggle" id="navToggle" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-wrapper">
+        <div class="container">
+
+            <!-- Header -->
+            <div class="projects-hero">
+                <h1 class="section-title"><span class="gradient-text">Mes Projets</span></h1>
+                <p class="section-subtitle">Exploration à l'intersection de la data, du design et de la narration visuelle.</p>
+
+                <!-- Filtres -->
+                <div class="filter-tabs">
+                    <button class="filter-btn active" data-filter="all">Tous</button>
+                    <button class="filter-btn" data-filter="dessin">🎨 Dessin</button>
+                    <button class="filter-btn" data-filter="webtoon">📖 Webtoon</button>
+                    <button class="filter-btn" data-filter="data-analyse">📊 Data Analyse</button>
+                    <button class="filter-btn" data-filter="data-science">🤖 Data Science</button>
+                </div>
+            </div>
+
+            <!-- ==================== DESSIN ==================== -->
+            <section class="project-category fade-in" id="dessin" data-category="dessin">
+                <div class="category-header">
+                    <div class="category-icon dessin">🎨</div>
+                    <div>
+                        <h2>Dessin &amp; Illustration</h2>
+                        <p>Concept art, personnages, environments et explorations visuelles.</p>
+                    </div>
+                </div>
+                <div class="projects-grid">
+
+                    <article class="project-card">
+                        <div class="project-card-header dessin-gradient">🌿</div>
+                        <div class="project-card-body">
+                            <h3>Concept Art — Personnages</h3>
+                            <p>Design de personnages pour l'univers du webtoon : fiches de personnage, feuilles d'expressions, tenues et variations.</p>
+                            <div class="project-tags">
+                                <span class="project-tag">Procreate</span>
+                                <span class="project-tag">Character Design</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="project-card">
+                        <div class="project-card-header dessin-gradient">🏔️</div>
+                        <div class="project-card-body">
+                            <h3>Environment Design</h3>
+                            <p>Illustrations d'environnements et de décors pour poser l'atmosphère et la cohérence visuelle de l'univers narratif.</p>
+                            <div class="project-tags">
+                                <span class="project-tag">Illustration</span>
+                                <span class="project-tag">World Building</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="project-card card-wip">
+                        <div class="project-card-header dessin-gradient">✏️</div>
+                        <div class="project-card-body">
+                            <h3>Sketchbook 2024 — En cours</h3>
+                            <p>Recueil de sketches quotidiens. Pratique du croquis rapide, de l'observation et de l'anatomie.</p>
+                            <div class="project-tags">
+                                <span class="project-tag">WIP</span>
+                                <span class="project-tag">Sketch</span>
+                            </div>
+                        </div>
+                    </article>
+
+                </div>
+            </section>
+
+            <!-- ==================== WEBTOON ==================== -->
+            <section class="project-category fade-in" id="webtoon" data-category="webtoon">
+                <div class="category-header">
+                    <div class="category-icon webtoon">📖</div>
+                    <div>
+                        <h2>Webtoon</h2>
+                        <p>Univers narratif illustré et système d'objets collectors connectés.</p>
+                    </div>
+                </div>
+                <div class="projects-grid">
+
+                    <article class="project-card">
+                        <div class="project-card-header webtoon-gradient">🌑</div>
+                        <div class="project-card-body">
+                            <h3>Titre du Webtoon</h3>
+                            <p>Synopsis de ton webtoon — genre, atmosphère, protagonistes et enjeux. Donne envie de lire la suite avec une accroche forte.</p>
+                            <div class="project-tags">
+                                <span class="project-tag">Webtoon</span>
+                                <span class="project-tag">Clip Studio Paint</span>
+                                <span class="project-tag">Narration</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="project-card">
+                        <div class="project-card-header webtoon-gradient">📡</div>
+                        <div class="project-card-body">
+                            <h3>Collectors NFC — Phygital</h3>
+                            <p>Objets physiques collectors liés au webtoon, équipés de tags NFC renvoyant vers du contenu exclusif. L'IoT au service de la narration.</p>
+                            <div class="project-tags">
+                                <span class="project-tag">NFC</span>
+                                <span class="project-tag">IoT</span>
+                                <span class="project-tag">UX</span>
+                                <span class="project-tag">Phygital</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="project-card">
+                        <div class="project-card-header webtoon-gradient">🗺️</div>
+                        <div class="project-card-body">
+                            <h3>Lore &amp; World Building</h3>
+                            <p>Construction de l'univers : cartes, chronologie, factions, système de règles ou de technologie propres à l'histoire.</p>
+                            <div class="project-tags">
+                                <span class="project-tag">Worldbuilding</span>
+                                <span class="project-tag">Lore</span>
+                            </div>
+                        </div>
+                    </article>
+
+                </div>
+            </section>
+
+            <!-- ==================== DATA ANALYSE ==================== -->
+            <section class="project-category fade-in" id="data-analyse" data-category="data-analyse">
+                <div class="category-header">
+                    <div class="category-icon data-analyse">📊</div>
+                    <div>
+                        <h2>Data Analyse</h2>
+                        <p>Dashboards, visualisations et analyses exploratoires de données.</p>
+                    </div>
+                </div>
+                <div class="projects-grid">
+
+                    <article class="project-card">
+                        <div class="project-card-header analyse-gradient">📈</div>
+                        <div class="project-card-body">
+                            <h3>Dashboard — Logs Système</h3>
+                            <p>Analyse de logs d'infrastructure pour identifier des anomalies et visualiser les performances système avec des indicateurs clés.</p>
+                            <div class="project-tags">
+                                <span class="project-tag">Python</span>
+                                <span class="project-tag">Power BI</span>
+                                <span class="project-tag">Pandas</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="project-card">
+                        <div class="project-card-header analyse-gradient">🗂️</div>
+                        <div class="project-card-body">
+                            <h3>Analyse Exploratoire (EDA)</h3>
+                            <p>Exploration et nettoyage de datasets CSV / SQL. Mise en évidence de corrélations et production de rapports visuels clairs.</p>
+                            <div class="project-tags">
+                                <span class="project-tag">Jupyter</span>
+                                <span class="project-tag">Matplotlib</span>
+                                <span class="project-tag">SQL</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="project-card card-wip">
+                        <div class="project-card-header analyse-gradient">🔄</div>
+                        <div class="project-card-body">
+                            <h3>Pipeline ETL — En cours</h3>
+                            <p>Construction d'un pipeline de données automatisé pour la collecte, transformation et visualisation consolidée.</p>
+                            <div class="project-tags">
+                                <span class="project-tag">WIP</span>
+                                <span class="project-tag">ETL</span>
+                                <span class="project-tag">Python</span>
+                            </div>
+                        </div>
+                    </article>
+
+                </div>
+            </section>
+
+            <!-- ==================== DATA SCIENCE ==================== -->
+            <section class="project-category fade-in" id="data-science" data-category="data-science">
+                <div class="category-header">
+                    <div class="category-icon data-science">🤖</div>
+                    <div>
+                        <h2>Data Science</h2>
+                        <p>Machine learning, modèles prédictifs et expérimentations en IA.</p>
+                    </div>
+                </div>
+                <div class="projects-grid">
+
+                    <article class="project-card">
+                        <div class="project-card-header science-gradient">🎯</div>
+                        <div class="project-card-body">
+                            <h3>Modèle de classification</h3>
+                            <p>Entraînement et comparaison de modèles (Random Forest, XGBoost) sur un dataset public avec rapport de performances complet.</p>
+                            <div class="project-tags">
+                                <span class="project-tag">Scikit-learn</span>
+                                <span class="project-tag">XGBoost</span>
+                                <span class="project-tag">Python</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="project-card">
+                        <div class="project-card-header science-gradient">🧠</div>
+                        <div class="project-card-body">
+                            <h3>NLP — Analyse de sentiment</h3>
+                            <p>Classification de sentiments à partir de commentaires textuels. Exploration des outils NLP modernes et évaluation des résultats.</p>
+                            <div class="project-tags">
+                                <span class="project-tag">NLP</span>
+                                <span class="project-tag">NLTK</span>
+                                <span class="project-tag">spaCy</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="project-card card-wip">
+                        <div class="project-card-header science-gradient">🌐</div>
+                        <div class="project-card-body">
+                            <h3>CNN Illustrations — En cours</h3>
+                            <p>Exploration des réseaux de neurones convolutifs (CNN) appliqués à la reconnaissance et classification d'illustrations.</p>
+                            <div class="project-tags">
+                                <span class="project-tag">WIP</span>
+                                <span class="project-tag">TensorFlow</span>
+                                <span class="project-tag">CNN</span>
+                            </div>
+                        </div>
+                    </article>
+
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-inner">
+                <p>© 2024 Sleipnir</p>
+                <div class="footer-links">
+                    <a href="https://github.com/Sleipnir-Ad-Sys" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <a href="index.html">Accueil</a>
+                    <a href="cv.html">CV</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile nav
+        document.getElementById('navToggle').addEventListener('click', () => {
+            document.querySelector('.nav-links').classList.toggle('open');
+        });
+
+        // Filter tabs
+        const filterBtns  = document.querySelectorAll('.filter-btn');
+        const categories  = document.querySelectorAll('.project-category');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const filter = btn.dataset.filter;
+
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                categories.forEach(cat => {
+                    const show = filter === 'all' || cat.dataset.category === filter;
+                    cat.style.display = show ? 'block' : 'none';
+                    if (show) cat.style.animation = 'fadeInUp 0.4s ease both';
+                });
+            });
+        });
+
+        // Scroll fade-in
+        const observer = new IntersectionObserver(
+            entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+            { threshold: 0.08 }
+        );
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
