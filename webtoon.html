@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Fine Équipe — Webtoon — Sleipnir</title>
+    <meta name="description" content="La Fine Équipe — Webtoon Dark Fantasy. L'histoire d'Haffeiyin, esclave arrachée à son passé, qui découvre que la musique peut être une arme.">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ===== WEBTOON PAGE ===== */
+
+        /* Accents rose/mauve pour la thématique webtoon */
+        --wt-pink:   #f778ba;
+        --wt-purple: #bc8cff;
+        --wt-grad:   linear-gradient(135deg, #f778ba 0%, #bc8cff 60%, #58a6ff 100%);
+
+        /* ---- HERO ---- */
+        .wt-hero {
+            position: relative;
+            min-height: calc(100vh - var(--nav-height));
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            padding: 5rem 0 4rem;
+        }
+
+        /* grille décorative subtile */
+        .wt-hero::before {
+            content: '';
+            position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(247,120,186,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(247,120,186,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+        }
+
+        /* halo radial arrière-plan */
+        .wt-hero::after {
+            content: '';
+            position: absolute;
+            top: -200px; left: -200px;
+            width: 700px; height: 700px;
+            background: radial-gradient(circle, rgba(247,120,186,0.07) 0%, transparent 68%);
+            pointer-events: none;
+        }
+
+        .wt-hero-halo-right {
+            position: absolute;
+            bottom: -150px; right: -150px;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(188,140,255,0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .wt-hero-inner {
+            position: relative;
+            z-index: 1;
+            max-width: 780px;
+        }
+
+        .wt-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.83rem;
+            margin-bottom: 2.5rem;
+            transition: var(--transition);
+        }
+        .wt-back:hover { color: #f778ba; }
+
+        .wt-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #f778ba;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .wt-eyebrow::before,
+        .wt-eyebrow::after {
+            content: '';
+            display: block;
+            width: 28px; height: 1px;
+            background: #f778ba;
+            opacity: 0.5;
+        }
+
+        .wt-title {
+            font-size: clamp(2.8rem, 7vw, 5rem);
+            font-weight: 900;
+            letter-spacing: -2px;
+            line-height: 1.05;
+            margin-bottom: 0.6rem;
+            background: linear-gradient(135deg, #f778ba 0%, #bc8cff 55%, #e6edf3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .wt-subtitle {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-bottom: 2rem;
+            line-height: 1.7;
+            max-width: 580px;
+        }
+
+        .wt-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 2.5rem;
+        }
+        .wt-badge {
+            padding: 4px 14px;
+            border-radius: 999px;
+            font-size: 0.77rem;
+            font-weight: 600;
+            border: 1px solid;
+        }
+        .wt-badge.pink   { background: rgba(247,120,186,0.1); border-color: rgba(247,120,186,0.3); color: #f778ba; }
+        .wt-badge.purple { background: rgba(188,140,255,0.1); border-color: rgba(188,140,255,0.3); color: var(--accent-purple); }
+        .wt-badge.blue   { background: rgba(88,166,255,0.1);  border-color: rgba(88,166,255,0.3);  color: var(--accent-blue); }
+        .wt-badge.green  { background: rgba(63,185,80,0.1);   border-color: rgba(63,185,80,0.3);   color: var(--accent-green); }
+
+        .wt-cta-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .wt-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 0.7rem 1.6rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: default;
+        }
+        .wt-cta.primary {
+            background: linear-gradient(135deg, #f778ba, #bc8cff);
+            color: white;
+            box-shadow: 0 4px 20px rgba(247,120,186,0.3);
+        }
+        .wt-cta.primary:hover {
+            box-shadow: 0 8px 32px rgba(247,120,186,0.45);
+            transform: translateY(-2px);
+        }
+        .wt-cta.secondary {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+        .wt-cta.secondary:hover {
+            border-color: #f778ba;
+            color: #f778ba;
+            transform: translateY(-1px);
+        }
+        .wt-cta.webtoons {
+            background: var(--bg-secondary);
+            border: 1px solid rgba(247,120,186,0.35);
+            color: #f778ba;
+            cursor: pointer;
+        }
+        .wt-cta.webtoons:hover {
+            background: rgba(247,120,186,0.08);
+            border-color: #f778ba;
+            box-shadow: 0 4px 16px rgba(247,120,186,0.18);
+            transform: translateY(-1px);
+        }
+        .wip-hint {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* ---- SEPARATEUR ---- */
+        .wt-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(247,120,186,0.3), rgba(188,140,255,0.3), transparent);
+            margin: 0 0 4rem;
+        }
+
+        /* ---- SYNOPSIS ---- */
+        .wt-section {
+            margin-bottom: 5rem;
+        }
+        .wt-section-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            color: #f778ba;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+        .wt-section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(247,120,186,0.3), transparent);
+        }
+
+        .wt-synopsis-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-left: 3px solid #f778ba;
+            border-radius: var(--radius-md);
+            padding: 2rem 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .wt-synopsis-box::before {
+            content: '\201C';
+            position: absolute;
+            top: -0.5rem; left: 1rem;
+            font-size: 8rem;
+            line-height: 1;
+            color: rgba(247,120,186,0.07);
+            font-family: Georgia, serif;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .wt-synopsis-text {
+            font-size: 1rem;
+            line-height: 1.9;
+            color: var(--text-secondary);
+            position: relative;
+            z-index: 1;
+        }
+        .wt-synopsis-text p { margin-bottom: 1.1rem; }
+        .wt-synopsis-text p:last-child { margin-bottom: 0; }
+        .wt-synopsis-text em {
+            color: var(--text-primary);
+            font-style: normal;
+            font-weight: 600;
+        }
+        .wt-synopsis-text .accent { color: #f778ba; font-weight: 600; font-style: italic; }
+
+        .wt-closing-verse {
+            margin-top: 1.5rem;
+            padding: 1rem 1.5rem;
+            background: rgba(247,120,186,0.05);
+            border: 1px solid rgba(247,120,186,0.15);
+            border-radius: var(--radius-sm);
+            font-size: 0.92rem;
+            color: var(--text-primary);
+            font-style: italic;
+            line-height: 1.8;
+            text-align: center;
+        }
+
+        /* ---- PERSONNAGES ---- */
+        .wt-chars-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+        }
+        .wt-char-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        .wt-char-card:hover {
+            border-color: rgba(247,120,186,0.35);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 36px rgba(247,120,186,0.1);
+        }
+        .wt-char-header {
+            height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.8rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .wt-char-header.haffeiyin { background: linear-gradient(135deg, rgba(247,120,186,0.18), rgba(188,140,255,0.1)); }
+        .wt-char-header.rowan     { background: linear-gradient(135deg, rgba(88,166,255,0.14), rgba(63,185,80,0.08)); }
+        .wt-char-header.selyara   { background: linear-gradient(135deg, rgba(255,123,114,0.14), rgba(247,120,186,0.1)); }
+        .wt-char-body { padding: 1.25rem; }
+        .wt-char-name {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 3px;
+        }
+        .wt-char-role {
+            font-size: 0.73rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #f778ba;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+        .wt-char-desc {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            line-height: 1.65;
+            margin-bottom: 1rem;
+        }
+        .wt-char-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .wt-char-tag {
+            font-size: 0.67rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+        }
+
+        /* ---- ENJEUX ---- */
+        .wt-enjeux-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .wt-enjeu {
+            display: flex;
+            gap: 1.25rem;
+            align-items: flex-start;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1.25rem 1.5rem;
+            transition: var(--transition);
+        }
+        .wt-enjeu:hover {
+            border-color: rgba(247,120,186,0.3);
+            background: linear-gradient(90deg, rgba(247,120,186,0.03), var(--bg-secondary));
+        }
+        .wt-enjeu-icon {
+            font-size: 1.6rem;
+            flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .wt-enjeu-body {}
+        .wt-enjeu-title {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .wt-enjeu-desc {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* ---- AMBIANCE ---- */
+        .wt-mood-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        .wt-mood-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .wt-mood-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+        }
+        .wt-mood-card.dark::before    { background: linear-gradient(90deg, #f778ba, #bc8cff); }
+        .wt-mood-card.music::before   { background: linear-gradient(90deg, #bc8cff, #58a6ff); }
+        .wt-mood-card.journey::before { background: linear-gradient(90deg, #58a6ff, #3fb950); }
+        .wt-mood-card.resilience::before { background: linear-gradient(90deg, #3fb950, #f778ba); }
+        .wt-mood-icon { font-size: 1.8rem; margin-bottom: 0.6rem; }
+        .wt-mood-title {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        .wt-mood-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.65;
+        }
+
+        /* ---- RESPONSIVE ---- */
+        @media (max-width: 768px) {
+            .wt-chars-grid  { grid-template-columns: 1fr; }
+            .wt-mood-grid   { grid-template-columns: 1fr; }
+            .wt-synopsis-box { padding: 1.25rem 1.5rem; }
+            .wt-title { letter-spacing: -1px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">Sleipnir</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="cv.html">CV</a></li>
+                <li><a href="projets.html" class="active">Projets</a></li>
+            </ul>
+            <div class="nav-toggle" id="navToggle" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-wrapper">
+        <div class="container">
+
+            <!-- ===== HERO ===== -->
+            <section class="wt-hero">
+                <div class="wt-hero-halo-right"></div>
+                <div class="wt-hero-inner">
+
+                    <a href="projets.html" class="wt-back">← Retour aux projets</a>
+
+                    <div class="wt-eyebrow">Webtoon · Dark Fantasy</div>
+
+                    <h1 class="wt-title">La Fine Équipe</h1>
+
+                    <p class="wt-subtitle">
+                        Dans un monde où les chaînes ont plus de valeur que les vies,<br>
+                        une erreur peut tout briser — ou tout changer.
+                    </p>
+
+                    <div class="wt-badges">
+                        <span class="wt-badge pink">🌑 Dark Fantasy</span>
+                        <span class="wt-badge purple">🎭 Drame</span>
+                        <span class="wt-badge blue">⚔️ Aventure</span>
+                        <span class="wt-badge green">🎵 Magie Musicale</span>
+                        <span class="wt-badge pink">💫 Reconstruction</span>
+                    </div>
+
+                    <div class="wt-cta-row">
+                        <a class="wt-cta primary" href="#synopsis">📖 Lire le synopsis</a>
+                        <a class="wt-cta secondary" href="#personnages">Les personnages</a>
+                        <a class="wt-cta webtoons" href="https://www.webtoons.com/fr/canvas/la-fine-%C3%A9quipe/list?title_no=969909" target="_blank" rel="noopener noreferrer">Lire sur Webtoons ↗</a>
+                    </div>
+                    <div style="margin-top:0.75rem;">
+                        <span class="wip-hint">✏️ En cours de création</span>
+                    </div>
+
+                </div>
+            </section>
+
+            <div class="wt-divider"></div>
+
+            <!-- ===== SYNOPSIS ===== -->
+            <section class="wt-section" id="synopsis">
+                <div class="wt-section-label">Synopsis</div>
+                <div class="wt-synopsis-box">
+                    <div class="wt-synopsis-text">
+                        <p>
+                            <em>Haffeiyin</em> n'était qu'un nom de plus sur un registre d'esclaves.
+                            Arrachée à son enfance, marquée par la violence et l'humiliation, elle a survécu dans l'enfer
+                            des mines de <em>Gorlag</em> sous le sifflement du fouet… jusqu'à ce qu'<span class="accent">une erreur ne change son destin</span>.
+                            Vendue, brisée, elle était vouée à disparaître dans l'oubli.
+                        </p>
+                        <p>
+                            Mais son voyage ne faisait que commencer.
+                        </p>
+                        <p>
+                            Recueillie par <em>Rowan</em>, un homme au charisme mystérieux et au passé voilé d'ombres,
+                            et <em>Selyara</em>, une bardesse au tempérament d'acier, Haffeiyin intègre une caravane pas comme
+                            les autres : <span class="accent">La Fine Équipe</span>Loin d'être un simple spectacle, 
+                            ce cirque itinérant est un havre pour ceux que le monde a rejetés, 
+                            un lieu où les prouesses et la musique servent de bouclier à une famille de cœur.
+                        </p>
+                        <p>
+                            Entre l'apprentissage de la magie bardique et les cicatrices qui peinent à refermer,
+                            Haffeiyin devra apprendre que <span class="accent">la musique n'est pas une punition, mais une arme</span>.
+                            Sous le chapiteau, elle devra transformer ses cris en harmonies et découvrir que,
+                            si une erreur peut tout briser…
+                        </p>
+                    </div>
+                    <div class="wt-closing-verse">
+                        « Il suffit parfois d'une note juste pour tout changer. »
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== PERSONNAGES ===== -->
+            <section class="wt-section" id="personnages">
+                <div class="wt-section-label">Personnages principaux</div>
+                <div class="wt-chars-grid">
+
+                    <div class="wt-char-card">
+                        <div class="wt-char-header haffeiyin">🎵</div>
+                        <div class="wt-char-body">
+                            <div class="wt-char-name">Haffeiyin</div>
+                            <div class="wt-char-role">Protagoniste · Apprentie Barde</div>
+                            <p class="wt-char-desc">
+                                Ancienne esclave des mines de Gorlag, marquée par les cicatrices de sa captivité.
+                                Silencieuse et méfiante, elle apprend à transformer sa douleur en musique pour se reconstruire.
+                            </p>
+                            <div class="wt-char-tags">
+                                <span class="wt-char-tag">Résilience</span>
+                                <span class="wt-char-tag">Magie Bardique</span>
+                                <span class="wt-char-tag">Trauma</span>
+                                <span class="wt-char-tag">Reconstruction</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="wt-char-card">
+                        <div class="wt-char-header rowan">🛡️</div>
+                        <div class="wt-char-body">
+                            <div class="wt-char-name">Rowan</div>
+                            <div class="wt-char-role">Leader · Passé mystérieux</div>
+                            <p class="wt-char-desc">
+                                Doté d'un charisme mystérieux, il dirige "La Fine Équipe" d'une main de maître. 
+                                Il a recueilli Haffeiyin pour des raisons qui lui appartiennent, protégeant son cirque comme un refuge.
+                            </p>
+                            <div class="wt-char-tags">
+                                <span class="wt-char-tag">Mystère</span>
+                                <span class="wt-char-tag">Protection</span>
+                                <span class="wt-char-tag">Leadership</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="wt-char-card">
+                        <div class="wt-char-header selyara">🎶</div>
+                        <div class="wt-char-body">
+                            <div class="wt-char-name">Selyara</div>
+                            <div class="wt-char-role">Bardesse · Mentor</div>
+                            <p class="wt-char-desc">
+                                Tempérament d'acier et talent indéniable. Elle transmet à Haffeiyin les secrets du Collège Bardique, 
+                                ne lui faisant aucun cadeau, car elle sait que la scène, comme la vie, ne pardonne pas la faiblesse.
+                            </p>
+                            <div class="wt-char-tags">
+                                <span class="wt-char-tag">Bardesse</span>
+                                <span class="wt-char-tag">Mentor</span>
+                                <span class="wt-char-tag">Exigence</span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="wt-char-card">
+                        <div class="wt-char-header gorlag">⛓️</div>
+                            <div class="wt-char-body">
+                                <div class="wt-char-name">Gorlag</div>
+                                <div class="wt-char-role">Antagoniste · Oppresseur</div>
+                                <p class="wt-char-desc">
+                                    L'incarnation du passé dont Haffeiyin tente de s'extraire. Cruel et impitoyable, 
+                                    il règne sur les mines et représente tout ce que la jeune barde tente de fuir et de briser.
+                                </p>
+                                <div class="wt-char-tags">
+                                    <span class="wt-char-tag">Cruauté</span>
+                                    <span class="wt-char-tag">Oppresseur</span>
+                                    <span class="wt-char-tag">Passé</span>
+                                </div>
+                            </div>
+                    </div>
+
+                    <div class="wt-char-card">
+                        <div class="wt-char-header avenya">🌟</div>
+                        <div class="wt-char-body">
+                            <div class="wt-char-name">Avenya</div>
+                            <div class="wt-char-role">Soeur de cellule</div>
+                            <p class="wt-char-desc">
+                                Compagne d'infortune dans les mines de Gorlag. Elles ont tenté de s'évader ensemble, 
+                                mais Avenya serait morte durant leur fuite. 
+                                Son souvenir est la cicatrice la plus profonde de Haffeiyin.
+                            </p>
+                            <div class="wt-char-tags">
+                                <span class="wt-char-tag">Mystère</span>
+                                <span class="wt-char-tag">Passé</span>
+                                <span class="wt-char-tag">Lien fraternel</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ===== ENJEUX ===== -->
+            <section class="wt-section" id="enjeux">
+                <div class="wt-section-label">Les Enjeux</div>
+                <div class="wt-enjeux-list">
+
+                    <div class="wt-enjeu">
+                        <div class="wt-enjeu-icon">🎓</div>
+                        <div class="wt-enjeu-body">
+                            <div class="wt-enjeu-title">L'apprentissage du Collège</div>
+                            <p class="wt-enjeu-desc">Maîtriser une magie qui puise sa source dans l'émotion brute. Chaque note est une bataille intérieure pour Haffeiyin : apprendre à transformer ses cicatrices en harmonie sans se laisser submerger par ses traumatismes.</p>
+                        </div>
+                    </div>
+
+                    <div class="wt-enjeu">
+                        <div class="wt-enjeu-icon">🤝</div>
+                        <div class="wt-enjeu-body">
+                            <div class="wt-enjeu-title">La Fine Équipe</div>
+                            <p class="wt-enjeu-desc">Bien plus qu'un simple cirque, cette troupe est un refuge pour parias. Haffeiyin doit percer les secrets de Rowan et comprendre ce qui unit ce groupe marginal, capable de lui offrir une famille là où le monde ne voyait qu'une esclave.</p>
+                        </div>
+                    </div>
+
+                    <div class="wt-enjeu">
+                        <div class="wt-enjeu-icon">👁️</div>
+                        <div class="wt-enjeu-body">
+                            <div class="wt-enjeu-title">Les Fantômes du Passé</div>
+                            <p class="wt-enjeu-desc">L'ombre de Gorlag ne se limite pas aux mines; elle hante chaque étape de la caravane. Haffeiyin doit apprendre à vivre sans le regard de son bourreau pour enfin s'approprier son propre destin.</p>
+                        </div>
+                    </div>
+
+                    <div class="wt-enjeu">
+                        <div class="wt-enjeu-icon">🔍</div>
+                        <div class="wt-enjeu-body">
+                            <div class="wt-enjeu-title">Le mystère d'Avenya</div>
+                            <p class="wt-enjeu-desc">Sa sœur de cellule, celle avec qui elle a partagé l'enfer et qui serait morte lors de leur fuite. Haffeiyin cherche la vérité : le passé est-il vraiment enterré, ou Avenya a-t-elle survécu dans l'ombre ?</p>
+                        </div>
+                    </div>
+
+                    <div class="wt-enjeu">
+                        <div class="wt-enjeu-icon">⛓️</div>
+                        <div class="wt-enjeu-body">
+                            <div class="wt-enjeu-title">Briser les chaînes</div>
+                            <p class="wt-enjeu-desc">La liberté physique n'était qu'un début. Le vrai combat d'Haffeiyin se joue à l'intérieur : s'affranchir de la culpabilité et de la peur pour devenir, enfin, sa propre maîtresse.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ===== AMBIANCE ===== -->
+            <section class="wt-section" id="ambiance">
+                <div class="wt-section-label">Genre &amp; Ambiance</div>
+                <div class="wt-mood-grid">
+
+                    <div class="wt-mood-card dark">
+                        <div class="wt-mood-icon">🌑</div>
+                        <div class="wt-mood-title">Dark Fantasy</div>
+                        <p class="wt-mood-desc">Un monde médiéval-fantastique sans concession. La violence existe, les cicatrices durent, les systèmes d'oppression sont réels — mais la lumière perce.</p>
+                    </div>
+
+                    <div class="wt-mood-card music">
+                        <div class="wt-mood-icon">🎵</div>
+                        <div class="wt-mood-title">Magie Musicale</div>
+                        <p class="wt-mood-desc">La musique comme arme, bouclier et langage universel. Les émotions prennent une forme tangible — jouer faux, c'est risquer sa vie.</p>
+                    </div>
+
+                    <div class="wt-mood-card journey">
+                        <div class="wt-mood-icon">🛤️</div>
+                        <div class="wt-mood-title">Road Fantasy</div>
+                        <p class="wt-mood-desc">Routes poussiéreuses, feux de camp, rencontres imprévues. Un récit de voyage où chaque étape révèle un peu plus sur les personnages et l'univers.</p>
+                    </div>
+
+                    <div class="wt-mood-card resilience">
+                        <div class="wt-mood-icon">💫</div>
+                        <div class="wt-mood-title">Résilience &amp; Reconstruction</div>
+                        <p class="wt-mood-desc">Au cœur du récit : apprendre à faire confiance, à se reconstruire après le pire. Un récit sur la guérison, porté par une galerie de parias qui apprennent à former une famille.</p>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-inner">
+                <p>© 2026 Sleipnir</p>
+                <div class="footer-links">
+                    <a href="https://github.com/Sleipnir-Ad-Sys" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <a href="index.html">Accueil</a>
+                    <a href="projets.html">Projets</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('navToggle').addEventListener('click', () => {
+            document.querySelector('.nav-links').classList.toggle('open');
+        });
+
+        // Scroll fade-in
+        const observer = new IntersectionObserver(
+            entries => entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.style.animation = 'fadeInUp 0.5s ease both';
+                    e.target.style.opacity = '1';
+                }
+            }),
+            { threshold: 0.08 }
+        );
+        document.querySelectorAll('.wt-section').forEach(el => {
+            el.style.opacity = '0';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

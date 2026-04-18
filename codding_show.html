@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyse Exploratoire (EDA) — Sleipnir</title>
+    <meta name="description" content="Démo interactive d'une analyse exploratoire de données (EDA) avec Python & Pandas.">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ===== EDA DEMO PAGE ===== */
+
+        .eda-hero {
+            padding: 3.5rem 0 2rem;
+            text-align: center;
+        }
+
+        .eda-meta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .eda-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(88,166,255,0.08);
+            border: 1px solid rgba(88,166,255,0.22);
+            color: var(--accent-blue);
+            padding: 3px 11px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Progress bar */
+        .step-counter {
+            text-align: right;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 5px;
+        }
+        .step-counter strong { color: var(--accent-blue); }
+
+        .progress-track {
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+            height: 4px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-main);
+            border-radius: 3px;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Main layout */
+        .eda-layout-wrap {
+            width: 100vw;
+            position: relative;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
+            padding: 0 2rem;
+            box-sizing: border-box;
+            margin-bottom: 1.5rem;
+        }
+        .eda-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.25rem;
+            height: 420px;
+        }
+
+        /* === CODE SIDE === */
+        .code-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .code-panel-header {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 0.65rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-tertiary);
+        }
+
+        .traffic-light { width: 10px; height: 10px; border-radius: 50%; }
+        .tl-red    { background: #ff5f57; }
+        .tl-yellow { background: #ffbd2e; }
+        .tl-green  { background: #28c840; }
+
+        .code-panel-title {
+            font-size: 0.77rem;
+            color: var(--text-muted);
+            font-family: 'Courier New', monospace;
+            margin-left: 4px;
+        }
+
+        .code-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.25rem 1.25rem 1.25rem 2rem;
+        }
+
+        .code-block {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.83rem;
+            line-height: 1.85;
+        }
+
+        .code-line {
+            display: block;
+            padding: 1px 8px;
+            border-left: 3px solid transparent;
+            border-radius: 3px;
+            transition: all 0.25s ease;
+            color: var(--text-muted);
+            white-space: pre;
+        }
+        .code-line.done    { color: var(--text-secondary); opacity: 0.55; }
+        .code-line.active  {
+            background: rgba(88,166,255,0.1);
+            color: var(--text-primary);
+            border-left-color: var(--accent-blue);
+        }
+        .code-line.pending { opacity: 0.2; }
+        .code-line.blank   { min-height: 1.5em; }
+
+        /* Syntax tokens */
+        .kw  { color: #ff7b72; }
+        .fn  { color: #d2a8ff; }
+        .str { color: #a5d6ff; }
+        .num { color: #79c0ff; }
+        .cm  { color: #6e7681; font-style: italic; }
+        .var { color: #ffa657; }
+        .op  { color: #e6edf3; }
+        .at  { color: #3fb950; }
+
+        /* === PREVIEW SIDE === */
+        .preview-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.65rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-tertiary);
+        }
+
+        .preview-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .step-name-badge {
+            font-size: 0.72rem;
+            font-family: 'Courier New', monospace;
+            padding: 2px 9px;
+            border-radius: 4px;
+            background: rgba(63,185,80,0.12);
+            color: var(--accent-green);
+            border: 1px solid rgba(63,185,80,0.25);
+        }
+
+        .preview-content {
+            flex: 1;
+            padding: 1.25rem;
+            overflow-y: auto;
+        }
+
+        .preview-step {
+            display: none;
+            flex-direction: column;
+            gap: 0.75rem;
+            animation: fadeInUp 0.3s ease both;
+        }
+        .preview-step.active { display: flex; }
+
+        .out-label {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 2px;
+        }
+
+        /* Terminal block */
+        .term {
+            background: #0d1117;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 0.85rem 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.77rem;
+            line-height: 1.9;
+            color: var(--accent-green);
+        }
+        .term .td  { color: var(--text-muted); }
+        .term .tb  { color: var(--accent-blue); }
+        .term .ty  { color: #ffa657; }
+        .term .tr  { color: #ff7b72; }
+        .term .tw  { color: var(--text-primary); }
+
+        /* Dataframe table */
+        .df-wrap { overflow-x: auto; border: 1px solid var(--border-color); border-radius: var(--radius-sm); }
+        .df-tbl {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Courier New', monospace;
+            font-size: 0.72rem;
+        }
+        .df-tbl th {
+            background: var(--bg-tertiary);
+            color: var(--accent-blue);
+            padding: 5px 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+        .df-tbl th:first-child { color: var(--text-muted); }
+        .df-tbl td {
+            padding: 4px 10px;
+            border-bottom: 1px solid rgba(48,54,61,0.45);
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+        .df-tbl tr:last-child td { border-bottom: none; }
+        .df-tbl tr:hover td { background: rgba(88,166,255,0.04); }
+        .df-tbl td:first-child { color: var(--text-muted); }
+
+        /* Stats boxes */
+        .sbox-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.65rem; }
+        .sbox {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 0.7rem;
+            text-align: center;
+        }
+        .sbox-val {
+            font-size: 1.35rem;
+            font-weight: 700;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+        }
+        .sbox-lbl { font-size: 0.68rem; color: var(--text-muted); margin-top: 2px; }
+
+        /* Null bars */
+        .null-list { display: flex; flex-direction: column; gap: 7px; }
+        .null-row { display: flex; align-items: center; gap: 8px; font-size: 0.77rem; font-family: 'Courier New', monospace; }
+        .null-col  { width: 90px; color: var(--accent-blue); flex-shrink: 0; }
+        .null-track { flex: 1; height: 12px; background: var(--bg-tertiary); border-radius: 3px; overflow: hidden; }
+        .null-bar { height: 100%; border-radius: 3px; }
+        .null-bar.ok  { background: var(--accent-green); width: 100% !important; }
+        .null-bar.bad { background: #ff7b72; }
+        .null-n.ok  { color: var(--accent-green); width: 22px; text-align: right; }
+        .null-n.bad { color: #ff7b72; width: 22px; text-align: right; }
+
+        /* Diff rows */
+        .diff-box {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 0.85rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+        .diff-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; padding: 3px 0; border-bottom: 1px solid rgba(48,54,61,0.4); }
+        .diff-row:last-child { border-bottom: none; }
+        .diff-lbl { color: var(--text-secondary); }
+        .diff-old { color: var(--text-muted); text-decoration: line-through; font-family: 'Courier New', monospace; }
+        .diff-arr { color: var(--text-muted); margin: 0 4px; }
+        .diff-new { color: var(--accent-green); font-weight: 600; font-family: 'Courier New', monospace; }
+
+        /* Bar chart */
+        .bar-chart { display: flex; flex-direction: column; gap: 8px; }
+        .bar-row   { display: grid; grid-template-columns: 95px 1fr 38px; align-items: center; gap: 8px; }
+        .bar-lbl   { font-size: 0.73rem; color: var(--text-secondary); text-align: right; font-family: 'Courier New', monospace; }
+        .bar-track { height: 16px; background: var(--bg-tertiary); border-radius: 3px; overflow: hidden; }
+        .bar-fill  { height: 100%; border-radius: 3px; background: linear-gradient(90deg,#58a6ff,#bc8cff); width: 0; transition: width 0.75s cubic-bezier(0.4,0,0.2,1); }
+        .bar-n     { font-size: 0.7rem; color: var(--text-muted); font-family: 'Courier New', monospace; }
+
+        /* Line chart */
+        .chart-box {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 0.85rem;
+        }
+        .lc-svg .axis { stroke: var(--border-color); stroke-width: 1; }
+        .lc-svg .grid  { stroke: var(--border-color); stroke-width: 1; stroke-dasharray: 3,3; }
+        .lc-svg text   { fill: var(--text-muted); font-size: 9px; font-family: 'Courier New', monospace; }
+        .lc-svg .area  { fill: url(#areaGrad); stroke: none; }
+        .lc-svg .line  { fill: none; stroke: url(#lineGrad); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+        .lc-svg .dot   { stroke-width: 1.5; }
+
+        /* Export */
+        .export-box { text-align: center; padding: 1.5rem 1rem; }
+        .export-box .ex-icon { font-size: 2.8rem; margin-bottom: 0.65rem; }
+        .export-box h3 { color: var(--accent-green); margin-bottom: 0.4rem; }
+        .export-box p  { color: var(--text-secondary); font-size: 0.82rem; margin-bottom: 0.9rem; }
+
+        /* Alert boxes */
+        .alert-warn {
+            padding: 0.55rem 0.8rem;
+            background: rgba(255,123,114,0.08);
+            border: 1px solid rgba(255,123,114,0.2);
+            border-radius: 6px;
+            font-size: 0.77rem;
+            color: #ff7b72;
+        }
+        .alert-ok {
+            padding: 0.55rem 0.8rem;
+            background: rgba(63,185,80,0.08);
+            border: 1px solid rgba(63,185,80,0.2);
+            border-radius: 6px;
+            font-size: 0.77rem;
+            color: var(--accent-green);
+        }
+
+        /* === EXPLAIN SIDE === */
+        .explain-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .explain-panel-header {
+            padding: 0.65rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-tertiary);
+            font-size: 0.77rem;
+            color: var(--text-muted);
+            font-family: 'Courier New', monospace;
+        }
+        .explain-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+        }
+        .explain-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 0.65rem 0.8rem;
+        }
+        .explain-fn {
+            font-family: 'Courier New', monospace;
+            font-size: 0.78rem;
+            color: var(--accent-purple);
+            font-weight: 600;
+            margin-bottom: 4px;
+            display: block;
+        }
+        .explain-txt {
+            font-size: 0.76rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0;
+        }
+        .explain-txt code, .explain-tip code {
+            font-family: 'Courier New', monospace;
+            color: var(--accent-blue);
+            font-size: 0.9em;
+        }
+        .explain-tip {
+            display: flex;
+            align-items: flex-start;
+            gap: 7px;
+            background: rgba(88,166,255,0.05);
+            border: 1px solid rgba(88,166,255,0.14);
+            border-radius: var(--radius-sm);
+            padding: 0.55rem 0.75rem;
+            font-size: 0.74rem;
+            color: var(--text-secondary);
+            line-height: 1.55;
+        }
+        .explain-icon { font-size: 0.85rem; flex-shrink: 0; margin-top: 1px; }
+
+        /* === CONTROLS === */
+        .eda-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.85rem;
+            margin-bottom: 3.5rem;
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.6rem 1.3rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 0.88rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .nav-btn:hover:not(:disabled) { border-color: var(--accent-blue); color: var(--accent-blue); transform: translateY(-1px); }
+        .nav-btn:disabled { opacity: 0.28; cursor: not-allowed; }
+        .nav-btn-primary {
+            background: var(--gradient-main);
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 4px 14px rgba(88,166,255,0.22);
+        }
+        .nav-btn-primary:hover:not(:disabled) { color: white; border-color: transparent; box-shadow: 0 6px 22px rgba(88,166,255,0.38); transform: translateY(-2px); }
+
+        .step-dots { display: flex; gap: 6px; }
+        .step-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .step-dot.done   { background: rgba(88,166,255,0.35); border-color: var(--accent-blue); }
+        .step-dot.active { background: var(--accent-blue); border-color: var(--accent-blue); transform: scale(1.35); }
+
+        .kbd-hint { text-align: center; color: var(--text-muted); font-size: 0.73rem; margin-top: 0.4rem; }
+        .kbd { background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 4px; padding: 1px 6px; font-family: 'Courier New', monospace; font-size: 0.7rem; }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.83rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            transition: var(--transition);
+        }
+        .back-link:hover { color: var(--accent-blue); }
+
+        /* Autoplay button */
+        .nav-btn-autoplay.playing {
+            background: rgba(63,185,80,0.1);
+            border-color: rgba(63,185,80,0.35);
+            color: var(--accent-green);
+        }
+        .nav-btn-autoplay.playing:hover:not(:disabled) {
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        /* Countdown ring */
+        .countdown-ring {
+            opacity: 0;
+            transition: opacity 0.25s;
+            flex-shrink: 0;
+        }
+        .countdown-ring.playing { opacity: 1; }
+        .countdown-ring .ring-track { stroke: var(--border-color); }
+        .countdown-ring .ring-fill {
+            stroke: var(--accent-green);
+            stroke-dasharray: 69.12;
+            stroke-dashoffset: 69.12;
+            stroke-linecap: round;
+            transition: none;
+        }
+        .countdown-ring.playing .ring-fill {
+            animation: ringCountdown 5s linear forwards;
+        }
+        @keyframes ringCountdown {
+            from { stroke-dashoffset: 0; }
+            to   { stroke-dashoffset: 69.12; }
+        }
+
+        @media (max-width: 768px) {
+            .eda-layout-wrap { padding: 0 1rem; }
+            .eda-layout { grid-template-columns: 1fr; height: auto; min-height: 0; }
+            .code-panel  { min-height: 260px; }
+            .step-dots   { display: none; }
+            .sbox-grid   { grid-template-columns: repeat(2,1fr); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">Sleipnir</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="cv.html">CV</a></li>
+                <li><a href="projets.html" class="active">Projets</a></li>
+            </ul>
+            <div class="nav-toggle" id="navToggle" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-wrapper">
+        <div class="container">
+
+            <a href="projets.html" class="back-link">← Retour aux projets</a>
+
+            <!-- Hero -->
+            <div class="eda-hero">
+                <h1 class="section-title"><span class="gradient-text">Analyse Exploratoire (EDA)</span></h1>
+                <p class="section-subtitle">Parcours interactif — de la donnée brute au dataset nettoyé et analysé.</p>
+                <div class="eda-meta">
+                    <span class="eda-badge">🐍 Python</span>
+                    <span class="eda-badge">🐼 Pandas</span>
+                    <span class="eda-badge">📊 Matplotlib</span>
+                    <span class="eda-badge">📁 ventes_2024.csv</span>
+                </div>
+            </div>
+
+            <!-- Progress -->
+            <div class="step-counter"><strong id="stepNum">1</strong>&thinsp;/&thinsp;<span id="stepTotal">9</span> étapes — <span id="stepTitle" style="color:var(--text-secondary)"></span></div>
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <!-- Main layout -->
+            <div class="eda-layout-wrap">
+            <div class="eda-layout">
+
+                <!-- Code side -->
+                <div class="code-panel">
+                    <div class="code-panel-header">
+                        <div class="traffic-light tl-red"></div>
+                        <div class="traffic-light tl-yellow"></div>
+                        <div class="traffic-light tl-green"></div>
+                        <span class="code-panel-title">eda_ventes.py</span>
+                    </div>
+                    <div class="code-scroll">
+                        <div class="code-block" id="codeBlock"></div>
+                    </div>
+                </div>
+
+                <!-- Explain side -->
+                <div class="explain-panel">
+                    <div class="explain-panel-header">📖&nbsp; Explication</div>
+                    <div class="explain-scroll" id="explainContent"></div>
+                </div>
+
+                <!-- Preview side -->
+                <div class="preview-panel">
+                    <div class="preview-panel-header">
+                        <span class="preview-label">Output</span>
+                        <span class="step-name-badge" id="stepBadge"></span>
+                    </div>
+                    <div class="preview-content" id="previewContent"></div>
+                </div>
+
+            </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="eda-controls">
+                <button class="nav-btn" id="btnPrev" disabled>← Précédent</button>
+                <div class="step-dots" id="stepDots"></div>
+                <svg id="countdownRing" class="countdown-ring" viewBox="0 0 30 30" width="30" height="30" aria-hidden="true">
+                    <circle class="ring-track" cx="15" cy="15" r="11" fill="none" stroke-width="2.5"/>
+                    <circle class="ring-fill"  cx="15" cy="15" r="11" fill="none" stroke-width="2.5" transform="rotate(-90 15 15)"/>
+                </svg>
+                <button class="nav-btn nav-btn-autoplay" id="btnAutoplay">▶ Auto</button>
+                <button class="nav-btn nav-btn-primary" id="btnNext">Suivant →</button>
+            </div>
+            <p class="kbd-hint">Navigation au clavier : <kbd class="kbd">←</kbd> <kbd class="kbd">→</kbd> &nbsp;·&nbsp; <kbd class="kbd">Espace</kbd> lecture auto</p>
+
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-inner">
+                <p>© 2026 Sleipnir</p>
+                <div class="footer-links">
+                    <a href="https://github.com/Sleipnir-Ad-Sys" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <a href="index.html">Accueil</a>
+                    <a href="projets.html">Projets</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    // ================================================================
+    //  STEPS DATA
+    // ================================================================
+    const STEPS = [
+        {
+            title: "Imports",
+            badge: "✓ env chargé",
+            lines: [
+                { t: "code", c: `<span class="kw">import</span> pandas <span class="kw">as</span> <span class="var">pd</span>` },
+                { t: "code", c: `<span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> <span class="var">plt</span>` },
+                { t: "code", c: `<span class="kw">import</span> seaborn <span class="kw">as</span> <span class="var">sns</span>` },
+            ],
+            html: `
+                <div class="out-label">Environnement</div>
+                <div class="term">
+<span class="td">$</span> <span class="tb">python</span> eda_ventes.py<br>
+<span class="tw">Bibliothèques chargées :</span><br>
+  pandas      <span class="ty">2.2.1</span><br>
+  matplotlib  <span class="ty">3.8.3</span><br>
+  seaborn     <span class="ty">0.13.2</span><br>
+<span class="td">────────────────────────</span><br>
+<span class="tw">Prêt.</span> En attente des données…
+                </div>
+            `
+        },
+        {
+            title: "Chargement",
+            badge: "✓ df chargé",
+            lines: [
+                { t: "blank" },
+                { t: "code", c: `<span class="cm"># Chargement du dataset</span>` },
+                { t: "code", c: `<span class="var">df</span> <span class="op">=</span> pd.<span class="fn">read_csv</span>(<span class="str">"ventes_2024.csv"</span>)` },
+                { t: "code", c: `<span class="fn">print</span>(<span class="var">df</span>.<span class="fn">head</span>(<span class="num">5</span>))` },
+            ],
+            html: `
+                <div class="out-label">df.head(5)</div>
+                <div class="df-wrap">
+                    <table class="df-tbl">
+                        <thead><tr><th></th><th>date</th><th>categorie</th><th>produit</th><th>montant</th><th>qte</th><th>region</th></tr></thead>
+                        <tbody>
+                            <tr><td>0</td><td>2024-01-03</td><td>Électronique</td><td>Laptop Pro</td><td>1249.99</td><td>1</td><td>Paris</td></tr>
+                            <tr><td>1</td><td>2024-01-04</td><td>Vêtements</td><td>Veste Hiver</td><td>89.50</td><td>2</td><td>Lyon</td></tr>
+                            <tr><td>2</td><td>2024-01-05</td><td>Électronique</td><td>Écouteurs BT</td><td>149.00</td><td>1</td><td>Paris</td></tr>
+                            <tr><td>3</td><td>2024-01-06</td><td>Alimentation</td><td>Panier Bio</td><td>42.30</td><td>3</td><td>Bordeaux</td></tr>
+                            <tr><td>4</td><td>2024-01-07</td><td>Sport</td><td>Vélo Route</td><td>780.00</td><td>1</td><td>Marseille</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="color:var(--text-muted);font-size:0.7rem;margin-top:5px;font-family:'Courier New',monospace;">… 1 247 lignes × 6 colonnes</div>
+            `
+        },
+        {
+            title: "Dimensions & types",
+            badge: "✓ shape & dtypes",
+            lines: [
+                { t: "blank" },
+                { t: "code", c: `<span class="cm"># Dimensions et types de colonnes</span>` },
+                { t: "code", c: `<span class="fn">print</span>(<span class="var">df</span>.shape)` },
+                { t: "code", c: `<span class="fn">print</span>(<span class="var">df</span>.dtypes)` },
+            ],
+            html: `
+                <div class="sbox-grid">
+                    <div class="sbox"><span class="sbox-val">1 247</span><span class="sbox-lbl">Lignes</span></div>
+                    <div class="sbox"><span class="sbox-val">6</span><span class="sbox-lbl">Colonnes</span></div>
+                    <div class="sbox"><span class="sbox-val">3</span><span class="sbox-lbl">Types distincts</span></div>
+                </div>
+                <div class="out-label" style="margin-top:0.75rem;">dtypes</div>
+                <div class="term">
+date        <span class="tb">object</span><br>
+categorie   <span class="tb">object</span><br>
+produit     <span class="tb">object</span><br>
+montant     <span class="ty">float64</span><br>
+quantite    <span class="ty">int64</span><br>
+region      <span class="tb">object</span><br>
+<span class="td">dtype: object</span>
+                </div>
+            `
+        },
+        {
+            title: "Valeurs nulles",
+            badge: "⚠ 58 nulls",
+            lines: [
+                { t: "blank" },
+                { t: "code", c: `<span class="cm"># Détection des valeurs manquantes</span>` },
+                { t: "code", c: `<span class="fn">print</span>(<span class="var">df</span>.<span class="fn">isnull</span>().<span class="fn">sum</span>())` },
+            ],
+            html: `
+                <div class="out-label">Valeurs manquantes par colonne</div>
+                <div class="null-list">
+                    <div class="null-row"><span class="null-col">date</span><div class="null-track"><div class="null-bar ok"></div></div><span class="null-n ok">0</span></div>
+                    <div class="null-row"><span class="null-col">categorie</span><div class="null-track"><div class="null-bar bad" style="width:2.2%"></div></div><span class="null-n bad">28</span></div>
+                    <div class="null-row"><span class="null-col">produit</span><div class="null-track"><div class="null-bar ok"></div></div><span class="null-n ok">0</span></div>
+                    <div class="null-row"><span class="null-col">montant</span><div class="null-track"><div class="null-bar bad" style="width:1.5%"></div></div><span class="null-n bad">19</span></div>
+                    <div class="null-row"><span class="null-col">quantite</span><div class="null-track"><div class="null-bar bad" style="width:0.9%"></div></div><span class="null-n bad">11</span></div>
+                    <div class="null-row"><span class="null-col">region</span><div class="null-track"><div class="null-bar ok"></div></div><span class="null-n ok">0</span></div>
+                </div>
+                <div class="alert-warn" style="margin-top:0.65rem;">⚠ 58 valeurs manquantes détectées (4.6 %)</div>
+            `
+        },
+        {
+            title: "Nettoyage",
+            badge: "✓ df_clean",
+            lines: [
+                { t: "blank" },
+                { t: "code", c: `<span class="cm"># Nettoyage</span>` },
+                { t: "code", c: `<span class="var">df_clean</span> <span class="op">=</span> <span class="var">df</span>.<span class="fn">dropna</span>()` },
+                { t: "code", c: `<span class="var">df_clean</span> <span class="op">=</span> <span class="var">df_clean</span>[<span class="var">df_clean</span>[<span class="str">'montant'</span>] <span class="op">&gt;</span> <span class="num">0</span>]` },
+                { t: "code", c: `<span class="var">df_clean</span>[<span class="str">'date'</span>] <span class="op">=</span> pd.<span class="fn">to_datetime</span>(<span class="var">df_clean</span>[<span class="str">'date'</span>])` },
+            ],
+            html: `
+                <div class="out-label">Résultat du nettoyage</div>
+                <div class="diff-box">
+                    <div class="diff-row"><span class="diff-lbl">Lignes</span><span class="diff-old">1 247</span><span class="diff-arr">→</span><span class="diff-new">1 189</span></div>
+                    <div class="diff-row"><span class="diff-lbl">Valeurs nulles</span><span class="diff-old">58</span><span class="diff-arr">→</span><span class="diff-new">0</span></div>
+                    <div class="diff-row"><span class="diff-lbl">Montants ≤ 0</span><span class="diff-old">présents</span><span class="diff-arr">→</span><span class="diff-new">filtrés</span></div>
+                    <div class="diff-row"><span class="diff-lbl">Colonne date</span><span class="diff-old">object</span><span class="diff-arr">→</span><span class="diff-new">datetime64</span></div>
+                </div>
+                <div class="alert-ok">✓ Dataset propre — 1 189 lignes exploitables</div>
+            `
+        },
+        {
+            title: "Statistiques",
+            badge: "✓ describe()",
+            lines: [
+                { t: "blank" },
+                { t: "code", c: `<span class="cm"># Statistiques descriptives</span>` },
+                { t: "code", c: `<span class="var">df_clean</span>[[<span class="str">'montant'</span>, <span class="str">'quantite'</span>]].<span class="fn">describe</span>()` },
+            ],
+            html: `
+                <div class="out-label">df.describe()</div>
+                <div class="df-wrap">
+                    <table class="df-tbl">
+                        <thead><tr><th></th><th>montant</th><th>quantite</th></tr></thead>
+                        <tbody>
+                            <tr><td>count</td><td>1189.00</td><td>1189.00</td></tr>
+                            <tr><td>mean</td><td>312.47</td><td>2.14</td></tr>
+                            <tr><td>std</td><td>287.93</td><td>1.52</td></tr>
+                            <tr><td>min</td><td>1.20</td><td>1.00</td></tr>
+                            <tr><td>25%</td><td>79.90</td><td>1.00</td></tr>
+                            <tr><td>50%</td><td>224.50</td><td>2.00</td></tr>
+                            <tr><td>75%</td><td>469.00</td><td>3.00</td></tr>
+                            <tr><td>max</td><td>1899.00</td><td>8.00</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            `
+        },
+        {
+            title: "Distribution catégories",
+            badge: "✓ value_counts()",
+            lines: [
+                { t: "blank" },
+                { t: "code", c: `<span class="cm"># Répartition par catégorie</span>` },
+                { t: "code", c: `<span class="var">counts</span> <span class="op">=</span> <span class="var">df_clean</span>[<span class="str">'categorie'</span>].<span class="fn">value_counts</span>()` },
+                { t: "code", c: `<span class="var">counts</span>.<span class="fn">plot</span>.<span class="fn">barh</span>(<span class="var">color</span><span class="op">=</span><span class="str">"steelblue"</span>)` },
+            ],
+            html: `
+                <div class="out-label">Ventes par catégorie</div>
+                <div class="bar-chart" id="barChart">
+                    <div class="bar-row"><span class="bar-lbl">Électronique</span><div class="bar-track"><div class="bar-fill" data-w="88"></div></div><span class="bar-n">347</span></div>
+                    <div class="bar-row"><span class="bar-lbl">Vêtements</span><div class="bar-track"><div class="bar-fill" data-w="65"></div></div><span class="bar-n">255</span></div>
+                    <div class="bar-row"><span class="bar-lbl">Sport</span><div class="bar-track"><div class="bar-fill" data-w="53"></div></div><span class="bar-n">208</span></div>
+                    <div class="bar-row"><span class="bar-lbl">Alimentation</span><div class="bar-track"><div class="bar-fill" data-w="43"></div></div><span class="bar-n">171</span></div>
+                    <div class="bar-row"><span class="bar-lbl">Maison</span><div class="bar-track"><div class="bar-fill" data-w="27"></div></div><span class="bar-n">105</span></div>
+                    <div class="bar-row"><span class="bar-lbl">Beauté</span><div class="bar-track"><div class="bar-fill" data-w="26"></div></div><span class="bar-n">103</span></div>
+                </div>
+            `
+        },
+        {
+            title: "Tendance mensuelle",
+            badge: "✓ plot()",
+            lines: [
+                { t: "blank" },
+                { t: "code", c: `<span class="cm"># Évolution mensuelle du CA</span>` },
+                { t: "code", c: `<span class="var">df_clean</span>[<span class="str">'mois'</span>] <span class="op">=</span> <span class="var">df_clean</span>[<span class="str">'date'</span>].dt.<span class="fn">to_period</span>(<span class="str">'M'</span>)` },
+                { t: "code", c: `<span class="var">monthly</span> <span class="op">=</span> (<span class="var">df_clean</span>` },
+                { t: "code", c: `    .<span class="fn">groupby</span>(<span class="str">'mois'</span>)[<span class="str">'montant'</span>]` },
+                { t: "code", c: `    .<span class="fn">sum</span>())` },
+                { t: "code", c: `<span class="var">monthly</span>.<span class="fn">plot</span>(<span class="var">title</span><span class="op">=</span><span class="str">"CA mensuel 2024"</span>)` },
+            ],
+            html: `
+                <div class="out-label">Chiffre d'affaires mensuel — 2024</div>
+                <div class="chart-box">
+                    <svg class="lc-svg" viewBox="0 0 360 165" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;" aria-label="Graphe CA mensuel 2024">
+                        <defs>
+                            <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%"   stop-color="#58a6ff"/>
+                                <stop offset="100%" stop-color="#bc8cff"/>
+                            </linearGradient>
+                            <linearGradient id="areaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%"   stop-color="#58a6ff" stop-opacity="0.16"/>
+                                <stop offset="100%" stop-color="#58a6ff" stop-opacity="0"/>
+                            </linearGradient>
+                        </defs>
+                        <line x1="42" y1="22" x2="352" y2="22" class="grid"/>
+                        <line x1="42" y1="55" x2="352" y2="55" class="grid"/>
+                        <line x1="42" y1="88" x2="352" y2="88" class="grid"/>
+                        <line x1="42" y1="121" x2="352" y2="121" class="grid"/>
+                        <text x="38" y="25" text-anchor="end">50k</text>
+                        <text x="38" y="58" text-anchor="end">40k</text>
+                        <text x="38" y="91" text-anchor="end">30k</text>
+                        <text x="38" y="124" text-anchor="end">20k</text>
+                        <path class="area" d="M42,105 L66,95 L91,78 L116,84 L141,67 L166,56 L191,44 L216,39 L241,50 L266,36 L291,29 L316,23 L316,135 L42,135 Z"/>
+                        <path class="line" d="M42,105 L66,95 L91,78 L116,84 L141,67 L166,56 L191,44 L216,39 L241,50 L266,36 L291,29 L316,23"/>
+                        <circle cx="42"  cy="105" r="3.5" fill="#58a6ff"  class="dot"/>
+                        <circle cx="66"  cy="95"  r="3.5" fill="#68a8ff"  class="dot"/>
+                        <circle cx="91"  cy="78"  r="3.5" fill="#7aaaff"  class="dot"/>
+                        <circle cx="116" cy="84"  r="3.5" fill="#8dacff"  class="dot"/>
+                        <circle cx="141" cy="67"  r="3.5" fill="#9faaff"  class="dot"/>
+                        <circle cx="166" cy="56"  r="3.5" fill="#b0a0ff"  class="dot"/>
+                        <circle cx="191" cy="44"  r="3.5" fill="#bc96ff"  class="dot"/>
+                        <circle cx="216" cy="39"  r="3.5" fill="#bc8cff"  class="dot"/>
+                        <circle cx="241" cy="50"  r="3.5" fill="#bc8cff"  class="dot"/>
+                        <circle cx="266" cy="36"  r="3.5" fill="#bc8cff"  class="dot"/>
+                        <circle cx="291" cy="29"  r="3.5" fill="#bc8cff"  class="dot"/>
+                        <circle cx="316" cy="23"  r="3.5" fill="#bc8cff"  class="dot"/>
+                        <line x1="42" y1="22"  x2="42"  y2="135" class="axis"/>
+                        <line x1="42" y1="135" x2="352" y2="135" class="axis"/>
+                        <text x="42"  y="148" text-anchor="middle">Jan</text>
+                        <text x="91"  y="148" text-anchor="middle">Mar</text>
+                        <text x="141" y="148" text-anchor="middle">Mai</text>
+                        <text x="191" y="148" text-anchor="middle">Juil</text>
+                        <text x="241" y="148" text-anchor="middle">Sep</text>
+                        <text x="291" y="148" text-anchor="middle">Nov</text>
+                        <text x="316" y="148" text-anchor="middle">Déc</text>
+                    </svg>
+                </div>
+            `
+        },
+        {
+            title: "Export",
+            badge: "✓ terminé",
+            lines: [
+                { t: "blank" },
+                { t: "code", c: `<span class="cm"># Export du dataset nettoyé</span>` },
+                { t: "code", c: `<span class="var">df_clean</span>.<span class="fn">to_csv</span>(` },
+                { t: "code", c: `    <span class="str">"ventes_2024_clean.csv"</span>,` },
+                { t: "code", c: `    <span class="var">index</span><span class="op">=</span><span class="kw">False</span>` },
+                { t: "code", c: `)` },
+                { t: "code", c: `<span class="fn">print</span>(<span class="str">"✓ EDA terminée"</span>)` },
+            ],
+            html: `
+                <div class="export-box">
+                    <div class="ex-icon">✅</div>
+                    <h3>Export réussi</h3>
+                    <p>ventes_2024_clean.csv — 1 189 lignes</p>
+                    <div class="term" style="text-align:left;">
+<span class="tw">Résumé EDA :</span><br>
+  Lignes initiales  <span class="ty">1 247</span><br>
+  Lignes finales    <span class="at">1 189</span><br>
+  Colonnes          <span class="ty">6</span><br>
+  Nulls supprimés   <span class="tr">58</span><br>
+  Types corrigés    <span class="ty">1</span> <span class="td">(date → datetime64)</span><br>
+<span class="td">─────────────────────────────</span><br>
+<span class="at">✓ EDA terminée</span>
+                    </div>
+                </div>
+            `
+        }
+    ];
+
+    // ================================================================
+    //  EXPLAINS
+    // ================================================================
+    const EXPLAINS = [
+        /* 0 — Imports */
+        `<div class="explain-card"><span class="explain-fn">import pandas as pd</span><p class="explain-txt">Charge <strong>Pandas</strong>, la bibliothèque de référence pour manipuler des données tabulaires sous forme de <strong>DataFrame</strong>.</p></div>
+        <div class="explain-card"><span class="explain-fn">import matplotlib.pyplot as plt</span><p class="explain-txt">Charge <strong>Matplotlib</strong> pour générer des graphiques et visualisations 2D.</p></div>
+        <div class="explain-tip"><span class="explain-icon">💡</span><span>Les alias <code>pd</code>, <code>plt</code> et <code>sns</code> sont des conventions universelles — tout développeur data les reconnaît immédiatement.</span></div>`,
+        /* 1 — Chargement */
+        `<div class="explain-card"><span class="explain-fn">pd.read_csv(fichier)</span><p class="explain-txt">Lit un fichier <strong>CSV</strong> et le transforme en DataFrame : un tableau 2D avec lignes indexées et colonnes nommées.</p></div>
+        <div class="explain-card"><span class="explain-fn">df.head(n)</span><p class="explain-txt">Affiche les <em>n</em> premières lignes. Premier contrôle visuel rapide — indispensable après tout chargement.</p></div>
+        <div class="explain-tip"><span class="explain-icon">💡</span><span>Toujours vérifier avec <code>.head()</code> que les colonnes et les types ont été correctement interprétés par Pandas.</span></div>`,
+        /* 2 — Dimensions & types */
+        `<div class="explain-card"><span class="explain-fn">df.shape</span><p class="explain-txt">Retourne un tuple <code>(lignes, colonnes)</code>. Vue immédiate de la taille du dataset.</p></div>
+        <div class="explain-card"><span class="explain-fn">df.dtypes</span><p class="explain-txt">Liste le type de chaque colonne : <code>object</code> = texte, <code>float64</code> = décimal, <code>int64</code> = entier.</p></div>
+        <div class="explain-tip"><span class="explain-icon">⚠️</span><span>Une colonne de dates lue comme <code>object</code> ne peut pas être triée ni agrégée — il faudra la convertir avec <code>pd.to_datetime()</code>.</span></div>`,
+        /* 3 — Valeurs nulles */
+        `<div class="explain-card"><span class="explain-fn">df.isnull()</span><p class="explain-txt">Génère un masque booléen : <code>True</code> là où la valeur est manquante (<code>NaN</code>), <code>False</code> sinon.</p></div>
+        <div class="explain-card"><span class="explain-fn">.sum()</span><p class="explain-txt">Additionne les <code>True</code> (valant 1) par colonne → donne le <strong>nombre de valeurs manquantes</strong> pour chacune.</p></div>
+        <div class="explain-tip"><span class="explain-icon">💡</span><span>Un taux de nulls &gt; 5 % sur une colonne clé peut signaler un problème de collecte ou de source de données.</span></div>`,
+        /* 4 — Nettoyage */
+        `<div class="explain-card"><span class="explain-fn">df.dropna()</span><p class="explain-txt">Supprime toutes les lignes contenant au moins un <code>NaN</code>. Simple mais agressif — on perd des lignes entières.</p></div>
+        <div class="explain-card"><span class="explain-fn">df[df['col'] &gt; 0]</span><p class="explain-txt"><strong>Filtre booléen</strong> : ne conserve que les lignes où la condition est vraie. Ici, on écarte les montants nuls ou négatifs (erreurs de saisie).</p></div>
+        <div class="explain-card"><span class="explain-fn">pd.to_datetime(col)</span><p class="explain-txt">Convertit du texte en <code>datetime64</code>, activant le tri chronologique, le <code>groupby</code> mensuel et les calculs de durée.</p></div>`,
+        /* 5 — Statistiques */
+        `<div class="explain-card"><span class="explain-fn">df.describe()</span><p class="explain-txt">Calcule automatiquement <strong>8 statistiques</strong> par colonne numérique : count, mean, std, min, 25&nbsp;%, médiane, 75&nbsp;%, max.</p></div>
+        <div class="explain-tip"><span class="explain-icon">💡</span><span>Un grand écart entre <code>mean</code> et <code>50%</code> (médiane) révèle une distribution asymétrique ou des valeurs extrêmes.</span></div>
+        <div class="explain-tip"><span class="explain-icon">📊</span><span>Ici : <code>mean=312</code> vs <code>median=224</code> — les ventes électronique (&gt;1 000 €) tirent la moyenne vers le haut.</span></div>`,
+        /* 6 — Distribution */
+        `<div class="explain-card"><span class="explain-fn">df['col'].value_counts()</span><p class="explain-txt">Compte les occurrences de chaque valeur unique. Retourne une Series triée par fréquence décroissante.</p></div>
+        <div class="explain-card"><span class="explain-fn">.plot.barh()</span><p class="explain-txt">Génère un graphique à <strong>barres horizontales</strong> via Matplotlib. Idéal pour les labels longs ou les comparaisons catégorielles.</p></div>
+        <div class="explain-tip"><span class="explain-icon">💡</span><span>L'électronique (29 %) génère aussi le CA unitaire le plus élevé — à croiser avec <code>montant.mean()</code> par catégorie.</span></div>`,
+        /* 7 — Tendance mensuelle */
+        `<div class="explain-card"><span class="explain-fn">dt.to_period('M')</span><p class="explain-txt">Extrait la période mensuelle d'une date (<code>2024-03-15</code> → <code>2024-03</code>). Requiert que la colonne soit en <code>datetime64</code>.</p></div>
+        <div class="explain-card"><span class="explain-fn">df.groupby('col').sum()</span><p class="explain-txt"><strong>Regroupe</strong> les lignes par valeur commune puis <strong>agrège</strong>. Ici : somme des montants par mois = CA mensuel.</p></div>
+        <div class="explain-tip"><span class="explain-icon">📈</span><span>La tendance croissante tout au long de l'année suggère un fort effet de saisonnalité ou une activité en plein essor.</span></div>`,
+        /* 8 — Export */
+        `<div class="explain-card"><span class="explain-fn">df.to_csv(path, index=False)</span><p class="explain-txt">Sérialise le DataFrame en fichier CSV. <code>index=False</code> évite d'écrire l'index numérique automatique, sans valeur métier.</p></div>
+        <div class="explain-tip"><span class="explain-icon">✅</span><span>Le dataset propre est prêt pour la suite : modélisation ML, visualisations avancées ou chargement en base de données.</span></div>
+        <div class="explain-tip"><span class="explain-icon">💡</span><span>Alternatives selon l'usage : <code>.parquet</code> (compact/rapide), <code>.xlsx</code> (équipes métier), <code>.json</code> (APIs web).</span></div>`,
+    ];
+
+    // ================================================================
+    //  STATE
+    // ================================================================
+    let current = 0;
+    const total = STEPS.length;
+
+    // ================================================================
+    //  RENDER
+    // ================================================================
+    function render() {
+        const step = STEPS[current];
+
+        document.getElementById('stepNum').textContent   = current + 1;
+        document.getElementById('stepTotal').textContent = total;
+        document.getElementById('stepTitle').textContent = step.title;
+        document.getElementById('stepBadge').textContent = step.badge;
+        document.getElementById('progressFill').style.width = `${((current + 1) / total) * 100}%`;
+
+        // --- Code block ---
+        let html = '';
+        for (let s = 0; s < total; s++) {
+            const isCurrent = s === current;
+            const isPast    = s < current;
+            for (const l of STEPS[s].lines) {
+                if (l.t === 'blank') {
+                    const cls = isPast ? 'code-line done blank' : isCurrent ? 'code-line active blank' : 'code-line pending blank';
+                    html += `<span class="${cls}"> </span>`;
+                } else {
+                    const display = s > current ? l.c.replace(/<[^>]+>/g, '') : l.c;
+                    const cls = isPast ? 'code-line done' : isCurrent ? 'code-line active' : 'code-line pending';
+                    html += `<span class="${cls}">${display}</span>`;
+                }
+            }
+        }
+        const codeBlock = document.getElementById('codeBlock');
+        codeBlock.innerHTML = html;
+        const firstActive = codeBlock.querySelector('.code-line.active');
+        if (firstActive) firstActive.scrollIntoView({ block: 'start', behavior: 'smooth' });
+
+        // --- Preview & Explain ---
+        document.getElementById('previewContent').innerHTML =
+            `<div class="preview-step active">${step.html}</div>`;
+        document.getElementById('explainContent').innerHTML = EXPLAINS[current];
+
+        // Animate bars on step 6
+        if (current === 6) {
+            requestAnimationFrame(() => {
+                document.querySelectorAll('#barChart .bar-fill').forEach(bar => {
+                    bar.style.width = bar.dataset.w + '%';
+                });
+            });
+        }
+
+        // --- Dots ---
+        const dotsEl = document.getElementById('stepDots');
+        dotsEl.innerHTML = '';
+        for (let i = 0; i < total; i++) {
+            const d = document.createElement('div');
+            d.className = 'step-dot' +
+                (i < current   ? ' done'   : '') +
+                (i === current ? ' active' : '');
+            d.title = STEPS[i].title;
+            d.addEventListener('click', () => { current = i; render(); });
+            dotsEl.appendChild(d);
+        }
+
+        // --- Buttons ---
+        document.getElementById('btnPrev').disabled = current === 0;
+        const nextBtn = document.getElementById('btnNext');
+        nextBtn.disabled    = current === total - 1;
+        nextBtn.textContent = current === total - 1 ? '✓ Terminé' : 'Suivant →';
+    }
+
+    // ================================================================
+    //  AUTOPLAY
+    // ================================================================
+    let autoTimer   = null;
+    let autoPlaying = false;
+    const DELAY     = 5000;
+
+    function startCountdownAnim() {
+        const ring = document.getElementById('countdownRing');
+        ring.classList.add('playing');
+        // Clone the fill to reset animation state completely (most reliable cross-browser trick)
+        const fill = ring.querySelector('.ring-fill');
+        const newFill = fill.cloneNode(true);
+        fill.replaceWith(newFill);
+    }
+
+    function stopCountdownAnim() {
+        document.getElementById('countdownRing').classList.remove('playing');
+    }
+
+    function stopAutoplay() {
+        if (autoTimer) { clearTimeout(autoTimer); autoTimer = null; }
+        autoPlaying = false;
+        const btn = document.getElementById('btnAutoplay');
+        btn.textContent = '▶ Auto';
+        btn.classList.remove('playing');
+        stopCountdownAnim();
+    }
+
+    function scheduleNext() {
+        startCountdownAnim();
+        autoTimer = setTimeout(() => {
+            if (current < total - 1) {
+                current++;
+                render();
+                scheduleNext();
+            } else {
+                stopAutoplay();
+            }
+        }, DELAY);
+    }
+
+    document.getElementById('btnAutoplay').addEventListener('click', () => {
+        if (autoPlaying) {
+            stopAutoplay();
+        } else {
+            autoPlaying = true;
+            const btn = document.getElementById('btnAutoplay');
+            btn.textContent = '⏸ Pause';
+            btn.classList.add('playing');
+            // Restart from beginning if already at last step
+            if (current === total - 1) { current = 0; render(); }
+            scheduleNext();
+        }
+    });
+
+    // ================================================================
+    //  EVENTS
+    // ================================================================
+    document.getElementById('btnPrev').addEventListener('click', () => {
+        stopAutoplay();
+        if (current > 0) { current--; render(); }
+    });
+    document.getElementById('btnNext').addEventListener('click', () => {
+        stopAutoplay();
+        if (current < total - 1) { current++; render(); }
+    });
+    document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowRight' && current < total - 1) { stopAutoplay(); current++; render(); }
+        if (e.key === 'ArrowLeft'  && current > 0)         { stopAutoplay(); current--; render(); }
+        if (e.key === ' ') {
+            e.preventDefault();
+            document.getElementById('btnAutoplay').click();
+        }
+    });
+    document.getElementById('navToggle').addEventListener('click', () => {
+        document.querySelector('.nav-links').classList.toggle('open');
+    });
+
+    render();
+    </script>
+</body>
+</html>
