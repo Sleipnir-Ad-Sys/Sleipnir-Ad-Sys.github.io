@@ -3,18 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Environment Design — Sleipnir</title>
-    <meta name="description" content="Design — fan art, stickers et illustrations libres pour l'univers de La Fine Équipe.">
+    <title>Mascotte &amp; Logo — Sleipnir</title>
+    <meta name="description" content="Mascotte et logo Sleipnir — identité visuelle, du concept au rendu final.">
     <link rel="stylesheet" href="../../../style.css">
     <link rel="stylesheet" href="../../../public/carousel.css">
     <style>
         :root {
-            --ds-pink:        #58a6ff;
-            --ds-grad:        linear-gradient(135deg, #58a6ff 0%, #3fb950 100%);
-            --ds-btn-hover-bg: rgba(88,166,255,0.08);
-            --ds-label-grad:  linear-gradient(90deg, rgba(88,166,255,0.3), transparent);
-            --ds-divider-grad: linear-gradient(90deg, transparent, rgba(88,166,255,0.35), rgba(63,185,80,0.35), transparent);
+            --ds-pink:         #f0b429;
+            --ds-grad:         linear-gradient(135deg, #f0b429 0%, #f77f00 100%);
+            --ds-btn-hover-bg: rgba(240,180,41,0.08);
+            --ds-label-grad:   linear-gradient(90deg, rgba(240,180,41,0.3), transparent);
+            --ds-divider-grad: linear-gradient(90deg, transparent, rgba(240,180,41,0.35), rgba(247,127,0,0.35), transparent);
+            --ds-wip-bg:       rgba(240,180,41,0.08);
+            --ds-wip-border:   rgba(240,180,41,0.28);
         }
+        .ds-about {
+            margin: 2rem 0 2.5rem;
+            padding: 1.5rem 2rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-left: 3px solid var(--ds-pink);
+            border-radius: var(--radius-md);
+            font-size: 0.92rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+        .ds-about-link {
+            display: inline-block;
+            margin-top: 0.75rem;
+            color: var(--ds-pink);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+        }
+        .ds-about-link:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -40,36 +62,43 @@
             <!-- Hero -->
             <div class="ds-hero">
                 <a href="../../projets.html" class="ds-back">← Retour aux projets</a>
-                <div class="ds-eyebrow">Dessin &amp; Illustration</div>
-                <h1 class="ds-title">Design</h1>
+                <div class="ds-eyebrow">Présentation &amp; Identité visuelle</div>
+                <h1 class="ds-title">Mascotte &amp; Logo</h1>
                 <p class="ds-subtitle">
-                    Fan art, stickers et illustrations libres — de la phase de recherche jusqu'au rendu final.
+                    Création de la mascotte et du logo Sleipnir — du croquis initial au rendu final. Une identité visuelle pensée pour être cohérente sur l'ensemble des supports.
                 </p>
+                <div class="wip-notice">✨ En cours — mis à jour régulièrement</div>
             </div>
 
             <div class="ds-divider"></div>
 
-            <!-- ===== CAROUSEL 1 — Recherche ===== -->
+            <!-- Texte de présentation -->
+            <div class="ds-about">
+                <p>Je suis une designeuse.</p>
+                <a href="../../../cv/cv.html" class="ds-about-link">Voir mon CV →</a>
+            </div>
+
+            <!-- ===== CAROUSEL 1 — Mascotte ===== -->
             <section class="carousel-section">
-                <div class="carousel-section-label">Recherche</div>
+                <div class="carousel-section-label">Mascotte</div>
                 <div class="carousel-wrapper">
                     <div class="carousel-track-outer">
                         <div class="carousel-track" data-carousel="1">
                             <div class="carousel-slide">
                                 <div class="carousel-placeholder">
-                                    <span class="ph-icon">🔍</span>
-                                    <p>Recherche — à venir</p>
+                                    <span class="ph-icon">🐺</span>
+                                    <p>Mascotte — à venir</p>
                                 </div>
                             </div>
                             <div class="carousel-slide">
                                 <div class="carousel-placeholder">
-                                    <span class="ph-icon">🔍</span>
-                                    <p>Recherche — à venir</p>
+                                    <span class="ph-icon">🐺</span>
+                                    <p>Mascotte — à venir</p>
                                 </div>
                             </div>
                         </div>
                         <div class="carousel-caption">
-                            <span class="carousel-caption-text" data-caption="1">Recherche &amp; explorations</span>
+                            <span class="carousel-caption-text" data-caption="1">Mascotte Sleipnir</span>
                             <span class="carousel-caption-counter" data-counter="1"><strong>1</strong> / 2</span>
                         </div>
                     </div>
@@ -84,27 +113,27 @@
                 </div>
             </section>
 
-            <!-- ===== CAROUSEL 2 — Final ===== -->
+            <!-- ===== CAROUSEL 2 — Logo ===== -->
             <section class="carousel-section">
-                <div class="carousel-section-label">Final</div>
+                <div class="carousel-section-label">Logo</div>
                 <div class="carousel-wrapper">
                     <div class="carousel-track-outer">
                         <div class="carousel-track" data-carousel="2">
                             <div class="carousel-slide">
                                 <div class="carousel-placeholder">
-                                    <span class="ph-icon">🎨</span>
-                                    <p>Illustration finale — à venir</p>
+                                    <span class="ph-icon">✨</span>
+                                    <p>Logo — à venir</p>
                                 </div>
                             </div>
                             <div class="carousel-slide">
                                 <div class="carousel-placeholder">
-                                    <span class="ph-icon">🎨</span>
-                                    <p>Illustration finale — à venir</p>
+                                    <span class="ph-icon">✨</span>
+                                    <p>Logo — à venir</p>
                                 </div>
                             </div>
                         </div>
                         <div class="carousel-caption">
-                            <span class="carousel-caption-text" data-caption="2">Illustrations finales</span>
+                            <span class="carousel-caption-text" data-caption="2">Logo Sleipnir</span>
                             <span class="carousel-caption-counter" data-counter="2"><strong>1</strong> / 2</span>
                         </div>
                     </div>
@@ -138,8 +167,8 @@
 
     <script src="../../../public/carousel.js"></script>
     <script>
-        setupCarousel('1', 'images/recherche');
-        setupCarousel('2', 'images/final');
+        setupCarousel('1', 'images/mascotte');
+        setupCarousel('2', 'images/logo');
     </script>
 </body>
 </html>
