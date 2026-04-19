@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lore & World Building — La Fine Équipe — Sleipnir</title>
+    <meta name="description" content="Lore & World Building de La Fine Équipe — univers d'Aethelgard, système de magie, factions et éléments de monde.">
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        /* ===== VARIABLES THÈME ===== */
+        :root {
+            --lore-pink:   #f778ba;
+            --lore-purple: #bc8cff;
+            --lore-blue:   #58a6ff;
+            --lore-gold:   #e3b341;
+        }
+
+        /* ---- HERO ---- */
+        .lore-hero {
+            position: relative;
+            padding: 5rem 0 3.5rem;
+            overflow: hidden;
+        }
+        .lore-hero::before {
+            content: '';
+            position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(188,140,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(188,140,255,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+        }
+        .lore-hero::after {
+            content: '';
+            position: absolute;
+            top: -200px; right: -200px;
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(188,140,255,0.07) 0%, transparent 68%);
+            pointer-events: none;
+        }
+        .lore-hero-halo {
+            position: absolute;
+            bottom: -150px; left: -150px;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(247,120,186,0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .lore-hero-inner {
+            position: relative;
+            z-index: 1;
+            max-width: 760px;
+        }
+        .lore-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.83rem;
+            margin-bottom: 2.5rem;
+            transition: var(--transition);
+        }
+        .lore-back:hover { color: var(--lore-purple); }
+        .lore-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--lore-purple);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .lore-eyebrow::before,
+        .lore-eyebrow::after {
+            content: '';
+            display: block;
+            width: 28px; height: 1px;
+            background: var(--lore-purple);
+            opacity: 0.5;
+        }
+        .lore-title {
+            font-size: clamp(2.4rem, 6vw, 4rem);
+            font-weight: 900;
+            letter-spacing: -2px;
+            line-height: 1.05;
+            margin-bottom: 0.6rem;
+            background: linear-gradient(135deg, #bc8cff 0%, #f778ba 55%, #e3b341 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .lore-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-bottom: 2rem;
+            line-height: 1.7;
+            max-width: 560px;
+        }
+        .lore-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 2rem;
+        }
+        .lore-badge {
+            padding: 4px 14px;
+            border-radius: 999px;
+            font-size: 0.77rem;
+            font-weight: 600;
+            border: 1px solid;
+        }
+        .lore-badge.purple { background: rgba(188,140,255,0.1); border-color: rgba(188,140,255,0.3); color: var(--lore-purple); }
+        .lore-badge.pink   { background: rgba(247,120,186,0.1); border-color: rgba(247,120,186,0.3); color: var(--lore-pink); }
+        .lore-badge.gold   { background: rgba(227,179,65,0.1);  border-color: rgba(227,179,65,0.3);  color: var(--lore-gold); }
+
+        /* ---- SÉPARATEUR ---- */
+        .lore-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(188,140,255,0.3), rgba(247,120,186,0.3), transparent);
+            margin: 0 0 4rem;
+        }
+
+        /* ---- SECTION LABEL ---- */
+        .lore-section {
+            margin-bottom: 5rem;
+            opacity: 0;
+        }
+        .lore-section-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            color: var(--lore-purple);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+        .lore-section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(188,140,255,0.3), transparent);
+        }
+
+        /* ---- INTRO MONDE ---- */
+        .lore-intro-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-left: 3px solid var(--lore-purple);
+            border-radius: var(--radius-md);
+            padding: 2rem 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .lore-intro-box::before {
+            content: '🌍';
+            position: absolute;
+            top: -0.5rem; right: 1.5rem;
+            font-size: 6rem;
+            line-height: 1;
+            opacity: 0.05;
+            pointer-events: none;
+            user-select: none;
+        }
+        .lore-intro-text {
+            font-size: 1rem;
+            line-height: 1.9;
+            color: var(--text-secondary);
+            position: relative;
+            z-index: 1;
+        }
+        .lore-intro-text em {
+            color: var(--text-primary);
+            font-style: normal;
+            font-weight: 600;
+        }
+        .lore-intro-text .accent-purple { color: var(--lore-purple); font-weight: 600; }
+        .lore-intro-text .accent-pink   { color: var(--lore-pink);   font-weight: 600; }
+
+        /* ---- CARTES ACCORDÉON ---- */
+        .lore-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem;
+        }
+        .lore-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        .lore-card:hover {
+            border-color: rgba(188,140,255,0.35);
+            box-shadow: 0 8px 28px rgba(188,140,255,0.08);
+        }
+        .lore-card.danger:hover {
+            border-color: rgba(247,120,186,0.35);
+            box-shadow: 0 8px 28px rgba(247,120,186,0.08);
+        }
+        .lore-summary {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem 1.5rem;
+            cursor: pointer;
+            user-select: none;
+            list-style: none;
+            transition: var(--transition);
+        }
+        .lore-summary::-webkit-details-marker { display: none; }
+        .lore-summary::marker { display: none; }
+        .lore-summary:hover { background: rgba(188,140,255,0.04); }
+        .lore-card.danger .lore-summary:hover { background: rgba(247,120,186,0.04); }
+        .lore-icon {
+            font-size: 1.5rem;
+            width: 42px; height: 42px;
+            flex-shrink: 0;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .lore-head { flex: 1; }
+        .lore-card-title {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+        .lore-card-sub {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--lore-purple);
+            font-weight: 600;
+        }
+        .lore-card.danger .lore-card-sub { color: var(--lore-pink); }
+        .lore-chevron {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            transition: transform 0.25s ease;
+        }
+        details[open] .lore-chevron { transform: rotate(180deg); }
+        .lore-body {
+            padding: 0 1.5rem 1.4rem;
+            border-top: 1px solid var(--border-color);
+        }
+        .lore-text {
+            font-size: 0.83rem;
+            color: var(--text-secondary);
+            line-height: 1.75;
+            padding-top: 1rem;
+        }
+        .lore-text em {
+            color: var(--text-primary);
+            font-style: normal;
+            font-weight: 600;
+        }
+        .lore-text .accent-purple { color: var(--lore-purple); font-weight: 600; }
+        .lore-text .accent-pink   { color: var(--lore-pink);   font-weight: 600; }
+        .lore-text .accent-gold   { color: var(--lore-gold);   font-weight: 600; }
+        .lore-sub {
+            margin-top: 0.9rem;
+            padding: 0.85rem 1rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-left: 2px solid var(--lore-purple);
+            border-radius: var(--radius-sm);
+        }
+        .lore-sub.pink { border-left-color: var(--lore-pink); }
+        .lore-sub-title {
+            font-size: 0.77rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--lore-purple);
+            margin-bottom: 0.4rem;
+        }
+        .lore-sub.pink .lore-sub-title { color: var(--lore-pink); }
+        .lore-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 0.9rem;
+        }
+        .lore-tag {
+            font-size: 0.67rem;
+            padding: 2px 9px;
+            border-radius: 4px;
+            background: rgba(188,140,255,0.08);
+            border: 1px solid rgba(188,140,255,0.2);
+            color: var(--lore-purple);
+        }
+        .lore-tag.pink {
+            background: rgba(247,120,186,0.08);
+            border-color: rgba(247,120,186,0.2);
+            color: var(--lore-pink);
+        }
+
+        /* ---- FULL-WIDTH CARD ---- */
+        .lore-card-full {
+            grid-column: 1 / -1;
+        }
+
+        /* ---- RESPONSIVE ---- */
+        @media (max-width: 768px) {
+            .lore-grid { grid-template-columns: 1fr; }
+            .lore-intro-box { padding: 1.25rem 1.5rem; }
+            .lore-title { letter-spacing: -1px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-inner">
+            <a href="../../index.html" class="nav-logo">Sleipnir</a>
+            <ul class="nav-links">
+                <li><a href="../../index.html">Accueil</a></li>
+                <li><a href="../../cv/cv.html">CV</a></li>
+                <li><a href="../projets.html" class="active">Projets</a></li>
+            </ul>
+            <div class="nav-toggle" id="navToggle" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-wrapper">
+        <div class="container">
+
+            <!-- ===== HERO ===== -->
+            <section class="lore-hero">
+                <div class="lore-hero-halo"></div>
+                <div class="lore-hero-inner">
+
+                    <a href="webtoon.html" class="lore-back">← La Fine Équipe</a>
+
+                    <div class="lore-eyebrow">Webtoon · Dark Fantasy</div>
+
+                    <h1 class="lore-title">Lore &amp; World Building</h1>
+
+                    <p class="lore-subtitle">
+                        L'univers d'Aethelgard — un monde de High Fantasy classique où la magie est partout,<br>
+                        mais où les zones oubliées des grands royaumes racontent les histoires les plus sombres.
+                    </p>
+
+                    <div class="lore-badges">
+                        <span class="lore-badge purple">🌍 High Fantasy</span>
+                        <span class="lore-badge purple">✨ D&amp;D</span>
+                        <span class="lore-badge pink">⛓️ Esclavage</span>
+                        <span class="lore-badge pink">🎪 Résistance</span>
+                        <span class="lore-badge gold">🎶 Magie Bardique</span>
+                    </div>
+
+                </div>
+            </section>
+
+            <div class="lore-divider"></div>
+
+            <!-- ===== LE MONDE ===== -->
+            <section class="lore-section" id="monde">
+                <div class="lore-section-label">Le Monde d'Aethelgard</div>
+                <div class="lore-intro-box">
+                    <div class="lore-intro-text">
+                        Le monde est ancré dans une <span class="accent-purple">High Fantasy classique (D&amp;D)</span> : la magie, les créatures et les artefacts sont courants. Cependant, le récit se concentre sur les <em>zones oubliées par les grands royaumes</em> — les marges du monde civilisé, là où ni la loi ni la pitié ne s'aventurent vraiment.
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== MAGIE ===== -->
+            <section class="lore-section" id="magie">
+                <div class="lore-section-label">Système de Magie</div>
+                <div class="lore-grid">
+
+                    <details class="lore-card" open>
+                        <summary class="lore-summary">
+                            <div class="lore-icon">✨</div>
+                            <div class="lore-head">
+                                <div class="lore-card-title">La Magie est partout</div>
+                                <div class="lore-card-sub">Arcanique · Divin · Primordial</div>
+                            </div>
+                            <span class="lore-chevron">▼</span>
+                        </summary>
+                        <div class="lore-body">
+                            <div class="lore-text">
+                                La magie est accessible via les trois grandes traditions : <em>arcanique</em> (formules et grimoires), <em>divine</em> (foi et dévotion), et <em>primordiale</em> (lien avec les forces naturelles). Dans la plupart des régions d'Aethelgard, un mage ou un clerc n'est pas une curiosité — c'est une réalité du quotidien.
+                                <div class="lore-tags">
+                                    <span class="lore-tag">Arcanique</span>
+                                    <span class="lore-tag">Divin</span>
+                                    <span class="lore-tag">Primordial</span>
+                                    <span class="lore-tag">Courant</span>
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+
+                    <details class="lore-card" open>
+                        <summary class="lore-summary">
+                            <div class="lore-icon">🎵</div>
+                            <div class="lore-head">
+                                <div class="lore-card-title">La Magie Bardique d'Haffeiyin</div>
+                                <div class="lore-card-sub">Rare · Personnelle · Émotionnelle</div>
+                            </div>
+                            <span class="lore-chevron">▼</span>
+                        </summary>
+                        <div class="lore-body">
+                            <div class="lore-text">
+                                Si la magie existe à grande échelle, la <span class="accent-purple">Magie Bardique telle qu'Haffeiyin l'apprend</span> est plus rare et personnelle. Elle ne demande pas de formules complexes ou d'incantations, mais une <em>connexion directe avec l'âme et l'émotion</em>.
+                                <div class="lore-sub">
+                                    <div class="lore-sub-title">⚡ Pourquoi Selyara est si stricte</div>
+                                    Cette magie est une extension de soi — elle ne pardonne aucune faille émotionnelle. Jouer faux n'est pas une question de technique : c'est une question de vérité intérieure. Une barde qui ment à elle-même risque bien plus que la fausse note.
+                                </div>
+                                <div class="lore-tags">
+                                    <span class="lore-tag">Magie bardique</span>
+                                    <span class="lore-tag">Émotion brute</span>
+                                    <span class="lore-tag">Âme</span>
+                                    <span class="lore-tag">Rare</span>
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+
+                </div>
+            </section>
+
+            <!-- ===== ANTAGONISTE ===== -->
+            <section class="lore-section" id="antagoniste">
+                <div class="lore-section-label">L'Antagoniste</div>
+                <div class="lore-grid">
+
+                    <details class="lore-card danger" open>
+                        <summary class="lore-summary">
+                            <div class="lore-icon">⛓️</div>
+                            <div class="lore-head">
+                                <div class="lore-card-title">Gorlag — Tyran Industriel</div>
+                                <div class="lore-card-sub">Esclavagiste · Mercenaires · Terreur</div>
+                            </div>
+                            <span class="lore-chevron">▼</span>
+                        </summary>
+                        <div class="lore-body">
+                            <div class="lore-text">
+                                <em>Gorlag</em> n'est pas un roi régnant sur un empire — c'est un <span class="accent-pink">tyran industriel et esclavagiste</span>. Il possède une concession immense dans une région inhospitalière, loin des regards des grands royaumes. Sa puissance ne vient pas d'un trône, mais d'une richesse bâtie sur la souffrance.
+                                <div class="lore-tags pink">
+                                    <span class="lore-tag pink">Tyran</span>
+                                    <span class="lore-tag pink">Industriel</span>
+                                    <span class="lore-tag pink">Esclavagiste</span>
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+
+                    <details class="lore-card danger">
+                        <summary class="lore-summary">
+                            <div class="lore-icon">⛏️</div>
+                            <div class="lore-head">
+                                <div class="lore-card-title">Les Mines &amp; Le Camp</div>
+                                <div class="lore-card-sub">Complexe tentaculaire · Zone d'horreur</div>
+                            </div>
+                            <span class="lore-chevron">▼</span>
+                        </summary>
+                        <div class="lore-body">
+                            <div class="lore-text">
+                                Un complexe tentaculaire de tunnels profonds et de baraquements de fortune. On y trouve des esclaves de toutes races et origines, réduits à l'état d'outils. C'est un lieu sale, bruyant, où <em>la vie humaine a moins de valeur qu'une pioche en acier</em>.
+                                <div class="lore-sub pink">
+                                    <div class="lore-sub-title">🛡️ La Protection</div>
+                                    Gorlag règne par la peur et la force brute, protégeant ses intérêts par des <span class="accent-pink">mercenaires recrutés sur les marchés de l'Ombre</span>. Aucune loi des royaumes n'atteint ces terres reculées.
+                                </div>
+                                <div class="lore-tags">
+                                    <span class="lore-tag pink">Mines</span>
+                                    <span class="lore-tag pink">Baraquements</span>
+                                    <span class="lore-tag pink">Mercenaires</span>
+                                    <span class="lore-tag pink">Terreur</span>
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+
+                </div>
+            </section>
+
+            <!-- ===== LE CIRQUE ===== -->
+            <section class="lore-section" id="cirque">
+                <div class="lore-section-label">Le Cirque des Rescapés</div>
+                <div class="lore-grid">
+
+                    <details class="lore-card" open>
+                        <summary class="lore-summary">
+                            <div class="lore-icon">🎪</div>
+                            <div class="lore-head">
+                                <div class="lore-card-title">Concept &amp; Origine</div>
+                                <div class="lore-card-sub">Troupe itinérante · Anciens esclaves</div>
+                            </div>
+                            <span class="lore-chevron">▼</span>
+                        </summary>
+                        <div class="lore-body">
+                            <div class="lore-text">
+                                C'est une troupe de cirque itinérante, colorée et résolument loufoque. Chaque membre est un <em>ancien esclave affranchi par Rowan</em>. Ils ont trouvé dans le cirque non seulement une liberté, mais une manière de <span class="accent-purple">recouvrer leur humanité</span>.
+                                <div class="lore-tags">
+                                    <span class="lore-tag">Liberté</span>
+                                    <span class="lore-tag">Famille de cœur</span>
+                                    <span class="lore-tag">Reconstruction</span>
+                                    <span class="lore-tag">Itinérant</span>
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+
+                    <details class="lore-card" open>
+                        <summary class="lore-summary">
+                            <div class="lore-icon">🕵️</div>
+                            <div class="lore-head">
+                                <div class="lore-card-title">Cellule de Résistance</div>
+                                <div class="lore-card-sub">Couverture parfaite · Les "coups" de Rowan</div>
+                            </div>
+                            <span class="lore-chevron">▼</span>
+                        </summary>
+                        <div class="lore-body">
+                            <div class="lore-text">
+                                Le spectacle est leur couverture parfaite. En voyageant de ville en ville, ils passent inaperçus aux yeux des autorités. <em>Rowan</em>, le leader, organise les <span class="accent-purple">« coups »</span> pour libérer d'autres esclaves — utilisant le cirque comme une véritable cellule de résistance mobile.
+                                <div class="lore-sub">
+                                    <div class="lore-sub-title">🎭 L'Atmosphère</div>
+                                    Sous le chapiteau, c'est le chaos joyeux : numéros de voltige, jonglage, blagues douteuses et musique entraînante. Le <span class="accent-purple">contraste frappant</span> avec leur passé traumatique fait toute la force de ce groupe.
+                                </div>
+                                <div class="lore-tags">
+                                    <span class="lore-tag">Résistance</span>
+                                    <span class="lore-tag">Infiltration</span>
+                                    <span class="lore-tag">Spectacle</span>
+                                    <span class="lore-tag">Rowan</span>
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+
+                </div>
+            </section>
+
+            <!-- ===== FACTIONS ===== -->
+            <section class="lore-section" id="factions">
+                <div class="lore-section-label">Factions &amp; Éléments de Monde</div>
+                <div class="lore-grid">
+
+                    <details class="lore-card danger">
+                        <summary class="lore-summary">
+                            <div class="lore-icon">🕳️</div>
+                            <div class="lore-head">
+                                <div class="lore-card-title">Le Marché de l'Ombre</div>
+                                <div class="lore-card-sub">Réseau clandestin · Trafic</div>
+                            </div>
+                            <span class="lore-chevron">▼</span>
+                        </summary>
+                        <div class="lore-body">
+                            <div class="lore-text">
+                                Un réseau clandestin qui <span class="accent-pink">alimente les camps comme celui de Gorlag</span> en esclaves et en ressources. Une toile invisible qui traverse les royaumes — trop diffuse pour être démantelée, trop rentable pour que les puissants cherchent vraiment à l'arrêter.
+                                <div class="lore-tags">
+                                    <span class="lore-tag pink">Clandestin</span>
+                                    <span class="lore-tag pink">Trafic</span>
+                                    <span class="lore-tag pink">Corruption</span>
+                                    <span class="lore-tag pink">Underground</span>
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+
+                    <details class="lore-card">
+                        <summary class="lore-summary">
+                            <div class="lore-icon">🎶</div>
+                            <div class="lore-head">
+                                <div class="lore-card-title">Les Guildes de Barde</div>
+                                <div class="lore-card-sub">Élitistes · En rupture avec Selyara</div>
+                            </div>
+                            <span class="lore-chevron">▼</span>
+                        </summary>
+                        <div class="lore-body">
+                            <div class="lore-text">
+                                Elles existent, mais sont souvent trop <em>élitistes ou théoriques</em>. Elles enseignent la technique, les formes, la grammaire magique — mais ont oublié que la vraie magie bardique vient des tripes.
+                                <div class="lore-sub">
+                                    <div class="lore-sub-title">⚡ Selyara — En Rupture Totale</div>
+                                    Avec son approche viscérale et brute, Selyara est <span class="accent-purple">aux antipodes de ces institutions</span>. Elle enseigne par la rigueur, l'honnêteté émotionnelle et l'instinct — ce que nulle guilde ne peut mettre dans un manuel.
+                                </div>
+                                <div class="lore-tags">
+                                    <span class="lore-tag">Institutions</span>
+                                    <span class="lore-tag">Élitisme</span>
+                                    <span class="lore-tag">Technique</span>
+                                    <span class="lore-tag">Opposition</span>
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-inner">
+                <p>© 2026 Sleipnir</p>
+                <div class="footer-links">
+                    <a href="https://github.com/Sleipnir-Ad-Sys" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <a href="../../index.html">Accueil</a>
+                    <a href="../projets.html">Projets</a>
+                    <a href="webtoon.html">La Fine Équipe</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('navToggle').addEventListener('click', () => {
+            document.querySelector('.nav-links').classList.toggle('open');
+        });
+
+        // Scroll fade-in
+        const observer = new IntersectionObserver(
+            entries => entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.style.animation = 'fadeInUp 0.5s ease both';
+                    e.target.style.opacity = '1';
+                }
+            }),
+            { threshold: 0.08 }
+        );
+        document.querySelectorAll('.lore-section').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>

@@ -5,19 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La Fine Équipe — Webtoon — Sleipnir</title>
     <meta name="description" content="La Fine Équipe — Webtoon Dark Fantasy. L'histoire d'Haffeiyin, esclave arrachée à son passé, qui découvre que la musique peut être une arme.">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../../style.css">
     <style>
         /* ===== WEBTOON PAGE ===== */
-
-        /* Accents rose/mauve pour la thématique webtoon */
-        --wt-pink:   #f778ba;
-        --wt-purple: #bc8cff;
-        --wt-grad:   linear-gradient(135deg, #f778ba 0%, #bc8cff 60%, #58a6ff 100%);
+        :root {
+            --wt-pink:   #f778ba;
+            --wt-purple: #bc8cff;
+            --wt-grad:   linear-gradient(135deg, #f778ba 0%, #bc8cff 60%, #58a6ff 100%);
+        }
 
         /* ---- HERO ---- */
         .wt-hero {
             position: relative;
-            min-height: calc(100vh - var(--nav-height));
+            /*min-height: calc(100vh - var(--nav-height));*/
             display: flex;
             align-items: center;
             overflow: hidden;
@@ -294,6 +294,8 @@
         .wt-char-header.haffeiyin { background: linear-gradient(135deg, rgba(247,120,186,0.18), rgba(188,140,255,0.1)); }
         .wt-char-header.rowan     { background: linear-gradient(135deg, rgba(88,166,255,0.14), rgba(63,185,80,0.08)); }
         .wt-char-header.selyara   { background: linear-gradient(135deg, rgba(255,123,114,0.14), rgba(247,120,186,0.1)); }
+        .wt-char-header.gorlag    { background: linear-gradient(135deg, rgba(247,120,186,0.1), rgba(100,50,50,0.2)); }
+        .wt-char-header.avenya    { background: linear-gradient(135deg, rgba(188,140,255,0.12), rgba(88,166,255,0.08)); }
         .wt-char-body { padding: 1.25rem; }
         .wt-char-name {
             font-size: 1.05rem;
@@ -425,11 +427,11 @@
     <!-- NAVIGATION -->
     <nav>
         <div class="nav-inner">
-            <a href="index.html" class="nav-logo">Sleipnir</a>
+            <a href="../../index.html" class="nav-logo">Sleipnir</a>
             <ul class="nav-links">
-                <li><a href="index.html">Accueil</a></li>
-                <li><a href="cv.html">CV</a></li>
-                <li><a href="projets.html" class="active">Projets</a></li>
+                <li><a href="../../index.html">Accueil</a></li>
+                <li><a href="../../cv/cv.html">CV</a></li>
+                <li><a href="../projets.html" class="active">Projets</a></li>
             </ul>
             <div class="nav-toggle" id="navToggle" aria-label="Menu">
                 <span></span><span></span><span></span>
@@ -445,7 +447,7 @@
                 <div class="wt-hero-halo-right"></div>
                 <div class="wt-hero-inner">
 
-                    <a href="projets.html" class="wt-back">← Retour aux projets</a>
+                    <a href="../projets.html" class="wt-back">← Retour aux projets</a>
 
                     <div class="wt-eyebrow">Webtoon · Dark Fantasy</div>
 
@@ -470,7 +472,8 @@
                         <a class="wt-cta webtoons" href="https://www.webtoons.com/fr/canvas/la-fine-%C3%A9quipe/list?title_no=969909" target="_blank" rel="noopener noreferrer">Lire sur Webtoons ↗</a>
                     </div>
                     <div style="margin-top:0.75rem;">
-                        <span class="wip-hint">✏️ En cours de création</span>
+                       <span class="wip-hint">Épisode 1 à 13 disponibles</span>  <br />
+                       <span class="wip-hint">Épisode 14 en cours d'écriture</span>
                     </div>
 
                 </div>
@@ -495,8 +498,8 @@
                         <p>
                             Recueillie par <em>Rowan</em>, un homme au charisme mystérieux et au passé voilé d'ombres,
                             et <em>Selyara</em>, une bardesse au tempérament d'acier, Haffeiyin intègre une caravane pas comme
-                            les autres : <span class="accent">La Fine Équipe</span>Loin d'être un simple spectacle, 
-                            ce cirque itinérant est un havre pour ceux que le monde a rejetés, 
+                            les autres : <span class="accent">La Fine Équipe</span>. Loin d'être un simple spectacle,
+                            ce cirque itinérant est un havre pour ceux que le monde a rejetés,
                             un lieu où les prouesses et la musique servent de bouclier à une famille de cœur.
                         </p>
                         <p>
@@ -698,8 +701,8 @@
                 <p>© 2026 Sleipnir</p>
                 <div class="footer-links">
                     <a href="https://github.com/Sleipnir-Ad-Sys" target="_blank" rel="noopener noreferrer">GitHub</a>
-                    <a href="index.html">Accueil</a>
-                    <a href="projets.html">Projets</a>
+                    <a href="../../index.html">Accueil</a>
+                    <a href="../projets.html">Projets</a>
                 </div>
             </div>
         </div>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NLP — Analyse de Sentiment — Sleipnir</title>
+    <meta name="description" content="Démo interactive — pipeline NLP complet : tokenisation, TF-IDF, classification de sentiments ligne par ligne.">
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../public/demo.css">
+    <style>
+        /* Token pills */
+        .token-wrap { display: flex; flex-wrap: wrap; gap: 5px; }
+        .token { font-family: 'Courier New', monospace; font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; border: 1px solid; }
+        .token.keep { background: rgba(88,166,255,0.08); border-color: rgba(88,166,255,0.25); color: var(--accent-blue); }
+        .token.stop { background: rgba(110,118,129,0.1); border-color: rgba(110,118,129,0.25); color: var(--text-muted); text-decoration: line-through; }
+        .token.pos  { background: rgba(63,185,80,0.08); border-color: rgba(63,185,80,0.25); color: var(--accent-green); }
+        /* Classification report table */
+        .cr-tbl { width: 100%; border-collapse: collapse; font-family: 'Courier New', monospace; font-size: 0.71rem; }
+        .cr-tbl th { background: var(--bg-tertiary); color: var(--accent-blue); padding: 4px 8px; text-align: right; border-bottom: 1px solid var(--border-color); }
+        .cr-tbl th:first-child { text-align: left; }
+        .cr-tbl td { padding: 3px 8px; border-bottom: 1px solid rgba(48,54,61,0.35); text-align: right; color: var(--text-secondary); }
+        .cr-tbl td:first-child { text-align: left; color: var(--accent-purple); }
+        .cr-tbl tr:last-child td { border-bottom: none; }
+        .cr-tbl .avg td { color: var(--text-muted); border-top: 1px solid var(--border-color); }
+        .cr-good { color: var(--accent-green) !important; font-weight: 700; }
+        /* Prediction bubble */
+        .pred-box { text-align: center; padding: 1.2rem 0.8rem; }
+        .pred-text { font-family: 'Courier New', monospace; font-size: 0.82rem; color: var(--text-secondary); background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.6rem 1rem; margin-bottom: 1rem; }
+        .pred-result { font-size: 1.8rem; font-weight: 700; margin: 0.5rem 0 0.3rem; }
+        .pred-result.pos { color: var(--accent-green); }
+        .pred-result.neg { color: #ff7b72; }
+        .pred-proba { font-family: 'Courier New', monospace; font-size: 0.74rem; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-inner">
+            <a href="../../index.html" class="nav-logo">Sleipnir</a>
+            <ul class="nav-links">
+                <li><a href="../../index.html">Accueil</a></li>
+                <li><a href="../../cv/cv.html">CV</a></li>
+                <li><a href="../projets.html" class="active">Projets</a></li>
+            </ul>
+            <div class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></div>
+        </div>
+    </nav>
+
+    <div class="page-wrapper">
+        <div class="container">
+
+            <a href="../projets.html" class="back-link">← Retour aux projets</a>
+
+            <div class="eda-hero">
+                <h1 class="section-title"><span class="gradient-text">NLP — Analyse de Sentiment</span></h1>
+                <p class="section-subtitle">Du texte brut à la classification de sentiments — tokenisation, TF-IDF et régression logistique.</p>
+                <div class="eda-meta">
+                    <span class="eda-badge">🐍 Python</span>
+                    <span class="eda-badge">🧠 NLTK</span>
+                    <span class="eda-badge">📊 scikit-learn</span>
+                    <span class="eda-badge">🔤 TF-IDF</span>
+                </div>
+            </div>
+
+            <div class="step-counter"><strong id="stepNum">1</strong>&thinsp;/&thinsp;<span id="stepTotal">7</span> étapes — <span id="stepTitle" style="color:var(--text-secondary)"></span></div>
+            <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+            <div class="eda-layout-wrap">
+            <div class="eda-layout">
+                <div class="code-panel">
+                    <div class="code-panel-header">
+                        <div class="traffic-light tl-red"></div>
+                        <div class="traffic-light tl-yellow"></div>
+                        <div class="traffic-light tl-green"></div>
+                        <span class="code-panel-title">nlp_sentiment.py</span>
+                    </div>
+                    <div class="code-scroll"><div class="code-block" id="codeBlock"></div></div>
+                </div>
+                <div class="explain-panel">
+                    <div class="explain-panel-header">📖&nbsp; Explication</div>
+                    <div class="explain-scroll" id="explainContent"></div>
+                </div>
+                <div class="preview-panel">
+                    <div class="preview-panel-header">
+                        <span class="preview-label">Output</span>
+                        <span class="step-name-badge" id="stepBadge"></span>
+                    </div>
+                    <div class="preview-content" id="previewContent"></div>
+                </div>
+            </div>
+            </div>
+
+            <div class="eda-controls">
+                <button class="nav-btn" id="btnPrev" disabled>← Précédent</button>
+                <div class="step-dots" id="stepDots"></div>
+                <svg id="countdownRing" class="countdown-ring" viewBox="0 0 30 30" width="30" height="30" aria-hidden="true">
+                    <circle class="ring-track" cx="15" cy="15" r="11" fill="none" stroke-width="2.5"/>
+                    <circle class="ring-fill"  cx="15" cy="15" r="11" fill="none" stroke-width="2.5" transform="rotate(-90 15 15)"/>
+                </svg>
+                <button class="nav-btn nav-btn-autoplay" id="btnAutoplay">▶ Auto</button>
+                <button class="nav-btn nav-btn-primary" id="btnNext">Suivant →</button>
+            </div>
+            <p class="kbd-hint">Navigation : <kbd class="kbd">←</kbd> <kbd class="kbd">→</kbd> &nbsp;·&nbsp; <kbd class="kbd">Espace</kbd> lecture auto</p>
+
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-inner">
+                <p>© 2026 Sleipnir</p>
+                <div class="footer-links">
+                    <a href="https://github.com/Sleipnir-Ad-Sys" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <a href="../../index.html">Accueil</a>
+                    <a href="../projets.html">Projets</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+<script>
+const STEPS = [
+    {
+        title: "Imports & setup NLTK",
+        badge: "✓ prêt",
+        lines: [
+            { t: "code", c: `<span class="kw">import</span> nltk` },
+            { t: "code", c: `<span class="kw">import</span> numpy <span class="kw">as</span> <span class="var">np</span>` },
+            { t: "code", c: `<span class="kw">from</span> nltk.tokenize  <span class="kw">import</span> <span class="fn">word_tokenize</span>` },
+            { t: "code", c: `<span class="kw">from</span> nltk.corpus    <span class="kw">import</span> <span class="fn">stopwords</span>` },
+            { t: "code", c: `<span class="kw">from</span> sklearn.feature_extraction.text <span class="kw">import</span> <span class="fn">TfidfVectorizer</span>` },
+            { t: "code", c: `<span class="kw">from</span> sklearn.linear_model            <span class="kw">import</span> <span class="fn">LogisticRegression</span>` },
+            { t: "code", c: `<span class="kw">from</span> sklearn.model_selection         <span class="kw">import</span> <span class="fn">train_test_split</span>` },
+            { t: "code", c: `<span class="kw">from</span> sklearn.metrics                 <span class="kw">import</span> <span class="fn">classification_report</span>` },
+            { t: "blank" },
+            { t: "code", c: `<span class="cm"># Téléchargement des ressources NLTK</span>` },
+            { t: "code", c: `nltk.<span class="fn">download</span>(<span class="str">'punkt'</span>, <span class="var">quiet</span><span class="op">=</span><span class="kw">True</span>)` },
+            { t: "code", c: `nltk.<span class="fn">download</span>(<span class="str">'stopwords'</span>, <span class="var">quiet</span><span class="op">=</span><span class="kw">True</span>)` },
+        ],
+        html: `
+            <div class="out-label">Environnement</div>
+            <div class="term">
+<span class="td">$</span> <span class="tb">python</span> nlp_sentiment.py<br>
+  nltk          <span class="ty">3.8.1</span><br>
+  scikit-learn  <span class="ty">1.4.0</span><br>
+<span class="td">──────────────────────────</span><br>
+<span class="at">[nltk_data] punkt       ✓ downloaded</span><br>
+<span class="at">[nltk_data] stopwords   ✓ downloaded</span><br>
+<span class="td">──────────────────────────</span><br>
+<span class="at">✓ Prêt</span>
+            </div>
+        `
+    },
+    {
+        title: "Dataset — critiques",
+        badge: "✓ corpus chargé",
+        lines: [
+            { t: "blank" },
+            { t: "code", c: `<span class="cm"># Dataset : critiques de films (extrait)</span>` },
+            { t: "code", c: `<span class="var">corpus</span> <span class="op">=</span> [` },
+            { t: "code", c: `    <span class="str">"film incroyable superbe jeu acteurs"</span>,` },
+            { t: "code", c: `    <span class="str">"nul ennuyeux histoire incompréhensible"</span>,` },
+            { t: "code", c: `    <span class="str">"magnifique chef oeuvre émotions"</span>,` },
+            { t: "code", c: `    <span class="str">"mauvais scénario décevant long"</span>,` },
+            { t: "code", c: `    <span class="str">"excellent humour brillant"</span>,` },
+            { t: "code", c: `    <span class="str">"horrible film raté déçu"</span>,` },
+            { t: "code", c: `<span class="cm">    # ... 994 autres critiques</span>` },
+            { t: "code", c: `]` },
+            { t: "code", c: `<span class="var">labels</span> <span class="op">=</span> [<span class="num">1</span>, <span class="num">0</span>, <span class="num">1</span>, <span class="num">0</span>, <span class="num">1</span>, <span class="num">0</span>, <span class="cm">...]</span>  <span class="cm"># 1=positif 0=négatif</span>` },
+        ],
+        html: `
+            <div class="out-label">Aperçu du corpus</div>
+            <div class="df-wrap">
+                <table class="df-tbl">
+                    <thead><tr><th></th><th>texte</th><th>label</th></tr></thead>
+                    <tbody>
+                        <tr><td>0</td><td>film incroyable superbe…</td><td style="color:#3fb950">1 (positif)</td></tr>
+                        <tr><td>1</td><td>nul ennuyeux histoire…</td><td style="color:#ff7b72">0 (négatif)</td></tr>
+                        <tr><td>2</td><td>magnifique chef oeuvre…</td><td style="color:#3fb950">1 (positif)</td></tr>
+                        <tr><td>3</td><td>mauvais scénario décevant…</td><td style="color:#ff7b72">0 (négatif)</td></tr>
+                        <tr><td>4</td><td>excellent humour brillant</td><td style="color:#3fb950">1 (positif)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="sbox-grid" style="margin-top:0.65rem;">
+                <div class="sbox"><span class="sbox-val">1 000</span><span class="sbox-lbl">Critiques</span></div>
+                <div class="sbox"><span class="sbox-val">500</span><span class="sbox-lbl">Positives</span></div>
+                <div class="sbox"><span class="sbox-val">500</span><span class="sbox-lbl">Négatives</span></div>
+            </div>
+        `
+    },
+    {
+        title: "Tokenisation",
+        badge: "✓ tokens",
+        lines: [
+            { t: "blank" },
+            { t: "code", c: `<span class="cm"># Tokenisation d'un exemple</span>` },
+            { t: "code", c: `<span class="var">texte</span> <span class="op">=</span> <span class="str">"Film incroyable, superbe jeu d'acteurs !"</span>` },
+            { t: "blank" },
+            { t: "code", c: `<span class="cm"># Minuscules + tokenisation</span>` },
+            { t: "code", c: `<span class="var">tokens</span> <span class="op">=</span> <span class="fn">word_tokenize</span>(<span class="var">texte</span>.<span class="fn">lower</span>())` },
+            { t: "blank" },
+            { t: "code", c: `<span class="fn">print</span>(<span class="var">tokens</span>)` },
+        ],
+        html: `
+            <div class="out-label">Texte source</div>
+            <div class="term"><span class="tw">"Film incroyable, superbe jeu d'acteurs !"</span></div>
+            <div class="out-label" style="margin-top:0.65rem;">Tokens produits</div>
+            <div class="token-wrap">
+                <span class="token keep">film</span>
+                <span class="token keep">incroyable</span>
+                <span class="token stop">,</span>
+                <span class="token keep">superbe</span>
+                <span class="token keep">jeu</span>
+                <span class="token stop">d</span>
+                <span class="token stop">'</span>
+                <span class="token keep">acteurs</span>
+                <span class="token stop">!</span>
+            </div>
+            <div style="color:var(--text-muted);font-size:0.7rem;margin-top:6px;font-family:'Courier New',monospace;">9 tokens — mots en <span style="color:var(--accent-blue)">bleu</span>, ponctuation en <span style="color:var(--text-muted)">grisé</span></div>
+        `
+    },
+    {
+        title: "Suppression des stopwords",
+        badge: "✓ filtrés",
+        lines: [
+            { t: "blank" },
+            { t: "code", c: `<span class="cm"># Stopwords français</span>` },
+            { t: "code", c: `<span class="var">stop_fr</span> <span class="op">=</span> <span class="fn">set</span>(<span class="fn">stopwords</span>.<span class="fn">words</span>(<span class="str">'french'</span>))` },
+            { t: "blank" },
+            { t: "code", c: `<span class="cm"># Filtrage : garder seulement les mots</span>` },
+            { t: "code", c: `<span class="var">filtered</span> <span class="op">=</span> [` },
+            { t: "code", c: `    <span class="var">w</span> <span class="kw">for</span> <span class="var">w</span> <span class="kw">in</span> <span class="var">tokens</span>` },
+            { t: "code", c: `    <span class="kw">if</span> <span class="var">w</span>.<span class="fn">isalpha</span>()` },
+            { t: "code", c: `    <span class="kw">and</span> <span class="var">w</span> <span class="kw">not in</span> <span class="var">stop_fr</span>` },
+            { t: "code", c: `]` },
+        ],
+        html: `
+            <div class="out-label">Avant filtrage (9 tokens)</div>
+            <div class="token-wrap">
+                <span class="token keep">film</span>
+                <span class="token stop">,</span>
+                <span class="token keep">incroyable</span>
+                <span class="token keep">superbe</span>
+                <span class="token keep">jeu</span>
+                <span class="token stop">d</span>
+                <span class="token stop">'</span>
+                <span class="token keep">acteurs</span>
+                <span class="token stop">!</span>
+            </div>
+            <div class="out-label" style="margin-top:0.65rem;">Après filtrage (5 tokens)</div>
+            <div class="token-wrap">
+                <span class="token pos">film</span>
+                <span class="token pos">incroyable</span>
+                <span class="token pos">superbe</span>
+                <span class="token pos">jeu</span>
+                <span class="token pos">acteurs</span>
+            </div>
+            <div class="diff-box" style="margin-top:0.65rem;">
+                <div class="diff-row"><span class="diff-lbl">Tokens initiaux</span><span class="diff-old">9</span><span class="diff-arr">→</span><span class="diff-new">5 mots porteurs</span></div>
+                <div class="diff-row"><span class="diff-lbl">Ponctuation</span><span class="diff-old">3</span><span class="diff-arr">→</span><span class="diff-new">0</span></div>
+            </div>
+        `
+    },
+    {
+        title: "Vectorisation TF-IDF",
+        badge: "✓ matrice X",
+        lines: [
+            { t: "blank" },
+            { t: "code", c: `<span class="cm"># TF-IDF sur tout le corpus</span>` },
+            { t: "code", c: `<span class="var">vectorizer</span> <span class="op">=</span> <span class="fn">TfidfVectorizer</span>(` },
+            { t: "code", c: `    <span class="var">max_features</span><span class="op">=</span><span class="num">5000</span>,  <span class="cm"># top 5000 mots</span>` },
+            { t: "code", c: `    <span class="var">ngram_range</span><span class="op">=</span>(<span class="num">1</span>,<span class="num">2</span>),   <span class="cm"># unigrammes + bigrammes</span>` },
+            { t: "code", c: `    <span class="var">stop_words</span><span class="op">=</span><span class="str">'french'</span>` },
+            { t: "code", c: `)` },
+            { t: "blank" },
+            { t: "code", c: `<span class="var">X</span> <span class="op">=</span> <span class="var">vectorizer</span>.<span class="fn">fit_transform</span>(<span class="var">corpus</span>)` },
+            { t: "code", c: `<span class="fn">print</span>(<span class="var">X</span>.shape)  <span class="cm"># (1000, 5000)</span>` },
+        ],
+        html: `
+            <div class="sbox-grid">
+                <div class="sbox"><span class="sbox-val">1000</span><span class="sbox-lbl">Documents</span></div>
+                <div class="sbox"><span class="sbox-val">5 000</span><span class="sbox-lbl">Features</span></div>
+                <div class="sbox"><span class="sbox-val">0.3%</span><span class="sbox-lbl">Densité</span></div>
+            </div>
+            <div class="out-label" style="margin-top:0.75rem;">Scores TF-IDF (extrait)</div>
+            <div class="df-wrap">
+                <table class="df-tbl">
+                    <thead><tr><th>terme</th><th>doc 0</th><th>doc 1</th><th>doc 2</th></tr></thead>
+                    <tbody>
+                        <tr><td>incroyable</td><td style="color:#3fb950">0.612</td><td>0.000</td><td>0.000</td></tr>
+                        <tr><td>superbe</td><td style="color:#3fb950">0.531</td><td>0.000</td><td style="color:#3fb950">0.498</td></tr>
+                        <tr><td>nul</td><td>0.000</td><td style="color:#ff7b72">0.644</td><td>0.000</td></tr>
+                        <tr><td>ennuyeux</td><td>0.000</td><td style="color:#ff7b72">0.588</td><td>0.000</td></tr>
+                        <tr><td>magnifique</td><td>0.000</td><td>0.000</td><td style="color:#3fb950">0.571</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        `
+    },
+    {
+        title: "Entraînement du modèle",
+        badge: "✓ model.fit()",
+        lines: [
+            { t: "blank" },
+            { t: "code", c: `<span class="cm"># Split train / test</span>` },
+            { t: "code", c: `<span class="var">X_train</span>, <span class="var">X_test</span>, <span class="var">y_train</span>, <span class="var">y_test</span> <span class="op">=</span> \\` },
+            { t: "code", c: `    <span class="fn">train_test_split</span>(<span class="var">X</span>, <span class="var">labels</span>, <span class="var">test_size</span><span class="op">=</span><span class="num">0.2</span>,` },
+            { t: "code", c: `                     <span class="var">random_state</span><span class="op">=</span><span class="num">42</span>)` },
+            { t: "blank" },
+            { t: "code", c: `<span class="cm"># Régression logistique</span>` },
+            { t: "code", c: `<span class="var">model</span> <span class="op">=</span> <span class="fn">LogisticRegression</span>(` },
+            { t: "code", c: `    <span class="var">C</span><span class="op">=</span><span class="num">1.0</span>,                <span class="cm"># régularisation</span>` },
+            { t: "code", c: `    <span class="var">max_iter</span><span class="op">=</span><span class="num">1000</span>` },
+            { t: "code", c: `)` },
+            { t: "code", c: `<span class="var">model</span>.<span class="fn">fit</span>(<span class="var">X_train</span>, <span class="var">y_train</span>)` },
+        ],
+        html: `
+            <div class="out-label">Entraînement</div>
+            <div class="term">
+<span class="tw">LogisticRegression(C=1.0, max_iter=1000)</span><br>
+<span class="td">────────────────────────────────</span><br>
+  Train samples   <span class="ty">800</span><br>
+  Test  samples   <span class="ty">200</span><br>
+  Features        <span class="ty">5 000</span><br>
+<span class="td">────────────────────────────────</span><br>
+<span class="at">✓ Convergence en 312 itérations</span>
+            </div>
+        `
+    },
+    {
+        title: "Prédiction & Évaluation",
+        badge: "✓ terminé",
+        lines: [
+            { t: "blank" },
+            { t: "code", c: `<span class="cm"># Prédire un nouveau texte</span>` },
+            { t: "code", c: `<span class="var">nouveau</span> <span class="op">=</span> [<span class="str">"film captivant superbe acteurs"</span>]` },
+            { t: "code", c: `<span class="var">X_new</span>   <span class="op">=</span> <span class="var">vectorizer</span>.<span class="fn">transform</span>(<span class="var">nouveau</span>)  <span class="cm"># pas fit !</span>` },
+            { t: "code", c: `<span class="var">pred</span>    <span class="op">=</span> <span class="var">model</span>.<span class="fn">predict</span>(<span class="var">X_new</span>)` },
+            { t: "code", c: `<span class="var">proba</span>   <span class="op">=</span> <span class="var">model</span>.<span class="fn">predict_proba</span>(<span class="var">X_new</span>)` },
+            { t: "blank" },
+            { t: "code", c: `<span class="cm"># Évaluation globale</span>` },
+            { t: "code", c: `<span class="var">y_pred</span> <span class="op">=</span> <span class="var">model</span>.<span class="fn">predict</span>(<span class="var">X_test</span>)` },
+            { t: "code", c: `<span class="fn">print</span>(<span class="fn">classification_report</span>(<span class="var">y_test</span>, <span class="var">y_pred</span>))` },
+        ],
+        html: `
+            <div class="out-label">Prédiction — nouvelle critique</div>
+            <div class="pred-box">
+                <div class="pred-text">"film captivant superbe acteurs"</div>
+                <div class="pred-result pos">😊 Positif</div>
+                <div class="pred-proba">P(positif) = 0.924 &nbsp;·&nbsp; P(négatif) = 0.076</div>
+            </div>
+            <div class="out-label">Rapport sur le jeu de test (200 critiques)</div>
+            <div class="df-wrap">
+                <table class="cr-tbl">
+                    <thead><tr><th></th><th>precision</th><th>recall</th><th>f1</th><th>support</th></tr></thead>
+                    <tbody>
+                        <tr><td>négatif</td><td class="cr-good">0.88</td><td>0.86</td><td class="cr-good">0.87</td><td>100</td></tr>
+                        <tr><td>positif</td><td>0.87</td><td class="cr-good">0.89</td><td class="cr-good">0.88</td><td>100</td></tr>
+                    </tbody>
+                    <tbody class="avg">
+                        <tr><td>accuracy</td><td></td><td></td><td class="cr-good">0.88</td><td>200</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        `
+    }
+];
+
+const EXPLAINS = [
+    /* 0 — Imports */
+    `<div class="explain-card"><span class="explain-fn">NLTK (Natural Language Toolkit)</span><p class="explain-txt">Bibliothèque Python dédiée au NLP — tokenisation, stopwords, stemming, étiquetage grammatical. Référence académique depuis 2001.</p></div>
+    <div class="explain-card"><span class="explain-fn">nltk.download()</span><p class="explain-txt">Télécharge les ressources linguistiques : <code>punkt</code> = règles de tokenisation, <code>stopwords</code> = liste de mots vides par langue.</p></div>
+    <div class="explain-tip"><span class="explain-icon">💡</span><span>Pour la production, préférer <strong>spaCy</strong> (plus rapide, modèles pré-entraînés) ou <strong>Transformers/BERT</strong> pour les tâches avancées.</span></div>`,
+
+    /* 1 — Dataset */
+    `<div class="explain-card"><span class="explain-fn">Apprentissage supervisé</span><p class="explain-txt">Chaque critique est associée à un label : 1 = positif, 0 = négatif. Le modèle apprend à associer des patterns textuels à ces catégories.</p></div>
+    <div class="explain-card"><span class="explain-fn">Qualité du dataset</span><p class="explain-txt">Classes équilibrées (500/500) → pas de biais de classe. En pratique, les datasets réels sont souvent déséquilibrés.</p></div>
+    <div class="explain-tip"><span class="explain-icon">💡</span><span>Datasets publics recommandés : <strong>IMDB</strong> (50k critiques EN), <strong>CineSD</strong> (FR), <strong>SST2</strong> (Stanford Sentiment Treebank).</span></div>`,
+
+    /* 2 — Tokenisation */
+    `<div class="explain-card"><span class="explain-fn">word_tokenize()</span><p class="explain-txt">Découpe le texte en <strong>tokens</strong> (unités) selon des règles linguistiques : sépare la ponctuation, gère les contractions (<code>d'acteurs</code> → <code>d</code> + <code>'</code> + <code>acteurs</code>).</p></div>
+    <div class="explain-card"><span class="explain-fn">.lower()</span><p class="explain-txt">Met tout en minuscules avant la tokenisation — <code>Film</code> et <code>film</code> doivent être le même token.</p></div>
+    <div class="explain-tip"><span class="explain-icon">💡</span><span>La tokenisation est la première étape de tout pipeline NLP. Un mauvais tokenizer peut nuire à toutes les étapes suivantes.</span></div>`,
+
+    /* 3 — Stopwords */
+    `<div class="explain-card"><span class="explain-fn">Stopwords</span><p class="explain-txt">Mots très fréquents sans valeur discriminante pour le sentiment : <em>le, la, de, et, un, je…</em> Les supprimer réduit le bruit et le nombre de features.</p></div>
+    <div class="explain-card"><span class="explain-fn">.isalpha()</span><p class="explain-txt">Filtre les tokens qui ne contiennent que des lettres — élimine la ponctuation, les chiffres et les caractères spéciaux.</p></div>
+    <div class="explain-tip warn"><span class="explain-icon">⚠️</span><span>Supprimer <em>tous</em> les stopwords peut nuire : <code>ne…pas</code> exprime la négation. Pour une analyse fine, conserver les mots de négation.</span></div>`,
+
+    /* 4 — TF-IDF */
+    `<div class="explain-card"><span class="explain-fn">TF (Term Frequency)</span><p class="explain-txt">Fréquence du mot dans le document. Un mot qui apparaît 5 fois dans une critique a un TF plus élevé.</p></div>
+    <div class="explain-card"><span class="explain-fn">IDF (Inverse Document Frequency)</span><p class="explain-txt">Pénalise les mots trop communs dans tout le corpus. <em>Film</em> apparaît dans toutes les critiques → IDF faible. <em>Incroyable</em> est rare → IDF élevé.</p></div>
+    <div class="explain-card"><span class="explain-fn">ngram_range=(1,2)</span><p class="explain-txt">Capture aussi les bigrammes : <code>pas bien</code> et <code>très mauvais</code> deviennent des features — améliore la gestion de la négation.</p></div>`,
+
+    /* 5 — Training */
+    `<div class="explain-card"><span class="explain-fn">LogisticRegression</span><p class="explain-txt">Malgré son nom, c'est un modèle de <strong>classification</strong>. Il apprend un score pour chaque feature (poids des mots) et prédit la probabilité d'appartenir à chaque classe.</p></div>
+    <div class="explain-card"><span class="explain-fn">Paramètre C</span><p class="explain-txt">Inverse de la régularisation. <code>C=1</code> est la valeur par défaut. Plus petit → plus de régularisation → modèle plus simple mais potentiellement sous-ajusté.</p></div>
+    <div class="explain-tip"><span class="explain-icon">💡</span><span>La régression logistique est excellente sur des features TF-IDF sparses. Elle est interprétable : on peut inspecter les poids des mots les plus influents.</span></div>`,
+
+    /* 6 — Prédiction */
+    `<div class="explain-card"><span class="explain-fn">vectorizer.transform() (pas fit_transform !)</span><p class="explain-txt">Sur les nouvelles données, on utilise le <strong>même vocabulaire</strong> appris à l'entraînement. <code>fit_transform()</code> reconstruirait un vocabulaire différent — erreur classique en NLP.</p></div>
+    <div class="explain-card"><span class="explain-fn">predict_proba()</span><p class="explain-txt">Retourne les probabilités pour chaque classe. Permet de mesurer la <strong>confiance</strong> du modèle, pas seulement la classe prédite.</p></div>
+    <div class="explain-tip ok"><span class="explain-icon">✅</span><span>88% d'accuracy avec TF-IDF + régression logistique est un excellent baseline. BERT/CamemBERT atteindrait ~95% sur le même corpus.</span></div>`
+];
+
+</script>
+<script src="../../public/demo-engine.js"></script>
+</body>
+</html>

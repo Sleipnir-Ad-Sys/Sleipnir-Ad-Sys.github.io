@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concept Art — Personnages — Sleipnir</title>
+    <meta name="description" content="Concept Art et design de personnages — fiches de personnage, feuilles d'expressions, tenues et variations.">
+    <link rel="stylesheet" href="../../../style.css">
+    <style>
+        /* ===== CAROUSEL PAGE — DESSIN ===== */
+        :root {
+            --ds-pink:   #f778ba;
+            --ds-purple: #bc8cff;
+            --ds-grad:   linear-gradient(135deg, #f778ba 0%, #bc8cff 100%);
+        }
+
+        .ds-hero {
+            padding: 3.5rem 0 3rem;
+        }
+
+        .ds-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.83rem;
+            margin-bottom: 2rem;
+            transition: var(--transition);
+        }
+        .ds-back:hover { color: var(--ds-pink); }
+
+        .ds-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--ds-pink);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .ds-eyebrow::before,
+        .ds-eyebrow::after {
+            content: '';
+            display: block;
+            width: 28px;
+            height: 1px;
+            background: var(--ds-pink);
+            opacity: 0.5;
+        }
+
+        .ds-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 900;
+            letter-spacing: -1.5px;
+            line-height: 1.1;
+            margin-bottom: 0.6rem;
+            background: var(--ds-grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .ds-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-width: 580px;
+            margin-bottom: 2rem;
+        }
+
+        .ds-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(247,120,186,0.35), rgba(188,140,255,0.35), transparent);
+            margin: 0 0 3.5rem;
+        }
+
+        /* ===== CAROUSEL ===== */
+        .carousel-section {
+            margin-bottom: 5rem;
+        }
+
+        .carousel-section-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            color: var(--ds-pink);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+        .carousel-section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(247,120,186,0.3), transparent);
+        }
+
+        .carousel-wrapper {
+            position: relative;
+        }
+
+        .carousel-track-outer {
+            overflow: hidden;
+            border-radius: var(--radius-md);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            aspect-ratio: 16 / 9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: var(--bg-tertiary);
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        /* Watermark de protection */
+        .carousel-slide::after {
+            content: 'Sleipnir_Art';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            color: rgba(255, 255, 255, 0.18);
+            font-size: 1.6rem;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            letter-spacing: 0.25em;
+            pointer-events: none;
+            user-select: none;
+            text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
+            white-space: nowrap;
+            z-index: 5;
+        }
+
+        /* Placeholder quand pas d'image */
+        .carousel-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            width: 100%;
+            height: 100%;
+            min-height: 380px;
+            color: var(--text-muted);
+            font-size: 0.88rem;
+        }
+        .carousel-placeholder .ph-icon {
+            font-size: 3.5rem;
+            opacity: 0.4;
+        }
+        .carousel-placeholder p {
+            opacity: 0.5;
+            font-style: italic;
+        }
+
+        /* Caption */
+        .carousel-caption {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .carousel-caption-text {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            flex: 1;
+        }
+        .carousel-caption-counter {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-family: 'Courier New', monospace;
+            white-space: nowrap;
+        }
+        .carousel-caption-counter strong { color: var(--ds-pink); }
+
+        /* Controls */
+        .carousel-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.25rem;
+        }
+
+        .carousel-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        .carousel-btn:hover {
+            border-color: var(--ds-pink);
+            color: var(--ds-pink);
+            background: rgba(247,120,186,0.08);
+        }
+        .carousel-btn:disabled {
+            opacity: 0.3;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .carousel-dots {
+            display: flex;
+            gap: 6px;
+        }
+        .carousel-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--border-color);
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            padding: 0;
+        }
+        .carousel-dot.active {
+            background: var(--ds-pink);
+            width: 22px;
+            border-radius: 4px;
+        }
+
+        /* WIP notice */
+        .wip-notice {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: rgba(247,120,186,0.08);
+            border: 1px solid rgba(247,120,186,0.25);
+            color: var(--ds-pink);
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 5px 14px;
+            border-radius: 999px;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="nav-inner">
+            <a href="../../../index.html" class="nav-logo">Sleipnir</a>
+            <ul class="nav-links">
+                <li><a href="../../../index.html">Accueil</a></li>
+                <li><a href="../../../cv/cv.html">CV</a></li>
+                <li><a href="../../projets.html" class="active">Projets</a></li>
+            </ul>
+            <div class="nav-toggle" id="navToggle" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-wrapper">
+        <div class="container">
+
+            <!-- Hero -->
+            <div class="ds-hero">
+                <a href="../../projets.html" class="ds-back">← Retour aux projets</a>
+                <div class="ds-eyebrow">Dessin &amp; Illustration</div>
+                <h1 class="ds-title">Concept Art — Personnages</h1>
+                <p class="ds-subtitle">
+                    Design de personnages pour l'univers du webtoon : fiches de personnage, feuilles d'expressions, tenues et variations. Chaque personnage possède son propre langage visuel.
+                </p>
+            </div>
+
+            <div class="ds-divider"></div>
+
+            <!-- ===== CAROUSEL 1 — Recherche ===== -->
+            <section class="carousel-section">
+                <div class="carousel-section-label">Recherche</div>
+                <div class="carousel-wrapper" id="carousel-1">
+                    <div class="carousel-track-outer">
+                        <div class="carousel-track" data-carousel="1">
+                            <div class="carousel-slide">
+                                <div class="carousel-placeholder">
+                                    <span class="ph-icon">🔍</span>
+                                    <p>Recherche — à venir</p>
+                                </div>
+                            </div>
+                            <div class="carousel-slide">
+                                <div class="carousel-placeholder">
+                                    <span class="ph-icon">🔍</span>
+                                    <p>Recherche — à venir</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-caption">
+                            <span class="carousel-caption-text" data-caption="1">Recherche de personnage</span>
+                            <span class="carousel-caption-counter" data-counter="1"><strong>1</strong> / 2</span>
+                        </div>
+                    </div>
+                    <div class="carousel-controls">
+                        <button class="carousel-btn" data-prev="1" aria-label="Précédent">&#8592;</button>
+                        <div class="carousel-dots" data-dots="1">
+                            <button class="carousel-dot active"></button>
+                            <button class="carousel-dot"></button>
+                        </div>
+                        <button class="carousel-btn" data-next="1" aria-label="Suivant">&#8594;</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== CAROUSEL 2 — Expressions & Poses ===== -->
+            <section class="carousel-section">
+                <div class="carousel-section-label">Expressions &amp; Poses</div>
+                <div class="carousel-wrapper" id="carousel-2">
+                    <div class="carousel-track-outer">
+                        <div class="carousel-track" data-carousel="2">
+                            <div class="carousel-slide">
+                                <div class="carousel-placeholder">
+                                    <span class="ph-icon">😶</span>
+                                    <p>Feuille d'expressions — à venir</p>
+                                </div>
+                            </div>
+                            <div class="carousel-slide">
+                                <div class="carousel-placeholder">
+                                    <span class="ph-icon">😶</span>
+                                    <p>Feuille d'expressions — à venir</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-caption">
+                            <span class="carousel-caption-text" data-caption="2">Feuille d'expressions</span>
+                            <span class="carousel-caption-counter" data-counter="2"><strong>1</strong> / 2</span>
+                        </div>
+                    </div>
+                    <div class="carousel-controls">
+                        <button class="carousel-btn" data-prev="2" aria-label="Précédent">&#8592;</button>
+                        <div class="carousel-dots" data-dots="2">
+                            <button class="carousel-dot active"></button>
+                            <button class="carousel-dot"></button>
+                        </div>
+                        <button class="carousel-btn" data-next="2" aria-label="Suivant">&#8594;</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== CAROUSEL 3 — Final ===== -->
+            <section class="carousel-section">
+                <div class="carousel-section-label">Final</div>
+                <div class="carousel-wrapper" id="carousel-3">
+                    <div class="carousel-track-outer">
+                        <div class="carousel-track" data-carousel="3">
+                            <div class="carousel-slide">
+                                <div class="carousel-placeholder">
+                                    <span class="ph-icon">🌿</span>
+                                    <p>Fiche personnage — à venir</p>
+                                </div>
+                            </div>
+                            <div class="carousel-slide">
+                                <div class="carousel-placeholder">
+                                    <span class="ph-icon">🌿</span>
+                                    <p>Fiche personnage — à venir</p>
+                                </div>
+                            </div>
+                            <div class="carousel-slide">
+                                <div class="carousel-placeholder">
+                                    <span class="ph-icon">🌿</span>
+                                    <p>Fiche personnage — à venir</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-caption">
+                            <span class="carousel-caption-text" data-caption="3">Fiche de personnage finale</span>
+                            <span class="carousel-caption-counter" data-counter="3"><strong>1</strong> / 3</span>
+                        </div>
+                    </div>
+                    <div class="carousel-controls">
+                        <button class="carousel-btn" data-prev="3" aria-label="Précédent">&#8592;</button>
+                        <div class="carousel-dots" data-dots="3">
+                            <button class="carousel-dot active"></button>
+                            <button class="carousel-dot"></button>
+                            <button class="carousel-dot"></button>
+                        </div>
+                        <button class="carousel-btn" data-next="3" aria-label="Suivant">&#8594;</button>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-inner">
+                <p>© 2026 Sleipnir</p>
+                <div class="footer-links">
+                    <a href="https://github.com/Sleipnir-Ad-Sys" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <a href="../../../index.html">Accueil</a>
+                    <a href="../../projets.html">Projets</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile nav
+        document.getElementById('navToggle').addEventListener('click', () => {
+            document.querySelector('.nav-links').classList.toggle('open');
+        });
+
+        // Protection — clic droit désactivé sur les images
+        document.addEventListener('contextmenu', function(e) {
+            if (e.target.closest('.carousel-track')) e.preventDefault();
+        });
+
+        // ── Moteur de chargement automatique d'images ──────────────────
+        // Le carousel se met à jour tout seul.
+
+        function probeImages(folder) {
+            return new Promise(function(resolve) {
+                var found = [];
+                var i = 1;
+                var exts = ['jpg', 'jpeg', 'png', 'webp'];
+                function tryIndex() {
+                    var pad = String(i).padStart(2, '0');
+                    var e = 0;
+                    function tryExt() {
+                        if (e >= exts.length) { resolve(found); return; }
+                        var src = folder + '/' + pad + '.' + exts[e];
+                        var img = new Image();
+                        img.onload = function() { found.push(src); i++; tryIndex(); };
+                        img.onerror = function() { e++; tryExt(); };
+                        img.src = src;
+                    }
+                    tryExt();
+                }
+                tryIndex();
+            });
+        }
+
+        function setupCarousel(id, folder) {
+            var track    = document.querySelector('[data-carousel="' + id + '"]');
+            var dotsEl   = document.querySelector('[data-dots="' + id + '"]');
+            var counterEl = document.querySelector('[data-counter="' + id + '"]');
+            var btnPrev  = document.querySelector('[data-prev="' + id + '"]');
+            var btnNext  = document.querySelector('[data-next="' + id + '"]');
+            var current  = 0;
+
+            function activate(images) {
+                if (images.length > 0) {
+                    track.innerHTML = images.map(function(src) {
+                        return '<div class="carousel-slide"><img src="' + src + '" alt="" loading="lazy"></div>';
+                    }).join('');
+                    dotsEl.innerHTML = images.map(function(_, i) {
+                        return '<button class="carousel-dot' + (i === 0 ? ' active' : '') + '"></button>';
+                    }).join('');
+                    counterEl.innerHTML = '<strong>1</strong> / ' + images.length;
+                }
+                var slides = track.querySelectorAll('.carousel-slide');
+                var total  = slides.length;
+                var dots   = dotsEl.querySelectorAll('.carousel-dot');
+                var strong = counterEl ? counterEl.querySelector('strong') : null;
+
+                function goTo(n) {
+                    current = Math.max(0, Math.min(n, total - 1));
+                    track.style.transform = 'translateX(-' + (current * 100) + '%)';
+                    if (strong) strong.textContent = current + 1;
+                    dots.forEach(function(d, i) { d.classList.toggle('active', i === current); });
+                    if (btnPrev) btnPrev.disabled = current === 0;
+                    if (btnNext) btnNext.disabled = current === total - 1;
+                }
+                if (btnPrev) btnPrev.addEventListener('click', function() { goTo(current - 1); });
+                if (btnNext) btnNext.addEventListener('click', function() { goTo(current + 1); });
+                dots.forEach(function(d, i) { d.addEventListener('click', function() { goTo(i); }); });
+                var startX = 0;
+                track.addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; }, { passive: true });
+                track.addEventListener('touchend', function(e) {
+                    var dx = e.changedTouches[0].clientX - startX;
+                    if (Math.abs(dx) > 40) goTo(current + (dx < 0 ? 1 : -1));
+                });
+                goTo(0);
+            }
+
+            probeImages(folder).then(activate);
+        }
+
+        // ── Lancer les carousels (un dossier par section) ────────────────
+        setupCarousel('1', 'images/recherche');
+        setupCarousel('2', 'images/expressions');
+        setupCarousel('3', 'images/fiches');
+    </script>
+</body>
+</html>

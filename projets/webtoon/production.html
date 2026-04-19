@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Production — La Fine Équipe — Sleipnir</title>
+    <meta name="description" content="Process de production du webtoon La Fine Équipe : storyboard, encrage, couleurs et dialogues.">
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        /* ===== PAGE PRODUCTION WEBTOON ===== */
+        :root {
+            --prod-pink:   #f778ba;
+            --prod-purple: #bc8cff;
+        }
+        /* ---- HERO ---- */
+
+        /* ---- HERO ---- */
+        .prod-hero {
+            padding: 5rem 0 3.5rem;
+            position: relative;
+        }
+
+        .prod-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.83rem;
+            margin-bottom: 2.5rem;
+            transition: var(--transition);
+        }
+        .prod-back:hover { color: var(--prod-pink); }
+
+        .prod-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--prod-pink);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .prod-eyebrow::before,
+        .prod-eyebrow::after {
+            content: '';
+            display: block;
+            width: 28px; height: 1px;
+            background: var(--prod-pink);
+            opacity: 0.5;
+        }
+
+        .prod-title {
+            font-size: clamp(2.4rem, 6vw, 4.2rem);
+            font-weight: 900;
+            letter-spacing: -2px;
+            line-height: 1.05;
+            margin-bottom: 0.8rem;
+            background: linear-gradient(135deg, #f778ba 0%, #bc8cff 55%, #e6edf3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .prod-title-sub {
+            font-size: 0.52em;
+            letter-spacing: -0.5px;
+            display: block;
+        }
+
+        .prod-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.75;
+            max-width: 580px;
+            margin-bottom: 2.5rem;
+        }
+
+        /* ---- PIPELINE ---- */
+        .prod-pipeline {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 3.5rem;
+        }
+        .prod-step {
+            padding: 5px 16px;
+            border-radius: 999px;
+            font-size: 0.77rem;
+            font-weight: 600;
+            background: rgba(247,120,186,0.1);
+            border: 1px solid rgba(247,120,186,0.3);
+            color: var(--prod-pink);
+        }
+        .prod-step-arrow {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        /* ---- DIVIDER ---- */
+        .prod-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(247,120,186,0.3), rgba(188,140,255,0.3), transparent);
+            margin: 0 0 4rem;
+        }
+
+        /* ---- SECTION ---- */
+        .prod-section {
+            margin-bottom: 5rem;
+        }
+        .prod-section-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            color: var(--prod-pink);
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        .prod-step-num {
+            width: 22px; height: 22px;
+            border-radius: 50%;
+            background: rgba(247,120,186,0.12);
+            border: 1px solid rgba(247,120,186,0.3);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.67rem;
+            font-weight: 700;
+            color: var(--prod-pink);
+            flex-shrink: 0;
+        }
+        .prod-section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(247,120,186,0.3), transparent);
+        }
+        .prod-section-desc {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            line-height: 1.75;
+            margin-bottom: 1.75rem;
+            max-width: 640px;
+        }
+
+        /* ---- CAROUSEL ---- */
+        .carousel-wrapper {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+        .carousel-track-outer { position: relative; overflow: hidden; }
+        .carousel-track {
+            display: flex;
+            transition: transform 0.38s cubic-bezier(.4,0,.2,1);
+            will-change: transform;
+        }
+
+        /* Slide : affiche une zone cadrée (crop) de l'image */
+        .carousel-slide {
+            min-width: 100%;
+            height: 480px;
+            position: relative;
+            overflow: hidden;
+            cursor: zoom-in;
+        }
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top center;
+            display: block;
+            user-select: none;
+            -webkit-user-drag: none;
+            transition: transform 0.25s ease;
+        }
+        .carousel-slide:hover img { transform: scale(1.02); }
+
+        /* Watermark carousel */
+        .carousel-slide::after {
+            content: 'Sleipnir_Art';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            color: rgba(255,255,255,0.18);
+            font-size: 1.6rem;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            letter-spacing: 0.25em;
+            pointer-events: none;
+            user-select: none;
+            text-shadow: 0 1px 6px rgba(0,0,0,0.4);
+            white-space: nowrap;
+            z-index: 5;
+        }
+
+        /* Hint clic */
+        .carousel-hint {
+            position: absolute;
+            bottom: 10px; right: 12px;
+            background: rgba(0,0,0,0.55);
+            color: rgba(255,255,255,0.75);
+            font-size: 0.68rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            pointer-events: none;
+            z-index: 6;
+            backdrop-filter: blur(4px);
+            letter-spacing: 0.5px;
+        }
+
+        .carousel-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            width: 100%;
+            height: 100%;
+            min-height: 220px;
+            color: var(--text-muted);
+        }
+        .carousel-placeholder .ph-icon { font-size: 2rem; opacity: 0.4; }
+        .carousel-placeholder p { font-size: 0.8rem; }
+
+        .carousel-caption {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.55rem 1rem;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+        }
+        .carousel-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 0.7rem 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+        .carousel-btn {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: var(--transition);
+        }
+        .carousel-btn:hover:not(:disabled) {
+            border-color: var(--prod-pink);
+            color: var(--prod-pink);
+            background: rgba(247,120,186,0.08);
+        }
+        .carousel-btn:disabled { opacity: 0.3; cursor: default; }
+        .carousel-dots { display: flex; gap: 6px; }
+        .carousel-dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            border: none;
+            background: var(--border-color);
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 0;
+        }
+        .carousel-dot.active {
+            background: var(--prod-pink);
+            transform: scale(1.25);
+        }
+
+        /* ---- LIGHTBOX ---- */
+        .lightbox-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9000;
+            background: rgba(0,0,0,0.88);
+            backdrop-filter: blur(6px);
+            align-items: center;
+            justify-content: center;
+            cursor: zoom-out;
+        }
+        .lightbox-overlay.open { display: flex; }
+        .lightbox-inner {
+            position: relative;
+            width: 45vw;
+            max-width: 96vw;
+            max-height: 92vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(247,120,186,0.4) transparent;
+            cursor: default;
+        }
+        .lightbox-inner::-webkit-scrollbar { width: 5px; }
+        .lightbox-inner::-webkit-scrollbar-thumb { background: rgba(247,120,186,0.4); border-radius: 3px; }
+        .lightbox-img-wrap { position: relative; display: inline-block; line-height: 0; }
+        .lightbox-img-wrap::after {
+            content: 'Sleipnir_Art';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            color: rgba(255,255,255,0.18);
+            font-size: 2rem;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            letter-spacing: 0.3em;
+            pointer-events: none;
+            user-select: none;
+            text-shadow: 0 1px 8px rgba(0,0,0,0.5);
+            white-space: nowrap;
+            z-index: 2;
+        }
+        .lightbox-img-wrap img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 6px;
+            box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+        .lightbox-close {
+            position: fixed;
+            top: 18px; right: 22px;
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s;
+            z-index: 9001;
+        }
+        .lightbox-close:hover { background: rgba(247,120,186,0.3); }
+        .lightbox-nav {
+            position: fixed;
+            top: 50%; transform: translateY(-50%);
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.18);
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s;
+            z-index: 9001;
+        }
+        .lightbox-nav:hover { background: rgba(247,120,186,0.3); }
+        .lightbox-nav.prev { left: 16px; }
+        .lightbox-nav.next { right: 16px; }
+        .lightbox-nav:disabled { opacity: 0.2; cursor: default; }
+        .lightbox-counter {
+            position: fixed;
+            bottom: 18px; left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.78rem;
+            color: rgba(255,255,255,0.55);
+            z-index: 9001;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 768px) {
+            .prod-step-arrow { display: none; }
+            .carousel-slide { height: 320px; }
+            .lightbox-inner { width: 88vw; }
+            .lightbox-img-wrap img { width: 100%; height: auto; }
+            .lightbox-nav.prev { left: 6px; }
+            .lightbox-nav.next { right: 6px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="nav-inner">
+            <a href="../../index.html" class="nav-logo">Sleipnir</a>
+            <ul class="nav-links">
+                <li><a href="../../index.html">Accueil</a></li>
+                <li><a href="../../cv/cv.html">CV</a></li>
+                <li><a href="../projets.html" class="active">Projets</a></li>
+            </ul>
+            <div class="nav-toggle" id="navToggle" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- LIGHTBOX -->
+    <div class="lightbox-overlay" id="lightbox" aria-modal="true" role="dialog">
+        <button class="lightbox-close" id="lbClose" aria-label="Fermer">✕</button>
+        <button class="lightbox-nav prev" id="lbPrev" aria-label="Précédent">&#8592;</button>
+        <div class="lightbox-inner">
+            <div class="lightbox-img-wrap">
+                <img id="lbImg" src="" alt="">
+            </div>
+        </div>
+        <button class="lightbox-nav next" id="lbNext" aria-label="Suivant">&#8594;</button>
+        <div class="lightbox-counter" id="lbCounter"></div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="container">
+
+            <!-- ===== HERO ===== -->
+            <div class="prod-hero">
+                <a href="../projets.html" class="prod-back">← Retour aux projets</a>
+                <div class="prod-eyebrow">Webtoon · Process de création</div>
+                <h1 class="prod-title">
+                    La Fine Équipe
+                    <span class="prod-title-sub">Production planche par planche</span>
+                </h1>
+                <p class="prod-subtitle">
+                    De l'esquisse au rendu final — les quatre étapes qui donnent vie aux planches. Cliquez sur une image pour l'agrandir.
+                </p>
+                <div class="prod-pipeline">
+                    <span class="prod-step">01 · Storyboard</span>
+                    <span class="prod-step-arrow">→</span>
+                    <span class="prod-step">02 · Encrage</span>
+                    <span class="prod-step-arrow">→</span>
+                    <span class="prod-step">03 · Couleurs</span>
+                    <span class="prod-step-arrow">→</span>
+                    <span class="prod-step">04 · Dialogues</span>
+                </div>
+
+                <p class="prod-subtitle">
+                    Les épisodes de démonstration sur la seconde page de l'épisode 6 et la première page de l'épisode 9.<br />
+                    Pour voir les images en pleine résolution, cliquez dessus. Les épisodes complets sont disponibles sur
+                    <a class="wt-cta webtoons" href="https://www.webtoons.com/fr/canvas/la-fine-%C3%A9quipe/list?title_no=969909" target="_blank" rel="noopener noreferrer">Webtoons ↗</a>.
+                </p>
+                
+            </div>
+
+            <div class="prod-divider"></div>
+
+            <!-- ===== SECTION 1 — STORYBOARD ===== -->
+            <section class="prod-section">
+                <div class="prod-section-label">
+                    <span class="prod-step-num">01</span>
+                    Storyboard
+                </div>
+                <p class="prod-section-desc">
+                    Le storyboard pose la structure narrative de la planche : découpage des cases, cadrages et rythme visuel. Ces esquisses rapides permettent de valider la mise en scène avant de passer au dessin définitif.
+                </p>
+
+                <div class="carousel-wrapper">
+                    <div class="carousel-track-outer">
+                        <div class="carousel-track" data-carousel="1">
+                            <div class="carousel-slide">
+                                <div class="carousel-placeholder">
+                                    <span class="ph-icon">🎬</span>
+                                    <p>Pages storyboard — à venir</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-caption">
+                        <span data-caption="1">Storyboard</span>
+                        <span data-counter="1"><strong>1</strong> / 1</span>
+                    </div>
+                    <div class="carousel-controls">
+                        <button class="carousel-btn" data-prev="1" aria-label="Précédent">&#8592;</button>
+                        <div class="carousel-dots" data-dots="1"><button class="carousel-dot active"></button></div>
+                        <button class="carousel-btn" data-next="1" aria-label="Suivant">&#8594;</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== SECTION 2 — ENCRAGE ===== -->
+            <section class="prod-section">
+                <div class="prod-section-label">
+                    <span class="prod-step-num">02</span>
+                    Encrage
+                </div>
+                <p class="prod-section-desc">
+                    L'encrage transforme les esquisses en lignes propres et expressives. C'est l'étape où les personnages et décors prennent leur forme définitive, avec variation d'épaisseur et de pression pour donner du relief au trait.
+                </p>
+
+                <div class="carousel-wrapper">
+                    <div class="carousel-track-outer">
+                        <div class="carousel-track" data-carousel="2">
+                            <div class="carousel-slide">
+                                <div class="carousel-placeholder">
+                                    <span class="ph-icon">✌️</span>
+                                    <p>Pages encrées — à venir</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-caption">
+                        <span data-caption="2">Encrage</span>
+                        <span data-counter="2"><strong>1</strong> / 1</span>
+                    </div>
+                    <div class="carousel-controls">
+                        <button class="carousel-btn" data-prev="2" aria-label="Précédent">&#8592;</button>
+                        <div class="carousel-dots" data-dots="2"><button class="carousel-dot active"></button></div>
+                        <button class="carousel-btn" data-next="2" aria-label="Suivant">&#8594;</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== SECTION 3 — COULEURS ===== -->
+            <section class="prod-section">
+                <div class="prod-section-label">
+                    <span class="prod-step-num">03</span>
+                    Couleurs
+                </div>
+                <p class="prod-section-desc">
+                    La mise en couleur installe l'ambiance et les émotions de chaque scène. Palette sombre pour les moments de tension, tons chauds pour les instants de répit — chaque choix chromatique accompagne la narration.
+                </p>
+
+                <div class="carousel-wrapper">
+                    <div class="carousel-track-outer">
+                        <div class="carousel-track" data-carousel="3">
+                            <div class="carousel-slide">
+                                <div class="carousel-placeholder">
+                                    <span class="ph-icon">🎨</span>
+                                    <p>Pages colorisées — à venir</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-caption">
+                        <span data-caption="3">Couleurs</span>
+                        <span data-counter="3"><strong>1</strong> / 1</span>
+                    </div>
+                    <div class="carousel-controls">
+                        <button class="carousel-btn" data-prev="3" aria-label="Précédent">&#8592;</button>
+                        <div class="carousel-dots" data-dots="3"><button class="carousel-dot active"></button></div>
+                        <button class="carousel-btn" data-next="3" aria-label="Suivant">&#8594;</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== SECTION 4 — DIALOGUES ===== -->
+            <section class="prod-section">
+                <div class="prod-section-label">
+                    <span class="prod-step-num">04</span>
+                    Dialogues &amp; Lettering
+                </div>
+                <p class="prod-section-desc">
+                    Le lettering finalise la planche : placement des bulles, typographie, effets sonores et mise en page des textes. L'équilibre entre image et texte est essentiel pour fluidifier la lecture.
+                </p>
+
+                <div class="carousel-wrapper">
+                    <div class="carousel-track-outer">
+                        <div class="carousel-track" data-carousel="4">
+                            <div class="carousel-slide">
+                                <div class="carousel-placeholder">
+                                    <span class="ph-icon">💬</span>
+                                    <p>Pages finales — à venir</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-caption">
+                        <span data-caption="4">Dialogues &amp; Lettering</span>
+                        <span data-counter="4"><strong>1</strong> / 1</span>
+                    </div>
+                    <div class="carousel-controls">
+                        <button class="carousel-btn" data-prev="4" aria-label="Précédent">&#8592;</button>
+                        <div class="carousel-dots" data-dots="4"><button class="carousel-dot active"></button></div>
+                        <button class="carousel-btn" data-next="4" aria-label="Suivant">&#8594;</button>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-inner">
+                <p>© 2026 Sleipnir</p>
+                <div class="footer-links">
+                    <a href="https://github.com/Sleipnir-Ad-Sys" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <a href="../../index.html">Accueil</a>
+                    <a href="../projets.html">Projets</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        /* ---- Nav mobile ---- */
+        document.getElementById('navToggle').addEventListener('click', function () {
+            document.querySelector('.nav-links').classList.toggle('open');
+        });
+
+        /* ---- Protection clic droit ---- */
+        document.addEventListener('contextmenu', function (e) {
+            if (e.target.closest('.carousel-track') || e.target.closest('.lightbox-overlay')) {
+                e.preventDefault();
+            }
+        });
+
+        /* ══ LIGHTBOX ══════════════════════════════════════════════ */
+        var lbImages  = [];
+        var lbIndex   = 0;
+        var overlay   = document.getElementById('lightbox');
+        var lbImg     = document.getElementById('lbImg');
+        var lbCounter = document.getElementById('lbCounter');
+        var lbPrev    = document.getElementById('lbPrev');
+        var lbNext    = document.getElementById('lbNext');
+        var lbCloseBtn = document.getElementById('lbClose');
+
+        function lbOpen(images, index) {
+            lbImages = images;
+            lbShow(index);
+            overlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function lbCloseFn() {
+            overlay.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+        function lbShow(n) {
+            lbIndex = Math.max(0, Math.min(n, lbImages.length - 1));
+            lbImg.src = lbImages[lbIndex];
+            lbCounter.textContent = (lbIndex + 1) + ' / ' + lbImages.length;
+            lbPrev.disabled = lbIndex === 0;
+            lbNext.disabled = lbIndex === lbImages.length - 1;
+        }
+        lbCloseBtn.addEventListener('click', lbCloseFn);
+        lbPrev.addEventListener('click', function () { lbShow(lbIndex - 1); });
+        lbNext.addEventListener('click', function () { lbShow(lbIndex + 1); });
+        overlay.addEventListener('click', function (e) { if (e.target === overlay) lbCloseFn(); });
+        document.addEventListener('keydown', function (e) {
+            if (!overlay.classList.contains('open')) return;
+            if (e.key === 'Escape')     lbCloseFn();
+            if (e.key === 'ArrowLeft')  lbShow(lbIndex - 1);
+            if (e.key === 'ArrowRight') lbShow(lbIndex + 1);
+        });
+        var lbStartX = 0;
+        overlay.addEventListener('touchstart', function (e) { lbStartX = e.touches[0].clientX; }, { passive: true });
+        overlay.addEventListener('touchend',   function (e) {
+            var dx = e.changedTouches[0].clientX - lbStartX;
+            if (Math.abs(dx) > 40) lbShow(lbIndex + (dx < 0 ? 1 : -1));
+        });
+
+        /* ══ SONDAGE IMAGES ═════════════════════════════════════════ */
+        function probeImages(folder) {
+            return new Promise(function (resolve) {
+                var found = [], i = 1;
+                var exts = ['jpg', 'jpeg', 'png', 'webp'];
+                function tryIndex() {
+                    var pad = String(i).padStart(2, '0'), e = 0;
+                    function tryExt() {
+                        if (e >= exts.length) { resolve(found); return; }
+                        var src = folder + '/' + pad + '.' + exts[e];
+                        var img = new Image();
+                        img.onload  = function () { found.push(src); i++; tryIndex(); };
+                        img.onerror = function () { e++; tryExt(); };
+                        img.src = src;
+                    }
+                    tryExt();
+                }
+                tryIndex();
+            });
+        }
+
+        /* ══ CAROUSEL (crop + lightbox au clic) ═════════════════════ */
+        function setupCarousel(id, folder) {
+            var track     = document.querySelector('[data-carousel="' + id + '"]');
+            var dotsEl    = document.querySelector('[data-dots="'    + id + '"]');
+            var counterEl = document.querySelector('[data-counter="' + id + '"]');
+            var btnPrev   = document.querySelector('[data-prev="'    + id + '"]');
+            var btnNext   = document.querySelector('[data-next="'    + id + '"]');
+            var current   = 0;
+            var imageList = [];
+
+            function activate(images) {
+                imageList = images;
+                if (images.length > 0) {
+                    track.innerHTML = images.map(function (src, idx) {
+                        return '<div class="carousel-slide" data-idx="' + idx + '">'
+                             + '<img src="' + src + '" alt="" loading="lazy">'
+                             + '<span class="carousel-hint">🔍 Cliquer pour agrandir</span>'
+                             + '</div>';
+                    }).join('');
+                    dotsEl.innerHTML = images.map(function (_, j) {
+                        return '<button class="carousel-dot' + (j === 0 ? ' active' : '') + '"></button>';
+                    }).join('');
+                    counterEl.innerHTML = '<strong>1</strong> / ' + images.length;
+
+                    track.querySelectorAll('.carousel-slide').forEach(function (slide) {
+                        slide.addEventListener('click', function () {
+                            lbOpen(imageList, parseInt(slide.dataset.idx, 10));
+                        });
+                    });
+                }
+
+                var slides = track.querySelectorAll('.carousel-slide');
+                var total  = slides.length;
+                var dots   = dotsEl.querySelectorAll('.carousel-dot');
+                var strong = counterEl ? counterEl.querySelector('strong') : null;
+
+                function goTo(n) {
+                    current = Math.max(0, Math.min(n, total - 1));
+                    track.style.transform = 'translateX(-' + (current * 100) + '%)';
+                    if (strong) strong.textContent = current + 1;
+                    dots.forEach(function (d, j) { d.classList.toggle('active', j === current); });
+                    if (btnPrev) btnPrev.disabled = current === 0;
+                    if (btnNext) btnNext.disabled = current === total - 1;
+                }
+
+                if (btnPrev) btnPrev.addEventListener('click', function () { goTo(current - 1); });
+                if (btnNext) btnNext.addEventListener('click', function () { goTo(current + 1); });
+                dots.forEach(function (d, j) { d.addEventListener('click', function () { goTo(j); }); });
+
+                var startX = 0;
+                track.addEventListener('touchstart', function (e) { startX = e.touches[0].clientX; }, { passive: true });
+                track.addEventListener('touchend',   function (e) {
+                    var dx = e.changedTouches[0].clientX - startX;
+                    if (Math.abs(dx) > 40) goTo(current + (dx < 0 ? 1 : -1));
+                });
+
+                goTo(0);
+            }
+
+            probeImages(folder).then(activate);
+        }
+
+        /* Déposez vos images 01.jpg, 02.jpg… dans chaque dossier */
+        setupCarousel('1', 'images/storyboard');
+        setupCarousel('2', 'images/encrage');
+        setupCarousel('3', 'images/couleurs');
+        setupCarousel('4', 'images/dialogues');
+    </script>
+
+</body>
+</html>

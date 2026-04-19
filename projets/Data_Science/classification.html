@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modèle de Classification — Sleipnir</title>
+    <meta name="description" content="Démo interactive — Random Forest & XGBoost ligne par ligne avec scikit-learn.">
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../public/demo.css">
+    <style>
+        /* Classification report table */
+        .cr-tbl { width: 100%; border-collapse: collapse; font-family: 'Courier New', monospace; font-size: 0.71rem; }
+        .cr-tbl th { background: var(--bg-tertiary); color: var(--accent-blue); padding: 4px 8px; text-align: right; border-bottom: 1px solid var(--border-color); }
+        .cr-tbl th:first-child { text-align: left; }
+        .cr-tbl td { padding: 3px 8px; border-bottom: 1px solid rgba(48,54,61,0.35); text-align: right; color: var(--text-secondary); }
+        .cr-tbl td:first-child { text-align: left; color: var(--accent-purple); }
+        .cr-tbl tr:last-child td { border-bottom: none; }
+        .cr-tbl .avg td { color: var(--text-muted); border-top: 1px solid var(--border-color); }
+        .cr-good { color: var(--accent-green) !important; font-weight: 700; }
+        /* Comparison table */
+        .cmp-tbl { width: 100%; border-collapse: collapse; font-size: 0.74rem; }
+        .cmp-tbl th { padding: 5px 8px; border-bottom: 2px solid var(--border-color); color: var(--text-muted); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.8px; }
+        .cmp-tbl td { padding: 4px 8px; border-bottom: 1px solid rgba(48,54,61,0.35); color: var(--text-secondary); font-size: 0.73rem; }
+        .cmp-tbl tr:last-child td { border-bottom: none; }
+        .cmp-winner { color: var(--accent-green); font-weight: 700; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-inner">
+            <a href="../../index.html" class="nav-logo">Sleipnir</a>
+            <ul class="nav-links">
+                <li><a href="../../index.html">Accueil</a></li>
+                <li><a href="../../cv/cv.html">CV</a></li>
+                <li><a href="../projets.html" class="active">Projets</a></li>
+            </ul>
+            <div class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></div>
+        </div>
+    </nav>
+
+    <div class="page-wrapper">
+        <div class="container">
+
+            <a href="../projets.html" class="back-link">← Retour aux projets</a>
+
+            <div class="eda-hero">
+                <h1 class="section-title"><span class="gradient-text">Modèle de Classification</span></h1>
+                <p class="section-subtitle">De la donnée brute à la prédiction — Random Forest & XGBoost ligne par ligne.</p>
+                <div class="eda-meta">
+                    <span class="eda-badge">🐍 Python</span>
+                    <span class="eda-badge">🤖 scikit-learn</span>
+                    <span class="eda-badge">⚡ XGBoost</span>
+                    <span class="eda-badge">🎯 breast_cancer</span>
+                </div>
+            </div>
+
+            <div class="step-counter"><strong id="stepNum">1</strong>&thinsp;/&thinsp;<span id="stepTotal">8</span> étapes — <span id="stepTitle" style="color:var(--text-secondary)"></span></div>
+            <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+            <div class="eda-layout-wrap">
+            <div class="eda-layout">
+                <div class="code-panel">
+                    <div class="code-panel-header">
+                        <div class="traffic-light tl-red"></div>
+                        <div class="traffic-light tl-yellow"></div>
+                        <div class="traffic-light tl-green"></div>
+                        <span class="code-panel-title">classification.py</span>
+                    </div>
+                    <div class="code-scroll"><div class="code-block" id="codeBlock"></div></div>
+                </div>
+                <div class="explain-panel">
+                    <div class="explain-panel-header">📖&nbsp; Explication</div>
+                    <div class="explain-scroll" id="explainContent"></div>
+                </div>
+                <div class="preview-panel">
+                    <div class="preview-panel-header">
+                        <span class="preview-label">Output</span>
+                        <span class="step-name-badge" id="stepBadge"></span>
+                    </div>
+                    <div class="preview-content" id="previewContent"></div>
+                </div>
+            </div>
+            </div>
+
+            <div class="eda-controls">
+                <button class="nav-btn" id="btnPrev" disabled>← Précédent</button>
+                <div class="step-dots" id="stepDots"></div>
+                <svg id="countdownRing" class="countdown-ring" viewBox="0 0 30 30" width="30" height="30" aria-hidden="true">
+                    <circle class="ring-track" cx="15" cy="15" r="11" fill="none" stroke-width="2.5"/>
+                    <circle class="ring-fill"  cx="15" cy="15" r="11" fill="none" stroke-width="2.5" transform="rotate(-90 15 15)"/>
+                </svg>
+                <button class="nav-btn nav-btn-autoplay" id="btnAutoplay">▶ Auto</button>
+                <button class="nav-btn nav-btn-primary" id="btnNext">Suivant →</button>
+            </div>
+            <p class="kbd-hint">Navigation : <kbd class="kbd">←</kbd> <kbd class="kbd">→</kbd> &nbsp;·&nbsp; <kbd class="kbd">Espace</kbd> lecture auto</p>
+
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-inner">
+                <p>© 2026 Sleipnir</p>
+                <div class="footer-links">
+                    <a href="https://github.com/Sleipnir-Ad-Sys" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <a href="../../index.html">Accueil</a>
+                    <a href="../projets.html">Projets</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+<script>
+const STEPS = [
+    {
+        title: "Imports",
+        badge: "✓ env chargé",
+        lines: [
+            { t: "code", c: `<span class="kw">from</span> sklearn.datasets       <span class="kw">import</span> <span class="fn">load_breast_cancer</span>` },
+            { t: "code", c: `<span class="kw">from</span> sklearn.model_selection <span class="kw">import</span> <span class="fn">train_test_split</span>` },
+            { t: "code", c: `<span class="kw">from</span> sklearn.ensemble       <span class="kw">import</span> <span class="fn">RandomForestClassifier</span>` },
+            { t: "code", c: `<span class="kw">from</span> sklearn.metrics        <span class="kw">import</span> <span class="fn">accuracy_score</span>` },
+            { t: "code", c: `<span class="kw">from</span> sklearn.metrics        <span class="kw">import</span> <span class="fn">classification_report</span>` },
+            { t: "code", c: `<span class="kw">from</span> xgboost                <span class="kw">import</span> <span class="fn">XGBClassifier</span>` },
+            { t: "code", c: `<span class="kw">import</span> numpy <span class="kw">as</span> <span class="var">np</span>` },
+        ],
+        html: `
+            <div class="out-label">Bibliothèques</div>
+            <div class="term">
+<span class="td">$</span> <span class="tb">python</span> classification.py<br>
+  scikit-learn  <span class="ty">1.4.0</span><br>
+  xgboost       <span class="ty">2.0.3</span><br>
+  numpy         <span class="ty">1.26.4</span><br>
+<span class="td">──────────────────</span><br>
+<span class="at">✓ Environnement prêt</span>
+            </div>
+        `
+    },
+    {
+        title: "Chargement du dataset",
+        badge: "✓ data chargé",
+        lines: [
+            { t: "blank" },
+            { t: "code", c: `<span class="cm"># Dataset : cancer du sein (UCI)</span>` },
+            { t: "code", c: `<span class="var">data</span> <span class="op">=</span> <span class="fn">load_breast_cancer</span>()` },
+            { t: "blank" },
+            { t: "code", c: `<span class="var">X</span> <span class="op">=</span> <span class="var">data</span>.data    <span class="cm"># features (30 colonnes)</span>` },
+            { t: "code", c: `<span class="var">y</span> <span class="op">=</span> <span class="var">data</span>.target  <span class="cm"># 0=malin  1=bénin</span>` },
+            { t: "blank" },
+            { t: "code", c: `<span class="fn">print</span>(<span class="var">X</span>.shape, <span class="var">y</span>.shape)` },
+        ],
+        html: `
+            <div class="sbox-grid">
+                <div class="sbox"><span class="sbox-val">569</span><span class="sbox-lbl">Exemples</span></div>
+                <div class="sbox"><span class="sbox-val">30</span><span class="sbox-lbl">Features</span></div>
+                <div class="sbox"><span class="sbox-val">2</span><span class="sbox-lbl">Classes</span></div>
+            </div>
+            <div class="out-label" style="margin-top:0.75rem;">Classes</div>
+            <div class="diff-box">
+                <div class="diff-row"><span class="diff-lbl">0 — Malin</span><span class="diff-new">212 échantillons</span></div>
+                <div class="diff-row"><span class="diff-lbl">1 — Bénin</span><span class="diff-new">357 échantillons</span></div>
+            </div>
+            <div class="alert-ok">✓ Dataset équilibré — ratio 37/63 acceptable</div>
+        `
+    },
+    {
+        title: "Exploration rapide",
+        badge: "✓ features vues",
+        lines: [
+            { t: "blank" },
+            { t: "code", c: `<span class="cm"># Noms des features</span>` },
+            { t: "code", c: `<span class="fn">print</span>(<span class="var">data</span>.feature_names[:6])` },
+            { t: "blank" },
+            { t: "code", c: `<span class="cm"># Valeurs min/max</span>` },
+            { t: "code", c: `<span class="fn">print</span>(<span class="var">X</span>.<span class="fn">min</span>(<span class="var">axis</span><span class="op">=</span><span class="num">0</span>)[:6])` },
+            { t: "code", c: `<span class="fn">print</span>(<span class="var">X</span>.<span class="fn">max</span>(<span class="var">axis</span><span class="op">=</span><span class="num">0</span>)[:6])` },
+        ],
+        html: `
+            <div class="out-label">Aperçu des features</div>
+            <div class="df-wrap">
+                <table class="df-tbl">
+                    <thead><tr><th>Feature</th><th>min</th><th>max</th></tr></thead>
+                    <tbody>
+                        <tr><td>mean radius</td><td>6.981</td><td>28.11</td></tr>
+                        <tr><td>mean texture</td><td>9.71</td><td>39.28</td></tr>
+                        <tr><td>mean perimeter</td><td>43.79</td><td>188.5</td></tr>
+                        <tr><td>mean area</td><td>143.5</td><td>2501.0</td></tr>
+                        <tr><td>mean smoothness</td><td>0.053</td><td>0.163</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="alert-warn">⚠ Échelles très différentes → normalisation recommandée pour certains algorithmes (pas pour RF/XGB)</div>
+        `
+    },
+    {
+        title: "Split train / test",
+        badge: "✓ 80/20 split",
+        lines: [
+            { t: "blank" },
+            { t: "code", c: `<span class="cm"># Découpe entraînement / test</span>` },
+            { t: "code", c: `<span class="var">X_train</span>, <span class="var">X_test</span>, <span class="var">y_train</span>, <span class="var">y_test</span> <span class="op">=</span>` },
+            { t: "code", c: `    <span class="fn">train_test_split</span>(` },
+            { t: "code", c: `        <span class="var">X</span>, <span class="var">y</span>,` },
+            { t: "code", c: `        <span class="var">test_size</span><span class="op">=</span><span class="num">0.2</span>,` },
+            { t: "code", c: `        <span class="var">random_state</span><span class="op">=</span><span class="num">42</span>,` },
+            { t: "code", c: `        <span class="var">stratify</span><span class="op">=</span><span class="var">y</span>   <span class="cm"># proportions identiques</span>` },
+            { t: "code", c: `    )` },
+        ],
+        html: `
+            <div class="sbox-grid">
+                <div class="sbox"><span class="sbox-val">455</span><span class="sbox-lbl">Train</span></div>
+                <div class="sbox"><span class="sbox-val">114</span><span class="sbox-lbl">Test</span></div>
+                <div class="sbox"><span class="sbox-val">42</span><span class="sbox-lbl">Seed</span></div>
+            </div>
+            <div class="out-label" style="margin-top:0.75rem;">Répartition classes dans le test</div>
+            <div class="bar-chart">
+                <div class="bar-row"><span class="bar-lbl">Bénin</span><div class="bar-track"><div class="bar-fill" data-w="63"></div></div><span class="bar-n">71</span></div>
+                <div class="bar-row"><span class="bar-lbl">Malin</span><div class="bar-track"><div class="bar-fill red" data-w="37"></div></div><span class="bar-n">43</span></div>
+            </div>
+            <div class="alert-ok">✓ stratify=y garantit le même ratio dans train et test</div>
+        `
+    },
+    {
+        title: "Entraînement Random Forest",
+        badge: "✓ rf.fit()",
+        lines: [
+            { t: "blank" },
+            { t: "code", c: `<span class="cm"># Création du modèle</span>` },
+            { t: "code", c: `<span class="var">rf</span> <span class="op">=</span> <span class="fn">RandomForestClassifier</span>(` },
+            { t: "code", c: `    <span class="var">n_estimators</span><span class="op">=</span><span class="num">100</span>,   <span class="cm"># 100 arbres</span>` },
+            { t: "code", c: `    <span class="var">max_depth</span><span class="op">=</span><span class="kw">None</span>,     <span class="cm"># arbres complets</span>` },
+            { t: "code", c: `    <span class="var">random_state</span><span class="op">=</span><span class="num">42</span>` },
+            { t: "code", c: `)` },
+            { t: "blank" },
+            { t: "code", c: `<span class="cm"># Entraînement</span>` },
+            { t: "code", c: `<span class="var">rf</span>.<span class="fn">fit</span>(<span class="var">X_train</span>, <span class="var">y_train</span>)` },
+        ],
+        html: `
+            <div class="out-label">Forêt entraînée</div>
+            <div class="term">
+<span class="tw">RandomForestClassifier(</span><br>
+  n_estimators=<span class="ty">100</span>,<br>
+  max_depth=<span class="tb">None</span>,<br>
+  random_state=<span class="ty">42</span><br>
+<span class="tw">)</span><br>
+<span class="td">──────────────────────</span><br>
+<span class="at">✓ 100 arbres de décision construits</span><br>
+<span class="td">  Profondeur max observée : 14</span><br>
+<span class="td">  Features par split : √30 ≈ 5</span>
+            </div>
+        `
+    },
+    {
+        title: "Prédictions & Score",
+        badge: "✓ score",
+        lines: [
+            { t: "blank" },
+            { t: "code", c: `<span class="cm"># Prédictions sur le jeu de test</span>` },
+            { t: "code", c: `<span class="var">y_pred</span> <span class="op">=</span> <span class="var">rf</span>.<span class="fn">predict</span>(<span class="var">X_test</span>)` },
+            { t: "blank" },
+            { t: "code", c: `<span class="cm"># Métriques</span>` },
+            { t: "code", c: `<span class="var">acc</span> <span class="op">=</span> <span class="fn">accuracy_score</span>(<span class="var">y_test</span>, <span class="var">y_pred</span>)` },
+            { t: "code", c: `<span class="fn">print</span>(<span class="str">f"Accuracy : {</span><span class="var">acc</span><span class="str">:.4f}"</span>)` },
+        ],
+        html: `
+            <div class="sbox-grid">
+                <div class="sbox"><span class="sbox-val ok">97.4%</span><span class="sbox-lbl">Accuracy</span></div>
+                <div class="sbox"><span class="sbox-val ok">97.2%</span><span class="sbox-lbl">Précision</span></div>
+                <div class="sbox"><span class="sbox-val ok">98.6%</span><span class="sbox-lbl">Rappel</span></div>
+            </div>
+            <div class="out-label" style="margin-top:0.75rem;">Erreurs sur 114 exemples</div>
+            <div class="diff-box">
+                <div class="diff-row"><span class="diff-lbl">Correct</span><span class="diff-new">111 / 114</span></div>
+                <div class="diff-row"><span class="diff-lbl">Mauvaises prédictions</span><span style="color:#ff7b72;font-family:'Courier New',monospace;">3 / 114</span></div>
+            </div>
+        `
+    },
+    {
+        title: "Rapport de performances",
+        badge: "✓ report",
+        lines: [
+            { t: "blank" },
+            { t: "code", c: `<span class="cm"># Rapport complet</span>` },
+            { t: "code", c: `<span class="fn">print</span>(<span class="fn">classification_report</span>(` },
+            { t: "code", c: `    <span class="var">y_test</span>,` },
+            { t: "code", c: `    <span class="var">y_pred</span>,` },
+            { t: "code", c: `    <span class="var">target_names</span><span class="op">=</span><span class="var">data</span>.target_names` },
+            { t: "code", c: `))` },
+        ],
+        html: `
+            <div class="out-label">Classification Report</div>
+            <div class="df-wrap">
+                <table class="cr-tbl">
+                    <thead><tr><th></th><th>precision</th><th>recall</th><th>f1-score</th><th>support</th></tr></thead>
+                    <tbody>
+                        <tr><td>malignant</td><td class="cr-good">0.97</td><td>0.95</td><td class="cr-good">0.96</td><td>43</td></tr>
+                        <tr><td>benign</td><td>0.97</td><td class="cr-good">0.99</td><td class="cr-good">0.98</td><td>71</td></tr>
+                    </tbody>
+                    <tbody class="avg">
+                        <tr><td>accuracy</td><td></td><td></td><td class="cr-good">0.97</td><td>114</td></tr>
+                        <tr><td>macro avg</td><td>0.97</td><td>0.97</td><td>0.97</td><td>114</td></tr>
+                        <tr><td>weighted avg</td><td>0.97</td><td>0.97</td><td>0.97</td><td>114</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        `
+    },
+    {
+        title: "Comparaison XGBoost",
+        badge: "⚡ XGB vs RF",
+        lines: [
+            { t: "blank" },
+            { t: "code", c: `<span class="cm"># XGBoost — Gradient Boosting</span>` },
+            { t: "code", c: `<span class="var">xgb</span> <span class="op">=</span> <span class="fn">XGBClassifier</span>(` },
+            { t: "code", c: `    <span class="var">n_estimators</span><span class="op">=</span><span class="num">100</span>,` },
+            { t: "code", c: `    <span class="var">learning_rate</span><span class="op">=</span><span class="num">0.1</span>,` },
+            { t: "code", c: `    <span class="var">max_depth</span><span class="op">=</span><span class="num">4</span>,` },
+            { t: "code", c: `    <span class="var">random_state</span><span class="op">=</span><span class="num">42</span>,` },
+            { t: "code", c: `    <span class="var">eval_metric</span><span class="op">=</span><span class="str">'logloss'</span>` },
+            { t: "code", c: `)` },
+            { t: "code", c: `<span class="var">xgb</span>.<span class="fn">fit</span>(<span class="var">X_train</span>, <span class="var">y_train</span>)` },
+            { t: "code", c: `<span class="var">y_xgb</span> <span class="op">=</span> <span class="var">xgb</span>.<span class="fn">predict</span>(<span class="var">X_test</span>)` },
+        ],
+        html: `
+            <div class="out-label">Random Forest vs XGBoost</div>
+            <table class="cmp-tbl">
+                <thead><tr><th>Critère</th><th>Random Forest</th><th>XGBoost</th></tr></thead>
+                <tbody>
+                    <tr><td>Accuracy</td><td class="cmp-winner">97.4%</td><td>97.4%</td></tr>
+                    <tr><td>Temps entraînement</td><td class="cmp-winner">~0.3s</td><td>~0.8s</td></tr>
+                    <tr><td>Interprétabilité</td><td class="cmp-winner">Moyenne</td><td>Faible</td></tr>
+                    <tr><td>Surapprentissage</td><td class="cmp-winner">Robuste</td><td>Sensible</td></tr>
+                    <tr><td>Réglage hyperparams</td><td class="cmp-winner">Simple</td><td>Complexe</td></tr>
+                    <tr><td>Grands datasets</td><td>OK</td><td class="cmp-winner">Meilleur</td></tr>
+                </tbody>
+            </table>
+            <div class="alert-ok" style="margin-top:0.65rem;">💡 les deux modèles sont équivalents. Choisir RF pour la simplicité, XGB pour des datasets plus larges.</div>
+        `
+    }
+];
+
+const EXPLAINS = [
+    /* 0 — Imports */
+    `<div class="explain-card"><span class="explain-fn">sklearn (scikit-learn)</span><p class="explain-txt">Bibliothèque ML de référence en Python. Propose des algorithmes uniformes via une API <code>fit() / predict()</code> commune à tous les modèles.</p></div>
+    <div class="explain-card"><span class="explain-fn">XGBClassifier</span><p class="explain-txt"><strong>XGBoost</strong> (eXtreme Gradient Boosting) — algorithme très performant qui construit des arbres séquentiels, chacun corrigeant les erreurs du précédent.</p></div>
+    <div class="explain-tip"><span class="explain-icon">💡</span><span>La majorité des compétitions Kaggle sont remportées avec XGBoost ou LightGBM. Mais scikit-learn Random Forest reste plus simple à mettre en œuvre.</span></div>`,
+
+    /* 1 — Dataset */
+    `<div class="explain-card"><span class="explain-fn">load_breast_cancer()</span><p class="explain-txt">Dataset UCI inclus dans sklearn — 569 biopsies mammaires, 30 mesures cellulaires. Tâche : prédire si une tumeur est <strong>bénigne</strong> (1) ou <strong>maligne</strong> (0).</p></div>
+    <div class="explain-card"><span class="explain-fn">data.data vs data.target</span><p class="explain-txt"><code>data.data</code> = la matrice X (features). <code>data.target</code> = le vecteur y (étiquettes). Convention universelle en ML supervisé.</p></div>
+    <div class="explain-tip"><span class="explain-icon">💡</span><span>Les datasets <code>sklearn.datasets</code> sont parfaits pour apprendre et comparer des algorithmes sans se soucier du preprocessing.</span></div>`,
+
+    /* 2 — Exploration */
+    `<div class="explain-card"><span class="explain-fn">data.feature_names</span><p class="explain-txt">Noms lisibles des 30 colonnes : rayon moyen, texture, périmètre, aire… Toujours connaître ses données avant de modéliser.</p></div>
+    <div class="explain-card"><span class="explain-fn">X.min(axis=0) / X.max(axis=0)</span><p class="explain-txt"><code>axis=0</code> calcule la statistique sur chaque colonne. Détecte les échelles très différentes entre features.</p></div>
+    <div class="explain-tip warn"><span class="explain-icon">⚠️</span><span>Pour les SVM et régressions logistiques, il faudrait normaliser. Random Forest et XGBoost sont <strong>invariants à l'échelle</strong> — pas besoin de StandardScaler.</span></div>`,
+
+    /* 3 — Split */
+    `<div class="explain-card"><span class="explain-fn">train_test_split(test_size=0.2)</span><p class="explain-txt">80% des données pour entraîner, 20% pour évaluer. Le modèle ne voit jamais les données de test — c'est la règle fondamentale du ML.</p></div>
+    <div class="explain-card"><span class="explain-fn">stratify=y</span><p class="explain-txt">Garantit que les proportions de classes (bénin/malin) sont identiques dans train et test. Crucial sur des classes déséquilibrées.</p></div>
+    <div class="explain-tip"><span class="explain-icon">💡</span><span><code>random_state=42</code> fige la randomisation → résultats reproductibles. La valeur 42 est une convention (référence à <em>The Hitchhiker's Guide</em>).</span></div>`,
+
+    /* 4 — RF Training */
+    `<div class="explain-card"><span class="explain-fn">RandomForestClassifier</span><p class="explain-txt">Ensemble de N arbres de décision entraînés sur des sous-ensembles aléatoires des données (bagging). La prédiction finale est un vote majoritaire.</p></div>
+    <div class="explain-card"><span class="explain-fn">n_estimators=100</span><p class="explain-txt">100 arbres indépendants. Plus d'arbres = plus robuste, mais plus lent. En général 100-500 est suffisant.</p></div>
+    <div class="explain-tip"><span class="explain-icon">💡</span><span>À chaque split, seules <code>√(n_features)</code> ≈ 5 features sont candidates — c'est ce qui diversifie les arbres et réduit la corrélation entre eux.</span></div>`,
+
+    /* 5 — Score */
+    `<div class="explain-card"><span class="explain-fn">rf.predict(X_test)</span><p class="explain-txt">Chacun des 100 arbres vote pour une classe. La classe majoritaire est la prédiction finale du Random Forest.</p></div>
+    <div class="explain-card"><span class="explain-fn">accuracy_score(y_test, y_pred)</span><p class="explain-txt">Proportion de prédictions correctes. Simple mais insuffisant seul — une précision de 97% peut cacher des faux négatifs critiques en médecine.</p></div>
+    <div class="explain-tip warn"><span class="explain-icon">⚠️</span><span>En contexte médical, un faux négatif (tumeur maligne classée bénigne) est bien plus grave qu'un faux positif. Il faut donc regarder d'autres métriques que l'accuracy.</span></div>`,
+
+    /* 6 — Report */
+    `<div class="explain-card"><span class="explain-fn">Précision (precision)</span><p class="explain-txt">Parmi les tumeurs prédites malignes, quelle fraction l'est vraiment ? <code>TP / (TP + FP)</code>. Minimise les fausses alarmes.</p></div>
+    <div class="explain-card"><span class="explain-fn">Rappel (recall)</span><p class="explain-txt">Parmi les vraies tumeurs malignes, quelle fraction a été détectée ? <code>TP / (TP + FN)</code>. Minimise les cas manqués.</p></div>
+    <div class="explain-card"><span class="explain-fn">F1-score</span><p class="explain-txt">Moyenne harmonique de précision et rappel. Métrique équilibrée, utile quand les classes sont déséquilibrées.</p></div>`,
+
+    /* 7 — XGBoost */
+    `<div class="explain-card"><span class="explain-fn">Gradient Boosting vs Bagging</span><p class="explain-txt">RF (bagging) entraîne des arbres <strong>en parallèle</strong>, indépendants. XGB (boosting) les entraîne <strong>en séquence</strong> — chaque arbre corrige les erreurs du précédent.</p></div>
+    <div class="explain-card"><span class="explain-fn">learning_rate=0.1</span><p class="explain-txt">Poids de chaque arbre dans la somme. Faible taux + beaucoup d'arbres = meilleure généralisation mais plus lent à entraîner.</p></div>
+    <div class="explain-tip ok"><span class="explain-icon">✅</span><span>Pour débuter : Random Forest est l'une des meilleures options. Pour des performances maximales sur de gros datasets il faut passer à XGBoost avec recherche d'hyperparamètres (GridSearchCV).</span></div>`
+];
+
+</script>
+<script src="../../public/demo-engine.js"></script>
+</body>
+</html>

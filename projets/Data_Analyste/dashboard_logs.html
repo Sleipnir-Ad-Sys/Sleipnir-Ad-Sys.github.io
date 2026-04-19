@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — Logs Système — Sleipnir</title>
+    <meta name="description" content="Démo interactive — pipeline Python + Power BI pour analyser des logs d'infrastructure.">
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../public/demo.css">
+    <style>
+        /* Bar chart — default fill is red-orange for log-level display */
+        .bar-row  { grid-template-columns: 80px 1fr 38px; }
+        .bar-fill { background: linear-gradient(90deg,#ff7b72,#ffa657); }
+        .bar-fill.ok { background: linear-gradient(90deg,#58a6ff,#bc8cff); }
+        /* Power BI pros/cons table */
+        .pbi-table { width: 100%; border-collapse: collapse; font-size: 0.76rem; }
+        .pbi-table th { padding: 6px 10px; text-align: left; border-bottom: 2px solid var(--border-color); color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; font-size: 0.68rem; }
+        .pbi-table td { padding: 5px 10px; border-bottom: 1px solid rgba(48,54,61,0.4); color: var(--text-secondary); vertical-align: top; font-size: 0.74rem; line-height: 1.5; }
+        .pbi-table tr:last-child td { border-bottom: none; }
+        .pbi-pro { color: var(--accent-green); font-weight: 600; padding-right: 4px; }
+        .pbi-con { color: #ff7b72; font-weight: 600; padding-right: 4px; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-inner">
+            <a href="../../index.html" class="nav-logo">Sleipnir</a>
+            <ul class="nav-links">
+                <li><a href="../../index.html">Accueil</a></li>
+                <li><a href="../../cv/cv.html">CV</a></li>
+                <li><a href="../projets.html" class="active">Projets</a></li>
+            </ul>
+            <div class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></div>
+        </div>
+    </nav>
+
+    <div class="page-wrapper">
+        <div class="container">
+
+            <a href="../projets.html" class="back-link">← Retour aux projets</a>
+
+            <div class="eda-hero">
+                <h1 class="section-title"><span class="gradient-text">Dashboard — Logs Système</span></h1>
+                <p class="section-subtitle">Pipeline complet : parsing Python → nettoyage Pandas → visualisation Power BI.</p>
+                <div class="eda-meta">
+                    <span class="eda-badge">🐍 Python</span>
+                    <span class="eda-badge">🐼 Pandas</span>
+                    <span class="eda-badge">📊 Power BI</span>
+                    <span class="eda-badge">🔍 Regex</span>
+                    <span class="eda-badge">📁 system.log</span>
+                </div>
+            </div>
+
+            <div class="step-counter"><strong id="stepNum">1</strong>&thinsp;/&thinsp;<span id="stepTotal">7</span> étapes — <span id="stepTitle" style="color:var(--text-secondary)"></span></div>
+            <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+            <div class="eda-layout-wrap">
+            <div class="eda-layout">
+                <div class="code-panel">
+                    <div class="code-panel-header">
+                        <div class="traffic-light tl-red"></div>
+                        <div class="traffic-light tl-yellow"></div>
+                        <div class="traffic-light tl-green"></div>
+                        <span class="code-panel-title" id="codeFileName">logs_pipeline.py</span>
+                    </div>
+                    <div class="code-scroll"><div class="code-block" id="codeBlock"></div></div>
+                </div>
+                <div class="explain-panel">
+                    <div class="explain-panel-header">📖&nbsp; Explication</div>
+                    <div class="explain-scroll" id="explainContent"></div>
+                </div>
+                <div class="preview-panel">
+                    <div class="preview-panel-header">
+                        <span class="preview-label">Output</span>
+                        <span class="step-name-badge" id="stepBadge"></span>
+                    </div>
+                    <div class="preview-content" id="previewContent"></div>
+                </div>
+            </div>
+            </div>
+
+            <div class="eda-controls">
+                <button class="nav-btn" id="btnPrev" disabled>← Précédent</button>
+                <div class="step-dots" id="stepDots"></div>
+                <svg id="countdownRing" class="countdown-ring" viewBox="0 0 30 30" width="30" height="30" aria-hidden="true">
+                    <circle class="ring-track" cx="15" cy="15" r="11" fill="none" stroke-width="2.5"/>
+                    <circle class="ring-fill"  cx="15" cy="15" r="11" fill="none" stroke-width="2.5" transform="rotate(-90 15 15)"/>
+                </svg>
+                <button class="nav-btn nav-btn-autoplay" id="btnAutoplay">▶ Auto</button>
+                <button class="nav-btn nav-btn-primary" id="btnNext">Suivant →</button>
+            </div>
+            <p class="kbd-hint">Navigation : <kbd class="kbd">←</kbd> <kbd class="kbd">→</kbd> &nbsp;·&nbsp; <kbd class="kbd">Espace</kbd> lecture auto</p>
+
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-inner">
+                <p>© 2026 Sleipnir</p>
+                <div class="footer-links">
+                    <a href="https://github.com/Sleipnir-Ad-Sys" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <a href="../../index.html">Accueil</a>
+                    <a href="../projets.html">Projets</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+<script>
+const STEPS = [
+    {
+        title: "Lecture des logs",
+        badge: "✓ fichier ouvert",
+        file: "logs_pipeline.py",
+        lines: [
+            { t: "code", c: `<span class="kw">import</span> re` },
+            { t: "code", c: `<span class="kw">import</span> pandas <span class="kw">as</span> <span class="var">pd</span>` },
+            { t: "blank" },
+            { t: "code", c: `<span class="cm"># Lecture du fichier de logs</span>` },
+            { t: "code", c: `<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"system.log"</span>, <span class="str">"r"</span>) <span class="kw">as</span> <span class="var">f</span>:` },
+            { t: "code", c: `    <span class="var">lines</span> <span class="op">=</span> <span class="var">f</span>.<span class="fn">readlines</span>()` },
+            { t: "blank" },
+            { t: "code", c: `<span class="fn">print</span>(<span class="fn">len</span>(<span class="var">lines</span>), <span class="str">"lignes lues"</span>)` },
+            { t: "code", c: `<span class="fn">print</span>(<span class="var">lines</span>[<span class="num">0</span>])` },
+        ],
+        html: `
+            <div class="out-label">Aperçu — system.log</div>
+            <div class="term">
+<span class="td">$</span> <span class="tb">python</span> logs_pipeline.py<br>
+<span class="tw">8 342 lignes lues</span><br><br>
+<span class="td">Exemple de ligne :</span><br>
+<span class="ty">2024-03-15 08:12:04</span> <span class="tr">[ERROR]</span> <span class="tw">disk usage 94% on /dev/sda1</span><br>
+<span class="ty">2024-03-15 08:13:22</span> <span class="at">[INFO]</span>  <span class="tw">backup completed successfully</span><br>
+<span class="ty">2024-03-15 08:14:01</span> <span class="ty">[WARN]</span>  <span class="tw">memory usage 81%</span><br>
+<span class="ty">2024-03-15 08:15:48</span> <span class="tr">[ERROR]</span> <span class="tw">connection timeout db-primary</span><br>
+<span class="ty">2024-03-15 08:16:03</span> <span class="at">[INFO]</span>  <span class="tw">healthcheck OK</span>
+            </div>
+        `
+    },
+    {
+        title: "Parsing regex",
+        badge: "✓ regex compilé",
+        file: "logs_pipeline.py",
+        lines: [
+            { t: "blank" },
+            { t: "code", c: `<span class="cm"># Pattern : timestamp [LEVEL] message</span>` },
+            { t: "code", c: `<span class="var">pattern</span> <span class="op">=</span> re.<span class="fn">compile</span>(` },
+            { t: "code", c: `    <span class="str">r'(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2})'</span>` },
+            { t: "code", c: `    <span class="str">r' \\[(\\w+)\\] (.+)'</span>` },
+            { t: "code", c: `)` },
+            { t: "blank" },
+            { t: "code", c: `<span class="var">records</span> <span class="op">=</span> []` },
+            { t: "code", c: `<span class="kw">for</span> <span class="var">line</span> <span class="kw">in</span> <span class="var">lines</span>:` },
+            { t: "code", c: `    <span class="var">m</span> <span class="op">=</span> <span class="var">pattern</span>.<span class="fn">match</span>(<span class="var">line</span>)` },
+            { t: "code", c: `    <span class="kw">if</span> <span class="var">m</span>:` },
+            { t: "code", c: `        <span class="var">records</span>.<span class="fn">append</span>(<span class="var">m</span>.<span class="fn">groups</span>())` },
+        ],
+        html: `
+            <div class="out-label">Groupes capturés</div>
+            <div class="df-wrap">
+                <table class="df-tbl">
+                    <thead><tr><th></th><th>timestamp</th><th>level</th><th>message</th></tr></thead>
+                    <tbody>
+                        <tr><td>0</td><td>2024-03-15 08:12:04</td><td style="color:#ff7b72">ERROR</td><td>disk usage 94%…</td></tr>
+                        <tr><td>1</td><td>2024-03-15 08:13:22</td><td style="color:#3fb950">INFO</td><td>backup completed…</td></tr>
+                        <tr><td>2</td><td>2024-03-15 08:14:01</td><td style="color:#ffa657">WARN</td><td>memory usage 81%</td></tr>
+                        <tr><td>3</td><td>2024-03-15 08:15:48</td><td style="color:#ff7b72">ERROR</td><td>connection timeout…</td></tr>
+                        <tr><td>4</td><td>2024-03-15 08:16:03</td><td style="color:#3fb950">INFO</td><td>healthcheck OK</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="color:var(--text-muted);font-size:0.7rem;margin-top:5px;font-family:'Courier New',monospace;">8 201 / 8 342 lignes parsées (98.3 %)</div>
+        `
+    },
+    {
+        title: "Création DataFrame",
+        badge: "✓ df prêt",
+        file: "logs_pipeline.py",
+        lines: [
+            { t: "blank" },
+            { t: "code", c: `<span class="cm"># Création du DataFrame</span>` },
+            { t: "code", c: `<span class="var">df</span> <span class="op">=</span> pd.<span class="fn">DataFrame</span>(` },
+            { t: "code", c: `    <span class="var">records</span>,` },
+            { t: "code", c: `    <span class="var">columns</span><span class="op">=</span>[<span class="str">'timestamp'</span>,<span class="str">'level'</span>,<span class="str">'message'</span>]` },
+            { t: "code", c: `)` },
+            { t: "blank" },
+            { t: "code", c: `<span class="cm"># Conversion du timestamp</span>` },
+            { t: "code", c: `<span class="var">df</span>[<span class="str">'timestamp'</span>] <span class="op">=</span> pd.<span class="fn">to_datetime</span>(<span class="var">df</span>[<span class="str">'timestamp'</span>])` },
+            { t: "code", c: `<span class="var">df</span>[<span class="str">'heure'</span>]     <span class="op">=</span> <span class="var">df</span>[<span class="str">'timestamp'</span>].dt.hour` },
+            { t: "code", c: `<span class="var">df</span>[<span class="str">'date'</span>]      <span class="op">=</span> <span class="var">df</span>[<span class="str">'timestamp'</span>].dt.date` },
+        ],
+        html: `
+            <div class="sbox-grid">
+                <div class="sbox"><span class="sbox-val">8 201</span><span class="sbox-lbl">Lignes</span></div>
+                <div class="sbox"><span class="sbox-val">5</span><span class="sbox-lbl">Colonnes</span></div>
+                <div class="sbox"><span class="sbox-val">4</span><span class="sbox-lbl">Niveaux</span></div>
+            </div>
+            <div class="out-label" style="margin-top:0.75rem;">dtypes</div>
+            <div class="term">
+timestamp    <span class="tb">datetime64[ns]</span><br>
+level        <span class="tb">object</span><br>
+message      <span class="tb">object</span><br>
+heure        <span class="ty">int64</span><br>
+date         <span class="tb">object</span>
+            </div>
+        `
+    },
+    {
+        title: "Agrégation & anomalies",
+        badge: "✓ erreurs/heure",
+        file: "logs_pipeline.py",
+        lines: [
+            { t: "blank" },
+            { t: "code", c: `<span class="cm"># Erreurs par niveau</span>` },
+            { t: "code", c: `<span class="var">level_counts</span> <span class="op">=</span> <span class="var">df</span>[<span class="str">'level'</span>].<span class="fn">value_counts</span>()` },
+            { t: "blank" },
+            { t: "code", c: `<span class="cm"># Erreurs critiques par heure</span>` },
+            { t: "code", c: `<span class="var">errors</span> <span class="op">=</span> <span class="var">df</span>[<span class="var">df</span>[<span class="str">'level'</span>] <span class="op">==</span> <span class="str">'ERROR'</span>]` },
+            { t: "code", c: `<span class="var">peak</span> <span class="op">=</span> <span class="var">errors</span>.<span class="fn">groupby</span>(<span class="str">'heure'</span>)` },
+            { t: "code", c: `         .<span class="fn">size</span>().<span class="fn">reset_index</span>(<span class="var">name</span><span class="op">=</span><span class="str">'count'</span>)` },
+        ],
+        html: `
+            <div class="out-label">Répartition par niveau</div>
+            <div class="bar-chart" id="barChart">
+                <div class="bar-row"><span class="bar-lbl">INFO</span><div class="bar-track"><div class="bar-fill ok" data-w="85"></div></div><span class="bar-n">5 923</span></div>
+                <div class="bar-row"><span class="bar-lbl">WARN</span><div class="bar-track"><div class="bar-fill ok" data-w="38"></div></div><span class="bar-n">1 648</span></div>
+                <div class="bar-row"><span class="bar-lbl">ERROR</span><div class="bar-track"><div class="bar-fill" data-w="52"></div></div><span class="bar-n">487</span></div>
+                <div class="bar-row"><span class="bar-lbl">CRITICAL</span><div class="bar-track"><div class="bar-fill" data-w="14"></div></div><span class="bar-n">143</span></div>
+            </div>
+            <div class="alert-warn" style="margin-top:0.65rem;">⚠ Pic d'erreurs détecté entre 02h et 04h (pic nocturne)</div>
+        `
+    },
+    {
+        title: "Export CSV pour Power BI",
+        badge: "✓ logs_clean.csv",
+        file: "logs_pipeline.py",
+        lines: [
+            { t: "blank" },
+            { t: "code", c: `<span class="cm"># Export pour Power BI</span>` },
+            { t: "code", c: `<span class="var">df</span>.<span class="fn">to_csv</span>(` },
+            { t: "code", c: `    <span class="str">"logs_clean.csv"</span>,` },
+            { t: "code", c: `    <span class="var">index</span><span class="op">=</span><span class="kw">False</span>,` },
+            { t: "code", c: `    <span class="var">sep</span><span class="op">=</span><span class="str">";"</span>     <span class="cm"># séparateur FR</span>` },
+            { t: "code", c: `)` },
+            { t: "blank" },
+            { t: "code", c: `<span class="fn">print</span>(<span class="str">f"✓ {</span><span class="fn">len</span>(<span class="var">df</span>)<span class="str">} lignes exportées"</span>)` },
+        ],
+        html: `
+            <div class="export-box">
+                <div class="ex-icon">✅</div>
+                <h3>Prêt pour Power BI</h3>
+                <p>logs_clean.csv — 8 201 lignes</p>
+                <div class="term" style="text-align:left;">
+<span class="tw">Colonnes exportées :</span><br>
+  timestamp   <span class="tb">datetime64</span><br>
+  level       <span class="tb">object</span><br>
+  message     <span class="tb">object</span><br>
+  heure       <span class="ty">int64</span><br>
+  date        <span class="tb">object</span><br>
+<span class="td">──────────────────────────</span><br>
+<span class="at">✓ 8 201 lignes exportées</span>
+                </div>
+            </div>
+        `
+    },
+    {
+        title: "Power BI — Mesures DAX",
+        badge: "✓ DAX",
+        file: "mesures.dax",
+        lines: [
+            { t: "code", c: `<span class="cm">// Taux d'erreur global</span>` },
+            { t: "code", c: `<span class="var">Taux_Erreur</span> <span class="op">=</span>` },
+            { t: "code", c: `<span class="fn">DIVIDE</span>(` },
+            { t: "code", c: `    <span class="fn">COUNTROWS</span>(<span class="fn">FILTER</span>(<span class="var">logs</span>,` },
+            { t: "code", c: `        <span class="var">logs</span>[level] <span class="op">=</span> <span class="str">"ERROR"</span>)),` },
+            { t: "code", c: `    <span class="fn">COUNTROWS</span>(<span class="var">logs</span>), <span class="num">0</span>` },
+            { t: "code", c: `)` },
+            { t: "blank" },
+            { t: "code", c: `<span class="cm">// Erreurs 7 derniers jours</span>` },
+            { t: "code", c: `<span class="var">Erreurs_7j</span> <span class="op">=</span>` },
+            { t: "code", c: `<span class="fn">CALCULATE</span>(` },
+            { t: "code", c: `    <span class="fn">COUNTROWS</span>(<span class="var">logs</span>),` },
+            { t: "code", c: `    <span class="fn">DATESINPERIOD</span>(<span class="var">logs</span>[date],` },
+            { t: "code", c: `        <span class="fn">LASTDATE</span>(<span class="var">logs</span>[date]),<span class="op">-</span><span class="num">7</span>,<span class="fn">DAY</span>),` },
+            { t: "code", c: `    <span class="var">logs</span>[level] <span class="op">=</span> <span class="str">"ERROR"</span>` },
+            { t: "code", c: `)` },
+        ],
+        html: `
+            <div class="out-label">KPI Cards — Power BI</div>
+            <div class="sbox-grid">
+                <div class="sbox"><span class="sbox-val">5.9%</span><span class="sbox-lbl">Taux d'erreur</span></div>
+                <div class="sbox"><span class="sbox-val">143</span><span class="sbox-lbl">Critiques</span></div>
+                <div class="sbox"><span class="sbox-val">02h</span><span class="sbox-lbl">Pic nocturne</span></div>
+            </div>
+            <div class="out-label" style="margin-top:0.75rem;">Visuels recommandés</div>
+            <div class="diff-box">
+                <div class="diff-row"><span class="diff-lbl">Erreurs / heure</span><span class="diff-new">Graphe courbes</span></div>
+                <div class="diff-row"><span class="diff-lbl">Répartition niveaux</span><span class="diff-new">Graphe en anneau</span></div>
+                <div class="diff-row"><span class="diff-lbl">Messages critiques</span><span class="diff-new">Table filtrée</span></div>
+                <div class="diff-row"><span class="diff-lbl">Tendance 30j</span><span class="diff-new">Graphe aires</span></div>
+            </div>
+        `
+    },
+    {
+        title: "Power BI — Forces & Faiblesses",
+        badge: "⚖ bilan",
+        file: "mesures.dax",
+        lines: [
+            { t: "code", c: `<span class="cm">// Power BI : quand l'utiliser ?</span>` },
+            { t: "blank" },
+            { t: "code", c: `<span class="cm">// ✅ FORCES</span>` },
+            { t: "code", c: `<span class="cm">// - Dashboards interactifs sans code</span>` },
+            { t: "code", c: `<span class="cm">// - Refresh automatique (gateway)</span>` },
+            { t: "code", c: `<span class="cm">// - Partage facile (Power BI Service)</span>` },
+            { t: "code", c: `<span class="cm">// - DAX puissant pour KPIs</span>` },
+            { t: "blank" },
+            { t: "code", c: `<span class="cm">// ⚠ FAIBLESSES</span>` },
+            { t: "code", c: `<span class="cm">// - Licence Pro requise pour partager</span>` },
+            { t: "code", c: `<span class="cm">// - Limité pour ML / stat avancée</span>` },
+            { t: "code", c: `<span class="cm">// - Courbe d'apprentissage DAX</span>` },
+            { t: "code", c: `<span class="cm">// - Données sensibles → RGPD</span>` },
+        ],
+        html: `
+            <div class="out-label">Bilan Power BI</div>
+            <table class="pbi-table">
+                <thead><tr><th>✅ Forces</th><th>⚠ Faiblesses</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><span class="pbi-pro">+</span>Dashboards no-code accessibles à tous</td>
+                        <td><span class="pbi-con">−</span>Licence Pro pour partager</td>
+                    </tr>
+                    <tr>
+                        <td><span class="pbi-pro">+</span>Rafraîchissement auto via Gateway</td>
+                        <td><span class="pbi-con">−</span>DAX complexe à maîtriser</td>
+                    </tr>
+                    <tr>
+                        <td><span class="pbi-pro">+</span>Connecteurs natifs (SQL, Excel, API…)</td>
+                        <td><span class="pbi-con">−</span>Pas adapté au ML / stats avancées</td>
+                    </tr>
+                    <tr>
+                        <td><span class="pbi-pro">+</span>KPIs en temps réel (streaming)</td>
+                        <td><span class="pbi-con">−</span>Données hébergées chez Microsoft</td>
+                    </tr>
+                    <tr>
+                        <td><span class="pbi-pro">+</span>Intégration Azure & Teams native</td>
+                        <td><span class="pbi-con">−</span>Personnalisation visuelle limitée</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="alert-ok" style="margin-top:0.65rem;">💡 Idéal pour reporting métier · Python reste préférable pour l'analyse exploratoire et le ML</div>
+        `
+    }
+];
+
+const EXPLAINS = [
+    /* 0 — Lecture */
+    `<div class="explain-card"><span class="explain-fn">with open(fichier, "r") as f</span><p class="explain-txt">Ouvre le fichier en lecture et le ferme automatiquement après le bloc. Évite les fuites de ressources.</p></div>
+    <div class="explain-card"><span class="explain-fn">f.readlines()</span><p class="explain-txt">Lit toutes les lignes en une liste de strings. Chaque élément conserve le <code>\\n</code> final.</p></div>
+    <div class="explain-tip"><span class="explain-icon">💡</span><span>Pour de très gros fichiers (>1 Go), préférer <code>for line in f:</code> qui lit ligne par ligne sans tout charger en mémoire.</span></div>`,
+
+    /* 1 — Regex */
+    `<div class="explain-card"><span class="explain-fn">re.compile(pattern)</span><p class="explain-txt">Compile le pattern une fois → performances bien meilleures quand on l'applique des milliers de fois.</p></div>
+    <div class="explain-card"><span class="explain-fn">Groupes () dans le pattern</span><p class="explain-txt">Chaque paire de parenthèses capture un groupe : <code>(timestamp)</code>, <code>(level)</code>, <code>(message)</code>. Récupérés via <code>m.groups()</code>.</p></div>
+    <div class="explain-tip"><span class="explain-icon">💡</span><span><code>\\d{4}</code> = 4 chiffres, <code>\\w+</code> = mot alphanumérique, <code>.+</code> = tout caractère (hors newline). Toujours tester son regex sur <strong>regex101.com</strong>.</span></div>`,
+
+    /* 2 — DataFrame */
+    `<div class="explain-card"><span class="explain-fn">pd.to_datetime()</span><p class="explain-txt">Convertit la colonne string en type <code>datetime64</code> — indispensable pour filtrer, trier et agréger par date/heure.</p></div>
+    <div class="explain-card"><span class="explain-fn">.dt.hour / .dt.date</span><p class="explain-txt">L'accesseur <code>.dt</code> expose les composants datetime : <code>hour</code>, <code>date</code>, <code>weekday</code>, <code>month</code>…</p></div>
+    <div class="explain-tip"><span class="explain-icon">💡</span><span>Créer des colonnes dérivées (<code>heure</code>, <code>date</code>) simplifie ensuite les <code>groupby()</code> et les filtres dans Power BI.</span></div>`,
+
+    /* 3 — Agrégation */
+    `<div class="explain-card"><span class="explain-fn">df[df['level'] == 'ERROR']</span><p class="explain-txt">Filtrage booléen : renvoie un nouveau DataFrame ne contenant que les lignes ERROR.</p></div>
+    <div class="explain-card"><span class="explain-fn">.groupby('heure').size()</span><p class="explain-txt"><code>groupby</code> regroupe les lignes par valeur de colonne, <code>size()</code> compte les occurrences dans chaque groupe.</p></div>
+    <div class="explain-tip warn"><span class="explain-icon">⚠️</span><span>Un pic d'erreurs la nuit (02h-04h) peut indiquer une tâche planifiée mal configurée ou une surcharge de disque.</span></div>`,
+
+    /* 4 — Export */
+    `<div class="explain-card"><span class="explain-fn">df.to_csv(sep=";")</span><p class="explain-txt">Exporte en CSV. Le séparateur <code>;</code> est recommandé pour les locales françaises où la virgule est le séparateur décimal.</p></div>
+    <div class="explain-card"><span class="explain-fn">index=False</span><p class="explain-txt">Ne pas inclure l'index Pandas (0,1,2…) dans le fichier — Power BI n'en a pas besoin.</p></div>
+    <div class="explain-tip"><span class="explain-icon">💡</span><span>Power BI peut aussi se connecter directement à une base SQL ou un dossier SharePoint — le CSV est la solution la plus universelle.</span></div>`,
+
+    /* 5 — DAX */
+    `<div class="explain-card"><span class="explain-fn">DIVIDE(num, den, alt)</span><p class="explain-txt">Division sécurisée en DAX — retourne <code>alt</code> (ici 0) si le dénominateur est nul, évitant les erreurs.</p></div>
+    <div class="explain-card"><span class="explain-fn">CALCULATE + DATESINPERIOD</span><p class="explain-txt"><code>CALCULATE</code> évalue une expression dans un contexte de filtre modifié. <code>DATESINPERIOD</code> crée une fenêtre glissante de N jours.</p></div>
+    <div class="explain-tip"><span class="explain-icon">💡</span><span>Les mesures DAX sont recalculées à chaque interaction utilisateur (filtres, slicers) — c'est ce qui rend Power BI interactif sans requêtes SQL manuelles.</span></div>`,
+
+    /* 6 — Forces/Faiblesses */
+    `<div class="explain-card"><span class="explain-fn">Quand utiliser Power BI ?</span><p class="explain-txt">Idéal pour le reporting métier récurrent, les KPIs partagés avec des équipes non-techniques, et la visualisation temps réel.</p></div>
+    <div class="explain-card"><span class="explain-fn">Quand préférer Python ?</span><p class="explain-txt">Analyse exploratoire complexe, machine learning, transformations avancées, ou quand la confidentialité des données impose un hébergement local.</p></div>
+    <div class="explain-tip ok"><span class="explain-icon">✅</span><span>La combinaison gagnante : Python pour le preprocessing → CSV/SQL → Power BI pour la visualisation. C'est exactement ce que ce pipeline illustre.</span></div>`
+];
+
+</script>
+<script src="../../public/demo-engine.js"></script>
+</body>
+</html>

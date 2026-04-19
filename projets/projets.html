@@ -5,17 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Projets — Sleipnir</title>
     <meta name="description" content="Projets de Sleipnir — Dessin, Webtoon, Data Analyse et Data Science.">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 
     <!-- NAVIGATION -->
     <nav>
         <div class="nav-inner">
-            <a href="index.html" class="nav-logo">Sleipnir</a>
+            <a href="../index.html" class="nav-logo">Sleipnir</a>
             <ul class="nav-links">
-                <li><a href="index.html">Accueil</a></li>
-                <li><a href="cv.html">CV</a></li>
+                <li><a href="../index.html">Accueil</a></li>
+                <li><a href="../cv/cv.html">CV</a></li>
                 <li><a href="projets.html" class="active">Projets</a></li>
             </ul>
             <div class="nav-toggle" id="navToggle" aria-label="Menu">
@@ -48,12 +48,12 @@
                     <div class="category-icon dessin">🎨</div>
                     <div>
                         <h2>Dessin &amp; Illustration</h2>
-                        <p>Concept art, personnages, environments et explorations visuelles.</p>
+                        <p>Concept art, personnages et explorations visuelles.</p>
                     </div>
                 </div>
                 <div class="projects-grid">
 
-                    <article class="project-card">
+                    <article class="project-card" style="cursor:pointer;" onclick="location.href='Dessin/dessin/index.html'">
                         <div class="project-card-header dessin-gradient">🌿</div>
                         <div class="project-card-body">
                             <h3>Concept Art — Personnages</h3>
@@ -62,30 +62,47 @@
                                 <span class="project-tag">Clip Studio Paint</span>
                                 <span class="project-tag">Character Design</span>
                             </div>
+                            <a href="Dessin/dessin/index.html" class="card-link" style="margin-top:1rem;">Voir le diaporama →</a>
                         </div>
                     </article>
 
-                    <article class="project-card">
+                    <article class="project-card" style="cursor:pointer;" onclick="location.href='Dessin/design/index.html'">
                         <div class="project-card-header dessin-gradient">🏔️</div>
                         <div class="project-card-body">
-                            <h3>Environment Design</h3>
-                            <p>Illustrations d'environnements et de décors pour poser l'atmosphère et la cohérence visuelle de l'univers narratif.</p>
+                            <h3>Design</h3>
+                            <p>Fan art, stickers et illustrations libres — de la phase de recherche jusqu'au rendu final.</p>
                             <div class="project-tags">
                                 <span class="project-tag">Illustration</span>
-                                <span class="project-tag">World Building</span>
+                                <span class="project-tag">Design</span>
                             </div>
+                            <a href="Dessin/design/index.html" class="card-link" style="margin-top:1rem;">Voir le diaporama →</a>
                         </div>
                     </article>
 
-                    <article class="project-card card-wip">
+                    <article class="project-card" style="cursor:pointer;" onclick="location.href='Dessin/sketchbook/index.html'">
                         <div class="project-card-header dessin-gradient">✏️</div>
                         <div class="project-card-body">
-                            <h3>Sketchbook 2024 — En cours</h3>
+                            <h3>Sketchbooks</h3>
                             <p>Recueil de sketches quotidiens. Pratique du croquis rapide, de l'observation et de l'anatomie.</p>
                             <div class="project-tags">
                                 <span class="project-tag">WIP</span>
                                 <span class="project-tag">Sketch</span>
                             </div>
+                            <a href="Dessin/sketchbook/index.html" class="card-link" style="margin-top:1rem;">Voir le diaporama →</a>
+                        </div>
+                    </article>
+
+                    <article class="project-card" style="cursor:pointer;" onclick="location.href='Dessin/3d/index.html'">
+                        <div class="project-card-header dessin-gradient">🧊</div>
+                        <div class="project-card-body">
+                            <h3>3D — Renders</h3>
+                            <p>Modélisation et rendu 3D — explorations volumétriques, personnages et environnements.</p>
+                            <div class="project-tags">
+                                <span class="project-tag">3D</span>
+                                <span class="project-tag">Render</span>
+                                <span class="project-tag">WIP</span>
+                            </div>
+                            <a href="Dessin/3d/index.html" class="card-link" style="margin-top:1rem;">Voir le diaporama →</a>
                         </div>
                     </article>
 
@@ -103,7 +120,7 @@
                 </div>
                 <div class="projects-grid">
 
-                    <article class="project-card" style="cursor:pointer;" onclick="location.href='webtoon.html'">
+                    <article class="project-card" style="cursor:pointer;" onclick="location.href='webtoon/webtoon.html'">
                         <div class="project-card-header webtoon-gradient">🌑</div>
                         <div class="project-card-body">
                             <h3>La Fine Équipe</h3>
@@ -114,7 +131,22 @@
                                 <span class="project-tag">Dark Fantasy</span>
                                 <span class="project-tag">Narration</span>
                             </div>
-                            <a href="webtoon.html" class="card-link" style="margin-top:1rem;">Découvrir l'univers →</a>
+                            <a href="webtoon/webtoon.html" class="card-link" style="margin-top:1rem;">Découvrir l'univers →</a>
+                        </div>
+                    </article>
+
+                    <article class="project-card" style="cursor:pointer;" onclick="location.href='webtoon/production.html'">
+                        <div class="project-card-header webtoon-gradient">🎬</div>
+                        <div class="project-card-body">
+                            <h3>Production — La Fine Équipe</h3>
+                            <p>Process de création planche par planche : storyboard, encrage, mise en couleur et dialogues.</p>
+                            <div class="project-tags">
+                                <span class="project-tag">Storyboard</span>
+                                <span class="project-tag">Encrage</span>
+                                <span class="project-tag">Couleurs</span>
+                                <span class="project-tag">Lettering</span>
+                            </div>
+                            <a href="webtoon/production.html" class="card-link" style="margin-top:1rem;">Voir le process →</a>
                         </div>
                     </article>
 
@@ -132,15 +164,17 @@
                         </div>
                     </article> -->
 
-                    <article class="project-card">
+                    <article class="project-card" style="cursor:pointer;" onclick="location.href='webtoon/lore.html'">
                         <div class="project-card-header webtoon-gradient">🗺️</div>
                         <div class="project-card-body">
                             <h3>Lore &amp; World Building</h3>
-                            <p>Construction de l'univers : cartes, chronologie, factions, système de règles ou de technologie propres à l'histoire.</p>
+                            <p>Construction de l'univers : système de magie bardique, factions, l'antagoniste Gorlag et le Cirque des Rescapés.</p>
                             <div class="project-tags">
                                 <span class="project-tag">Worldbuilding</span>
                                 <span class="project-tag">Lore</span>
+                                <span class="project-tag">Aethelgard</span>
                             </div>
+                            <a href="webtoon/lore.html" class="card-link" style="margin-top:1rem;">Explorer l'univers →</a>
                         </div>
                     </article>
 
@@ -158,7 +192,7 @@
                 </div>
                 <div class="projects-grid">
 
-                    <article class="project-card">
+                    <article class="project-card" style="cursor:pointer;" onclick="location.href='Data_Analyste/dashboard_logs.html'">
                         <div class="project-card-header analyse-gradient">📈</div>
                         <div class="project-card-body">
                             <h3>Dashboard — Logs Système</h3>
@@ -168,10 +202,11 @@
                                 <span class="project-tag">Power BI</span>
                                 <span class="project-tag">Pandas</span>
                             </div>
+                            <a href="Data_Analyste/dashboard_logs.html" class="card-link" style="margin-top:1rem;">Voir la démo interactive →</a>
                         </div>
                     </article>
 
-                    <article class="project-card" style="cursor:pointer;" onclick="location.href='codding_show.html'">
+                    <article class="project-card" style="cursor:pointer;" onclick="location.href='Data_Analyste/codding_show.html'">
                         <div class="project-card-header analyse-gradient">🗂️</div>
                         <div class="project-card-body">
                             <h3>Analyse Exploratoire (EDA)</h3>
@@ -181,7 +216,7 @@
                                 <span class="project-tag">Matplotlib</span>
                                 <span class="project-tag">SQL</span>
                             </div>
-                            <a href="codding_show.html" class="card-link" style="margin-top:1rem;">Voir la démo interactive →</a>
+                            <a href="Data_Analyste/codding_show.html" class="card-link" style="margin-top:1rem;">Voir la démo interactive →</a>
                         </div>
                     </article>
 
@@ -212,7 +247,7 @@
                 </div>
                 <div class="projects-grid">
 
-                    <article class="project-card">
+                    <article class="project-card" style="cursor:pointer;" onclick="location.href='Data_Science/classification.html'">
                         <div class="project-card-header science-gradient">🎯</div>
                         <div class="project-card-body">
                             <h3>Modèle de classification</h3>
@@ -222,10 +257,11 @@
                                 <span class="project-tag">XGBoost</span>
                                 <span class="project-tag">Python</span>
                             </div>
+                            <a href="Data_Science/classification.html" class="card-link" style="margin-top:1rem;">Voir la démo interactive →</a>
                         </div>
                     </article>
 
-                    <article class="project-card">
+                    <article class="project-card" style="cursor:pointer;" onclick="location.href='Data_Science/nlp_sentiment.html'">
                         <div class="project-card-header science-gradient">🧠</div>
                         <div class="project-card-body">
                             <h3>NLP — Analyse de sentiment</h3>
@@ -235,6 +271,7 @@
                                 <span class="project-tag">NLTK</span>
                                 <span class="project-tag">spaCy</span>
                             </div>
+                            <a href="Data_Science/nlp_sentiment.html" class="card-link" style="margin-top:1rem;">Voir la démo interactive →</a>
                         </div>
                     </article>
 
@@ -252,8 +289,8 @@
                 <p>© 2024 Sleipnir</p>
                 <div class="footer-links">
                     <a href="https://github.com/Sleipnir-Ad-Sys" target="_blank" rel="noopener noreferrer">GitHub</a>
-                    <a href="index.html">Accueil</a>
-                    <a href="cv.html">CV</a>
+                    <a href="../index.html">Accueil</a>
+                    <a href="../cv/cv.html">CV</a>
                 </div>
             </div>
         </div>
