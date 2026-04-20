@@ -101,5 +101,15 @@ function setupCarousel(id, folder) {
         goTo(0);
     }
 
-    probeImages(folder).then(activate);
+    // Show loading indicator while images are being fetched
+    var outer = track.parentElement;
+    var loader = document.createElement('div');
+    loader.className = 'carousel-loader';
+    loader.innerHTML = '<div class="carousel-loader-spinner"></div><span>Chargement…</span>';
+    outer.appendChild(loader);
+
+    probeImages(folder).then(function (images) {
+        loader.remove();
+        activate(images);
+    });
 }

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Étude de personnage (Fan Art) — Sleipnir</title>
+    <meta name="description" content="Études de personnages fan art — dessins d'après des personnages existants pour pratiquer les proportions, expressions et styles.">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../public/carousel.css">
+    <style>
+        :root {
+            --ds-pink:         #a78bfa;
+            --ds-grad:         linear-gradient(135deg, #a78bfa 0%, #f472b6 100%);
+            --ds-btn-hover-bg: rgba(167,139,250,0.08);
+            --ds-label-grad:   linear-gradient(90deg, rgba(167,139,250,0.3), transparent);
+            --ds-divider-grad: linear-gradient(90deg, transparent, rgba(167,139,250,0.35), rgba(244,114,182,0.35), transparent);
+            --ds-wip-bg:       rgba(167,139,250,0.08);
+            --ds-wip-border:   rgba(167,139,250,0.28);
+        }
+        .ds-subtitle { margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="nav-inner">
+            <a href="../../../index.html" class="nav-logo">Sleipnir</a>
+            <ul class="nav-links">
+                <li><a href="../../../index.html">Accueil</a></li>
+                <li><a href="../../../cv/cv.html">CV</a></li>
+                <li><a href="../../projets.html" class="active">Projets</a></li>
+            </ul>
+            <div class="nav-toggle" id="navToggle" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-wrapper">
+        <div class="container">
+
+            <!-- Hero -->
+            <div class="ds-hero">
+                <a href="../../projets.html" class="ds-back">← Retour aux projets</a>
+                <div class="ds-eyebrow">Dessin &amp; Illustration</div>
+                <h1 class="ds-title">Étude de personnage (Fan Art)</h1>
+                <p class="ds-subtitle">
+                    Dessins d'après des personnages existants — exercices de style, études de proportions et d'expressions en s'appuyant sur des personnages de jeux vidéo, manga ou animés.
+                </p>
+                <div class="wip-notice">Fan-Art</div>
+                <div class="wip-notice">Jinx</div>
+                <div class="wip-notice">LoL</div>
+            </div>
+
+            <div class="ds-divider"></div>
+
+            <!-- ===== CAROUSEL 1 — Fan Art ===== -->
+
+            <p class="ds-subtitle">
+                Ce projet d'illustration est une exploration technique dédiée à la création d'un personnage. Au-delà du résultat final, je souhaite mettre en avant mon pipeline de travail :<br />
+                    -<strong> Esquisse </strong>: Recherche de pose et composition.<br />
+                    - <strong>Lineart</strong>: Définition des contours et précision du trait.<br />
+                    - <strong>Aplats</strong>: Mise en place de la palette colorimétrique.<br />
+                    - <strong>Ombrage & Final</strong>: Travail sur le volume, la lumière et les finitions.<br />
+                Chaque étape est cruciale pour donner vie au personnage<br />
+            </p>
+
+            <section class="carousel-section">
+                <div class="carousel-section-label">Études de personnage</div>
+                <div class="carousel-wrapper">
+                    <div class="carousel-track-outer">
+                        <div class="carousel-track" data-carousel="1">
+                            <div class="carousel-slide">
+                                <div class="carousel-placeholder">
+                                    <span class="ph-icon">🎨</span>
+                                    <p>Fan Art — à venir</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-caption">
+                            <span class="carousel-caption-text" data-caption="1">Étude de personnage</span>
+                            <span class="carousel-caption-counter" data-counter="1"><strong>1</strong> / 1</span>
+                        </div>
+                    </div>
+                    <div class="carousel-controls">
+                        <button class="carousel-btn" data-prev="1" aria-label="Précédent">&#8592;</button>
+                        <div class="carousel-dots" data-dots="1">
+                            <button class="carousel-dot active"></button>
+                        </div>
+                        <button class="carousel-btn" data-next="1" aria-label="Suivant">&#8594;</button>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-inner">
+                <p>© 2026 Sleipnir</p>
+                <div class="footer-links">
+                    <a href="https://github.com/Sleipnir-Ad-Sys" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <a href="../../../index.html">Accueil</a>
+                    <a href="../../projets.html">Projets</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../../public/carousel.js"></script>
+    <script>
+        setupCarousel('1', 'images/fanart');
+    </script>
+</body>
+</html>

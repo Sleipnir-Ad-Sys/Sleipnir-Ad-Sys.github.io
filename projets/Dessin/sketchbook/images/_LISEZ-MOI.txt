@@ -1,3 +1,0 @@
-Nommez vos images : 01.jpg, 02.jpg, 03.jpg, ...
-Formats supportes : .jpg / .jpeg / .png / .webp
-Le carousel se met a jour automatiquement au chargement de la page.

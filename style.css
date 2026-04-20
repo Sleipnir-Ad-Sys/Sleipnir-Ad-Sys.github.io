@@ -323,27 +323,45 @@ h1, h2, h3, h4 { line-height: 1.2; font-weight: 700; }
    STATS ROW
    ============================================ */
 .stats-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2.5rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
   padding: 2rem 0;
   border-top: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
   margin-bottom: 4rem;
 }
 
-.stat { display: flex; flex-direction: column; gap: 4px; }
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  padding: 0.5rem 1rem;
+}
+
+.stat + .stat {
+  border-left: 1px solid var(--border-color);
+}
 
 .stat-number {
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1;
   background: var(--gradient-main);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-.stat-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+}
 
 /* ============================================
    CARDS
@@ -711,7 +729,12 @@ footer a:hover { text-decoration: underline; }
   .hero { min-height: auto; padding: 3rem 0; }
   .hero h1 { font-size: 2.2rem; }
 
-  .stats-row { gap: 1.5rem; }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .stat + .stat { border-left: none; }
+  .stat:nth-child(2) { border-left: 1px solid var(--border-color); }
+  .stat:nth-child(3),
+  .stat:nth-child(4) { border-top: 1px solid var(--border-color); }
+  .stat:nth-child(4) { border-left: 1px solid var(--border-color); }
   .filter-tabs { width: 100%; overflow-x: auto; }
 }
 
