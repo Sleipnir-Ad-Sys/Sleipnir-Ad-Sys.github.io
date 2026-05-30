@@ -608,6 +608,7 @@ h1, h2, h3, h4 { line-height: 1.2; font-weight: 700; }
 .category-icon.data-analyse  { background: rgba(88, 166, 255, 0.14); }
 .category-icon.data-science  { background: rgba(188, 140, 255, 0.14); }
 .category-icon.presentation  { background: rgba(240, 180, 41, 0.14); }
+.category-icon.veille        { background: rgba(20, 184, 166, 0.14); }
 
 .category-header h2 { font-size: 1.45rem; margin-bottom: 2px; }
 .category-header p  { color: var(--text-secondary); font-size: 0.88rem; }
@@ -643,6 +644,7 @@ h1, h2, h3, h4 { line-height: 1.2; font-weight: 700; }
 .analyse-gradient       { background: linear-gradient(135deg, rgba(88,166,255,0.18), rgba(88,166,255,0.04)); }
 .science-gradient       { background: linear-gradient(135deg, rgba(188,140,255,0.18), rgba(188,140,255,0.04)); }
 .presentation-gradient  { background: linear-gradient(135deg, rgba(240,180,41,0.18), rgba(247,127,0,0.04)); }
+.veille-gradient        { background: linear-gradient(135deg, rgba(20,184,166,0.18), rgba(20,184,166,0.04)); }
 
 .project-card-body { padding: 1.25rem 1.5rem 1.5rem; flex: 1; display: flex; flex-direction: column; }
 
